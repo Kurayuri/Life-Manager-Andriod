@@ -10,7 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
         <activity
-            android:name="com.trashparadise.lifemanager.MainActivity"
+            android:name=".ui.works.WorkNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.bills.BillNewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>

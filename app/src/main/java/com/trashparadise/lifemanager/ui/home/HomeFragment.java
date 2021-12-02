@@ -1,5 +1,6 @@
 package com.trashparadise.lifemanager.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,30 +14,43 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
+import com.trashparadise.lifemanager.ui.bills.BillNewActivity;
+import com.trashparadise.lifemanager.ui.works.WorkNewActivity;
 
-public class HomeFragment extends Fragment implements View.OnClickListener{
+public class HomeFragment extends Fragment{
 
-    private HomeViewModel homeViewModel;
+    private HomeViewModel mViewModel;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
 
-        binding.floatingActionButtonNewBill.setOnClickListener(this);
-        binding.floatingActionButtonNewBill.setOnClickListener(this);
+        binding.floatingActionButtonNewBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),BillNewActivity.class);
+                startActivity(intent);
+            }
+        });
+        binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(), WorkNewActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         return root;
@@ -46,9 +60,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onClick(View v) {
     }
 }

@@ -2,6 +2,7 @@ package com.trashparadise.lifemanager.ui.works;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.databinding.FragmentBillsBinding;
+import com.trashparadise.lifemanager.databinding.FragmentWorksBinding;
+import com.trashparadise.lifemanager.ui.bills.BillNewActivity;
 
 public class WorksFragment extends Fragment {
 
     private WorksViewModel mViewModel;
+    private FragmentWorksBinding binding;
 
     public static WorksFragment newInstance() {
         return new WorksFragment();
@@ -25,7 +30,22 @@ public class WorksFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_works, container, false);
+
+        mViewModel = new ViewModelProvider(this).get(WorksViewModel.class);
+
+        binding = FragmentWorksBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+
+        binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), WorkNewActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return root;
     }
 
 }

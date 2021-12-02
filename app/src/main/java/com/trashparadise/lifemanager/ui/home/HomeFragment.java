@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener{
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
@@ -34,6 +34,11 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        binding.floatingActionButtonNewBill.setOnClickListener(this);
+        binding.floatingActionButtonNewBill.setOnClickListener(this);
+
+
         return root;
     }
 
@@ -41,5 +46,9 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onClick(View v) {
     }
 }

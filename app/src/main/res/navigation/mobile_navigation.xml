@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.trashparadise.lifemanager.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_bills"
+        android:name="com.trashparadise.lifemanager.ui.bills.BillsFragment"
+        android:label="@string/title_bills"
+        tools:layout="@layout/fragment_bills" />
+
+    <fragment
+        android:id="@+id/navigation_works"
+        android:name="com.trashparadise.lifemanager.ui.works.WorksFragment"
+        android:label="@string/title_works"
+        tools:layout="@layout/fragment_works" />
+
+    <fragment
+        android:id="@+id/navigation_me"
+        android:name="com.trashparadise.lifemanager.ui.me.MeFragment"
+        android:label="@string/title_me"
+        tools:layout="@layout/fragment_me" />
+</navigation>

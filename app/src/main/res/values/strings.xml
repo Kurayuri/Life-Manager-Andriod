@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Life Manager</string>
+    <string name="title_home">Home</string>
+    <string name="title_bills">Bills</string>
+    <string name="title_works">Works</string>
+    <string name="title_me">Me</string>
+</resources>

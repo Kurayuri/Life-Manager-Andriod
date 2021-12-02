@@ -1,1 +1,1 @@
-LifeManagerAndriod
+LifeManager Andriod

@@ -14,8 +14,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
-import com.trashparadise.lifemanager.ui.bills.BillNewActivity;
-import com.trashparadise.lifemanager.ui.works.WorkNewActivity;
+import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
+import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
 public class HomeFragment extends Fragment{
 
@@ -40,14 +40,14 @@ public class HomeFragment extends Fragment{
         binding.floatingActionButtonNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getContext(),BillNewActivity.class);
+                Intent intent=new Intent(getContext(), BillEditActivity.class);
                 startActivity(intent);
             }
         });
         binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getContext(), WorkNewActivity.class);
+                Intent intent=new Intent(getContext(), WorkEditActivity.class);
                 startActivity(intent);
             }
         });

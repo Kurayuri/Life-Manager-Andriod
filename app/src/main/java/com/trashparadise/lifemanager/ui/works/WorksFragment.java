@@ -13,10 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.databinding.FragmentBillsBinding;
 import com.trashparadise.lifemanager.databinding.FragmentWorksBinding;
-import com.trashparadise.lifemanager.ui.bills.BillNewActivity;
 
 public class WorksFragment extends Fragment {
 
@@ -40,7 +37,7 @@ public class WorksFragment extends Fragment {
         binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), WorkNewActivity.class);
+                Intent intent = new Intent(getContext(), WorkEditActivity.class);
                 startActivity(intent);
             }
         });

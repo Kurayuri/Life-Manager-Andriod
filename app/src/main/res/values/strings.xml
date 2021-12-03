@@ -4,4 +4,8 @@
     <string name="title_bills">Bills</string>
     <string name="title_works">Works</string>
     <string name="title_me">Me</string>
+    <string name="numeric_keyboard_clear">Clear</string>
+    <string name="numeric_keyboard_delete">del</string>
+    <string name="numeric_keyboard_confirm">Confirm</string>
+    <string name="amount_init">0.00</string>
 </resources>

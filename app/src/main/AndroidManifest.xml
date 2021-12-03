@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
         <activity
-            android:name=".ui.works.WorkNewActivity"
+            android:name=".ui.works.WorkEditActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.bills.BillNewActivity"
+            android:name=".ui.bills.BillEditActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

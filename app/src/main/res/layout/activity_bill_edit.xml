@@ -10,19 +10,39 @@
         android:id="@+id/textView_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/amount_init"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <EditText
+        android:id="@+id/editText_note"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/gray_da"
+        android:cursorVisible="true"
+        android:ems="10"
+        android:gravity="top|start"
+        android:hint="@string/note_input_hint"
+        android:inputType="textMultiLine"
+        android:scrollbarAlwaysDrawHorizontalTrack="true"
+        android:textCursorDrawable="@null"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout_keyboardBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_amount" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout_keyboardBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/gray_da"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/constraintLayout_numericKeyboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -203,6 +223,14 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="200dp"
+        tools:layout_editor_absoluteY="144dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

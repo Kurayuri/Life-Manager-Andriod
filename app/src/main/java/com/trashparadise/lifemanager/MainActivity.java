@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavHostFragment fragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

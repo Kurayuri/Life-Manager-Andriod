@@ -3,24 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.35555555555555557" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.35555555555555557" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/selector_numeric_keyboard.xml" value="0.35555555555555557" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_bill_edit.xml" value="0.404320987654321" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_bill_new.xml" value="0.25" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_work_edit.xml" value="0.31128747795414463" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_work_new.xml" value="0.1" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/fragment_bills.xml" value="0.25" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/fragment_home.xml" value="0.11" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/fragment_me.xml" value="0.25" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/fragment_numeric_keyboard.xml" value="0.3536458333333333" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/fragment_works.xml" value="0.3296875" />
-        <entry key="..\:/Users/Kurayuri/Desktop/Tools/LifeManager/app/src/main/res/layout/activity_main.xml" value="0.3307291666666667" />
-        <entry key="..\:/Users/Kurayuri/Desktop/Tools/LifeManager/app/src/main/res/layout/fragment_bills.xml" value="0.3307291666666667" />
-        <entry key="..\:/Users/Kurayuri/Desktop/Tools/LifeManager/app/src/main/res/layout/fragment_home.xml" value="0.3307291666666667" />
-        <entry key="..\:/Users/Kurayuri/Desktop/Tools/LifeManager/app/src/main/res/layout/fragment_me.xml" value="0.3307291666666667" />
-        <entry key="..\:/Users/Kurayuri/Desktop/Tools/LifeManager/app/src/main/res/layout/fragment_works.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_bill_edit.xml" value="0.3307291666666667" />
       </map>
     </option>
   </component>

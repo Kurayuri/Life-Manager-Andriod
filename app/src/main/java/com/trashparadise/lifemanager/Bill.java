@@ -1,10 +1,12 @@
 package com.trashparadise.lifemanager;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
-public class Bill {
+
+public class Bill implements Comparable<Bill>, Serializable {
     private BigDecimal amount;
     private Date date;
     private String type;
@@ -18,6 +20,13 @@ public class Bill {
         this.note = note;
         this.uuid = UUID.randomUUID().toString().replaceAll("-","");
     }
+
+    @Override
+    public int compareTo(Bill o) {
+        int ans=o.getDate().compareTo(this.getDate());
+        return ans == 0 ? o.getUuid().compareTo(this.getUuid()) : ans;
+    }
+
     public String getType() {
         return type;
     }
@@ -57,6 +66,4 @@ public class Bill {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-
-
 }

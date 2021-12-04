@@ -39,7 +39,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
     private List<Integer> buttonsAmount = new ArrayList<>();
     private Integer dotted = 0;
     private Bill bill;
-    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private DecimalFormat decimalFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,10 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding = ActivityBillEditBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-
         application = (LifeManagerApplication) this.getApplication();
         Intent intent = getIntent();
+
+        decimalFormat= new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
 
         uuid = intent.getStringExtra("uuid");
         bill = application.getBill(uuid);
@@ -68,7 +69,6 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.textViewAmount.setText(decimalFormat.format(amount));
         binding.editTextNote.setText(note);
         binding.textViewDate.setText(date.toString());
-
 
         buttonsAmount.add(R.id.button_0);
         buttonsAmount.add(R.id.button_1);
@@ -122,7 +122,13 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void onConfirm() {
-        application.addBill(new Bill(amount, date, type, note));
+        note=binding.editTextNote.getText().toString();
+
+        if (uuid.equals("")){
+            application.addBill(new Bill(amount, date, type, note));}
+        else {
+            application.setBill(bill,new Bill(amount, date, type, note));
+        }
         finish();
     }
 

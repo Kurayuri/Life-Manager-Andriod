@@ -1,5 +1,6 @@
 package com.trashparadise.lifemanager.ui.bills;
 
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
@@ -7,6 +8,7 @@ import com.trashparadise.lifemanager.R;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.icu.util.GregorianCalendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,9 +18,12 @@ import com.trashparadise.lifemanager.databinding.ActivityBillEditBinding;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class BillEditActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,7 +53,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
         uuid = intent.getStringExtra("uuid");
         bill = application.getBill(uuid);
-        if (bill==null) {
+        if (bill == null) {
             amount = new BigDecimal("0");
             note = new String("");
             type = new String("");
@@ -84,27 +89,67 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
             x.setOnClickListener(this);
         }
         binding.buttonConfirm.setOnClickListener(this);
+        binding.textViewDate.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
         Integer id = v.getId();
-        if (buttonsAmount.contains(id)) {
-            onAmountInput(id);
-        } else {
-
-            switch (id) {
-                case R.id.button_confirm:
-                    onConfirm();
-                    break;
-            }
+        switch (id) {
+            case R.id.button_0:
+            case R.id.button_1:
+            case R.id.button_2:
+            case R.id.button_3:
+            case R.id.button_4:
+            case R.id.button_5:
+            case R.id.button_6:
+            case R.id.button_7:
+            case R.id.button_8:
+            case R.id.button_9:
+            case R.id.button_dot:
+            case R.id.button_clear:
+            case R.id.button_delete:
+                onAmountInput(id);
+                break;
+            case R.id.button_confirm:
+                onConfirm();
+                break;
+            case R.id.textView_date:
+                onDateInput();
+                break;
         }
     }
 
     private void onConfirm() {
-        application.addBill(new Bill(amount,date,type,note));
+        application.addBill(new Bill(amount, date, type, note));
         finish();
+    }
+
+    private void onDateInput() {
+        SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
+                getResources().getString(R.string.date_picker_title),
+                getResources().getString(R.string.positive),
+                getResources().getString(R.string.negative)
+        );
+
+        dateTimeDialogFragment.startAtTimeView();
+        dateTimeDialogFragment.set24HoursMode(true);
+        dateTimeDialogFragment.setDefaultDateTime(date);
+
+        dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Date newDate) {
+                date=newDate;
+                binding.textViewDate.setText(date.toString());
+            }
+
+            @Override
+            public void onNegativeButtonClick(Date newDate) {
+            }
+        });
+
+        dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time");
     }
 
     private void onAmountInput(Integer input) {
@@ -124,12 +169,12 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
                     amount = amount.divideToIntegralValue(decimal_10);
                     dotted = 0;
                 } else if (dotted <= 3) {
-                    BigDecimal dotnum = new BigDecimal("1");
+                    BigDecimal dotNumber = new BigDecimal("1");
                     for (int i = 0; i < dotted - 1; ++i) {
-                        dotnum = dotnum.multiply(decimal_10);
+                        dotNumber = dotNumber.multiply(decimal_10);
                     }
                     dotted -= 1;
-                    amount = amount.multiply(dotnum).divideToIntegralValue(decimal_10).divide(dotnum.divide(decimal_10));
+                    amount = amount.multiply(dotNumber).divideToIntegralValue(decimal_10).divide(dotNumber.divide(decimal_10));
                 }
                 break;
             }

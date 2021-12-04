@@ -4,6 +4,9 @@
     <string name="title_bills">Bills</string>
     <string name="title_works">Works</string>
     <string name="title_me">Me</string>
+    <string name="positive">OK</string>
+    <string name="negative">Cancel</string>
+    <string name="date_picker_title">Time</string>
     <string name="numeric_keyboard_clear">Clear</string>
     <string name="numeric_keyboard_delete">del</string>
     <string name="numeric_keyboard_confirm">Confirm</string>

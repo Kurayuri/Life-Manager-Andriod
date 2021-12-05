@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/conor_button_green.xml" value="0.4453125" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/indicator_bg.xml" value="0.4453125" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/layout_round_corner.xml" value="0.4203703703703704" />
-        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_bill_edit.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_bill_edit.xml" value="0.33" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_work_edit.xml" value="0.3307291666666667" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/fragment_bill_list.xml" value="0.25" />
@@ -13,6 +15,7 @@
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_bill.xml" value="0.33" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_billx.xml" value="0.21467391304347827" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_month.xml" value="0.1" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_type.xml" value="0.33" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4185185185185185" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.4185185185185185" />
       </map>

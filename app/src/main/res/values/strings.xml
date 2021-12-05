@@ -7,6 +7,7 @@
     <string name="positive">OK</string>
     <string name="negative">Cancel</string>
     <string name="amount_decimal_format">0.00</string>
+    <string name="amount_max">1E18</string>
     <string name="date_picker_title">Time</string>
     <string name="numeric_keyboard_clear">Clear</string>
     <string name="numeric_keyboard_delete">del</string>

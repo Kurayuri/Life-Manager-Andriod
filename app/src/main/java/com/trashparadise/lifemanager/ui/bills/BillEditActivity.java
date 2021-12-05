@@ -1,26 +1,31 @@
 package com.trashparadise.lifemanager.ui.bills;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+import com.trashparadise.lifemanager.Adapter.BillTypeAdapter;
 import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.icu.util.GregorianCalendar;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.trashparadise.lifemanager.bean.TypeBean;
+import com.trashparadise.lifemanager.constants.TypeRes;
 import com.trashparadise.lifemanager.databinding.ActivityBillEditBinding;
+import com.trashparadise.lifemanager.listener.OnItemClickListener;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -29,18 +34,25 @@ import java.util.Locale;
 public class BillEditActivity extends AppCompatActivity implements View.OnClickListener {
     private ActivityBillEditBinding binding;
     private LifeManagerApplication application;
+    private RecyclerView recyclerView;
 
     private BigDecimal amount;
     private Date date;
     private String type;
     private String note;
     private String uuid;
+    private Integer form;
+    private Integer typeId = 0;
+
+    private ArrayList<TypeBean> typeList = new ArrayList<>();
 
     private List<Integer> buttonsAmount = new ArrayList<>();
     private Integer dotted = 0;
     private Bill bill;
     private DecimalFormat decimalFormat;
     private SimpleDateFormat dateFormatDate;
+    private BigDecimal amountMax;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,26 +63,37 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         application = (LifeManagerApplication) this.getApplication();
         Intent intent = getIntent();
 
-        decimalFormat= new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
-        dateFormatDate=new SimpleDateFormat(getResources().getString(R.string.date_format_date));
+        decimalFormat = new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
+        dateFormatDate = new SimpleDateFormat(getResources().getString(R.string.date_format_date));
+        amountMax = new BigDecimal(getResources().getString(R.string.amount_max));
 
         uuid = intent.getStringExtra("uuid");
         bill = application.getBill(uuid);
         if (bill == null) {
             amount = new BigDecimal("0");
             note = new String("");
-            type = new String("");
+            form = 0;
+            type = new String(TypeRes.NAMES[form][typeId]);
             date = new Date();
         } else {
+
             amount = new BigDecimal(bill.getAmount().toString());
             note = new String(bill.getNote());
             uuid = new String(bill.getUuid());
             date = new Date(bill.getDate().getTime());
+            form = bill.getForm();
+            type = bill.getType();
+            Log.e("hh","onCreate: Old"+form+type);
         }
+
+        initTypeDate(form);
 
         binding.textViewAmount.setText(decimalFormat.format(amount));
         binding.editTextNote.setText(note);
         binding.textViewDate.setText(dateFormatDate.format(date));
+        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        binding.textViewType.setText(typeList.get(typeId).getName());
+        binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
 
         buttonsAmount.add(R.id.button_0);
         buttonsAmount.add(R.id.button_1);
@@ -93,6 +116,19 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.buttonConfirm.setOnClickListener(this);
         binding.textViewDate.setOnClickListener(this);
 
+
+        recyclerView = binding.typeRecycleView;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new BillTypeAdapter(typeList, new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                typeList.get(typeId).setChecked(false);
+                typeList.get(position).setChecked(true);
+                typeId = position;
+                binding.textViewType.setText(typeList.get(typeId).getName());
+                binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
+            }
+        }));
     }
 
     @Override
@@ -123,13 +159,25 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void onConfirm() {
-        note=binding.editTextNote.getText().toString();
+    private void initTypeDate(int form) {
+        for (int i = 0; i < TypeRes.NAMES[form].length; ++i) {
+            if (TypeRes.NAMES[form][i].equals(type)) {
+                typeId = i;
+            }
+            typeList.add(new TypeBean(TypeRes.NAMES[form][i], TypeRes.ICONS[form][i], TypeRes.ICONS_GRAY[form][i], i));
+        }
+        typeList.get(typeId).setChecked(true);
+    }
 
-        if (uuid.equals("")){
-            application.addBill(new Bill(amount, date, type, note));}
-        else {
-            application.setBill(bill,new Bill(amount, date, type, note));
+
+    private void onConfirm() {
+        note = binding.editTextNote.getText().toString();
+        type=typeList.get(typeId).getName();
+
+        if (uuid.equals("")) {
+            application.addBill(new Bill(amount, date, type, form, note));
+        } else {
+            application.setBill(bill, new Bill(amount, date, type, form, note));
         }
         finish();
     }
@@ -150,7 +198,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Date newDate) {
-                date=newDate;
+                date = newDate;
                 binding.textViewDate.setText(dateFormatDate.format(date));
             }
 
@@ -189,15 +237,17 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
                 break;
             }
             default: {
-                if (dotted == 0) {
-                    amount = amount.multiply(decimal_10).add(new BigDecimal(buttonsAmount.indexOf(input) + ""));
-                } else if (dotted <= 2) {
-                    BigDecimal dotnum = new BigDecimal("1");
-                    for (int i = 0; i < dotted; ++i) {
-                        dotnum = dotnum.multiply(new BigDecimal("0.1"));
+                if (amount.compareTo(amountMax) < 0) {
+                    if (dotted == 0) {
+                        amount = amount.multiply(decimal_10).add(new BigDecimal(buttonsAmount.indexOf(input) + ""));
+                    } else if (dotted <= 2) {
+                        BigDecimal dotnum = new BigDecimal("1");
+                        for (int i = 0; i < dotted; ++i) {
+                            dotnum = dotnum.multiply(new BigDecimal("0.1"));
+                        }
+                        dotted += 1;
+                        amount = amount.add(new BigDecimal(buttonsAmount.indexOf(input) + "").multiply(dotnum));
                     }
-                    dotted += 1;
-                    amount = amount.add(new BigDecimal(buttonsAmount.indexOf(input) + "").multiply(dotnum));
                 }
             }
         }

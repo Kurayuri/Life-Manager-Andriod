@@ -10,13 +10,17 @@ public class Bill implements Comparable<Bill>, Serializable {
     private BigDecimal amount;
     private Date date;
     private String type;
+    private Integer form;
     private String note;
     private String uuid;
 
-    public Bill(BigDecimal amount, Date date, String type, String note) {
+
+
+    public Bill(BigDecimal amount, Date date, String type, Integer form, String note) {
         this.amount = amount;
         this.date = date;
-        this.type=type;
+        this.type = type;
+        this.form = form;
         this.note = note;
         this.uuid = UUID.randomUUID().toString().replaceAll("-","");
     }
@@ -25,6 +29,13 @@ public class Bill implements Comparable<Bill>, Serializable {
     public int compareTo(Bill o) {
         int ans=o.getDate().compareTo(this.getDate());
         return ans == 0 ? o.getUuid().compareTo(this.getUuid()) : ans;
+    }
+    public Integer getForm() {
+        return form;
+    }
+
+    public void setForm(Integer form) {
+        this.form = form;
     }
 
     public String getType() {

@@ -3,12 +3,14 @@ package com.trashparadise.lifemanager;
 import android.app.Application;
 import android.util.Log;
 
+import com.trashparadise.lifemanager.constants.TypeRes;
+
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class LifeManagerApplication extends Application {
@@ -47,6 +49,7 @@ public class LifeManagerApplication extends Application {
             Log.e("Write Error", e.toString());
         }
     }
+
     public void delBill(String uuid){
         billList.remove(getBill(uuid));
     }
@@ -74,4 +77,5 @@ public class LifeManagerApplication extends Application {
     public ArrayList<Bill> getBillList() {
         return new ArrayList<Bill>(billList);
     }
+
 }

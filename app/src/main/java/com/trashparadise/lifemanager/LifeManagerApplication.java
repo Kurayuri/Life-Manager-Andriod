@@ -47,6 +47,9 @@ public class LifeManagerApplication extends Application {
             Log.e("Write Error", e.toString());
         }
     }
+    public void delBill(String uuid){
+        billList.remove(getBill(uuid));
+    }
 
     public void addBill(Bill bill) {
         billList.add(bill);

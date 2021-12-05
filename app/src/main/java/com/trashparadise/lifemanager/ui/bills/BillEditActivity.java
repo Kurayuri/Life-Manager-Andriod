@@ -40,6 +40,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
     private Integer dotted = 0;
     private Bill bill;
     private DecimalFormat decimalFormat;
+    private SimpleDateFormat dateFormatDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
 
         decimalFormat= new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
+        dateFormatDate=new SimpleDateFormat(getResources().getString(R.string.date_format_date));
 
         uuid = intent.getStringExtra("uuid");
         bill = application.getBill(uuid);
@@ -68,7 +70,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
         binding.textViewAmount.setText(decimalFormat.format(amount));
         binding.editTextNote.setText(note);
-        binding.textViewDate.setText(date.toString());
+        binding.textViewDate.setText(dateFormatDate.format(date));
 
         buttonsAmount.add(R.id.button_0);
         buttonsAmount.add(R.id.button_1);
@@ -136,7 +138,9 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
                 getResources().getString(R.string.date_picker_title),
                 getResources().getString(R.string.positive),
-                getResources().getString(R.string.negative)
+                getResources().getString(R.string.negative),
+                null,
+                Locale.getDefault().getLanguage()
         );
 
         dateTimeDialogFragment.startAtTimeView();
@@ -147,7 +151,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onPositiveButtonClick(Date newDate) {
                 date=newDate;
-                binding.textViewDate.setText(date.toString());
+                binding.textViewDate.setText(dateFormatDate.format(date));
             }
 
             @Override

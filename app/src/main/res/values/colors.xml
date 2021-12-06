@@ -14,7 +14,7 @@
     <drawable name="numeric_keyboard_unpressed">#FFFFFFFF</drawable>
     <drawable name="numeric_keyboard_pressed">#FFAAAAAA</drawable>
     <color name="colorFabBill">#c9a7f6</color>
-    <color name="colorFabWork">#fff568</color>
+    <color name="colorFabWork">#ffa35c</color>
 
     <color name="colorPrimary">#3f3c51</color>
     <color name="colorPrimaryDark">#3f3c51</color>

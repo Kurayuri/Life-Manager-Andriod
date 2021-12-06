@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanager.ui.bills;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -8,20 +10,27 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.constants.TypeRes;
 import com.trashparadise.lifemanager.databinding.FragmentBillsBinding;
 
 public class BillsFragment extends Fragment {
 
     private BillsViewModel mViewModel;
     private FragmentBillsBinding binding;
+    private AppCompatActivity activity;
+    private RadioGroup radioGroupForm;
+    private Integer form;
+    private Integer formNew;
+    private BillListFragment billListFragment;
 
     public static BillsFragment newInstance() {
         return new BillsFragment();
@@ -32,27 +41,72 @@ public class BillsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(BillsViewModel.class);
+        form = -1;
+        formNew = -1;
 
+        activity = (AppCompatActivity) getActivity();
         binding = FragmentBillsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_billList,new BillListFragment()).commit();
+        billListFragment=new BillListFragment(form);
+
+        getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_billList, billListFragment).commit();
+
+        ActionBar actionBar = activity.getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.actionbar_expand_income);
+        radioGroupForm = actionBar.getCustomView().findViewById(R.id.radioGroup_form);
+
+        initListener();
+
+        return root;
+    }
 
 
+    private void initListener() {
         binding.floatingActionButtonNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), BillEditActivity.class);
-                intent.putExtra("uuid","");
+                intent.putExtra("uuid", "");
                 startActivity(intent);
             }
         });
-        return root;
+
+        radioGroupForm.getChildAt(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (form == 0) {
+                    form = -1;
+                    radioGroupForm.clearCheck();
+                } else {
+                    form = 0;
+                }
+                updateDateSet();
+            }
+        });
+        radioGroupForm.getChildAt(1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (form == 1) {
+                    form = -1;
+                    radioGroupForm.clearCheck();
+                } else {
+                    form = 1;
+                }
+                updateDateSet();
+            }
+        });
+    }
+
+    public void updateDateSet(){
+        billListFragment.updateDateSet(form);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getChildFragmentManager().beginTransaction().replace(R.id.fragmentContainer_billList,new BillListFragment()).commit();
+        updateDateSet();
     }
 }

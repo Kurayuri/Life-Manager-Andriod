@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanager.ui.works;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -13,12 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
 import com.trashparadise.lifemanager.databinding.FragmentWorksBinding;
 
 public class WorksFragment extends Fragment {
 
     private WorksViewModel mViewModel;
     private FragmentWorksBinding binding;
+    private AppCompatActivity activity;
 
     public static WorksFragment newInstance() {
         return new WorksFragment();
@@ -30,8 +34,13 @@ public class WorksFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(this).get(WorksViewModel.class);
 
+        activity=(AppCompatActivity)getActivity();
+
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        ActionBar actionBar=activity.getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 
 
         binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {

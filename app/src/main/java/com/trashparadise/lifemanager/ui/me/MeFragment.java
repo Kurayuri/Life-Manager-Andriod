@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanager.ui.me;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -13,10 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
 
 public class MeFragment extends Fragment {
 
     private MeViewModel mViewModel;
+    private AppCompatActivity activity;
+    private FragmentMeBinding binding;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -25,7 +30,19 @@ public class MeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_me, container, false);
+        activity=(AppCompatActivity)getActivity();
+
+
+
+        binding = FragmentMeBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        ActionBar actionBar=activity.getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+
+
+
+        return root;
     }
 
 }

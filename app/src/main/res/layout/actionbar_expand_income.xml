@@ -9,8 +9,7 @@
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_centerInParent="true"
-        android:checkedButton="@+id/rb_expend">
+        android:layout_centerInParent="true">
 
         <RadioButton
             android:id="@+id/rb_expend"
@@ -19,8 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/expend"
-            android:textColor="@drawable/selector_radiobutton_text"/>
+            android:text="@string/expend"/>
 
         <RadioButton
             android:id="@+id/rb_income"
@@ -29,8 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/income"
-            android:textColor="@drawable/selector_radiobutton_text"/>
+            android:text="@string/income"/>
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

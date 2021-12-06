@@ -87,7 +87,6 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
             date = new Date(bill.getDate().getTime());
             form = bill.getForm();
             type = bill.getType();
-            Log.e("hh", "onCreate: Old" + form + type);
         }
 
         initTypeDate();
@@ -110,7 +109,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.toolbar_expand_income);
+        actionBar.setCustomView(R.layout.actionbar_expand_income);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
         radioGroup = findViewById(R.id.radioGroup_form);
@@ -127,45 +126,6 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         initListener();
     }
 
-    // Actionbar Button
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return false;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        Integer id = v.getId();
-        switch (id) {
-            case R.id.button_0:
-            case R.id.button_1:
-            case R.id.button_2:
-            case R.id.button_3:
-            case R.id.button_4:
-            case R.id.button_5:
-            case R.id.button_6:
-            case R.id.button_7:
-            case R.id.button_8:
-            case R.id.button_9:
-            case R.id.button_dot:
-            case R.id.button_clear:
-            case R.id.button_delete:
-                onAmountInput(id);
-                break;
-            case R.id.button_confirm:
-                onConfirm();
-                break;
-            case R.id.textView_date:
-                onDateInput();
-                break;
-        }
-    }
 
     private void initTypeDate() {
         typeId = TypeRes.getId(form, type);
@@ -286,27 +246,13 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         return form == 0 ? R.id.rb_expend : R.id.rb_income;
     }
 
-
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        int formNew = 0;
-        switch (checkedId) {
-            case R.id.rb_expend:
-                formNew = 0;
-                break;
-            case R.id.rb_income:
-                formNew = 1;
-                break;
-        }
-
-        if (formNew != form) {
-            form = formNew;
-            initTypeDate();
-            billTypeAdapter.notifyDataSetChanged();
-            onItemClick(0);
-            binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
-        }
-
+        form= form==1?0:1;
+        initTypeDate();
+        billTypeAdapter.notifyDataSetChanged();
+        onItemClick(0);
+        binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
     }
 
     @Override
@@ -317,4 +263,45 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.textViewType.setText(typeList.get(typeId).getName());
         binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
     }
+
+    // Actionbar Button
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Integer id = v.getId();
+        switch (id) {
+            case R.id.button_0:
+            case R.id.button_1:
+            case R.id.button_2:
+            case R.id.button_3:
+            case R.id.button_4:
+            case R.id.button_5:
+            case R.id.button_6:
+            case R.id.button_7:
+            case R.id.button_8:
+            case R.id.button_9:
+            case R.id.button_dot:
+            case R.id.button_clear:
+            case R.id.button_delete:
+                onAmountInput(id);
+                break;
+            case R.id.button_confirm:
+                onConfirm();
+                break;
+            case R.id.textView_date:
+                onDateInput();
+                break;
+        }
+    }
+
 }

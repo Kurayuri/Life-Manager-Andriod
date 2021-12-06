@@ -36,22 +36,23 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private DecimalFormat decimalFormat;
     private SimpleDateFormat dateFormatMonth;
     private SimpleDateFormat dateFormatTime;
+    private Integer form;
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ConstraintLayout layout;
         private final TextView textViewDate;
         private final TextView textViewAmount;
         private final TextView textViewType;
         private final ImageView imageViewType;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view) {
             super(view);
-            layout=(ConstraintLayout)view.findViewById(R.id.layout);
-            textViewDate=(TextView)view.findViewById(R.id.textView_date);
-            textViewAmount=(TextView)view.findViewById(R.id.textView_amount);
-            textViewType=(TextView) view.findViewById(R.id.textView_type);
-            imageViewType=(ImageView) view.findViewById(R.id.imageView_type);
+            layout = (ConstraintLayout) view.findViewById(R.id.layout);
+            textViewDate = (TextView) view.findViewById(R.id.textView_date);
+            textViewAmount = (TextView) view.findViewById(R.id.textView_amount);
+            textViewType = (TextView) view.findViewById(R.id.textView_type);
+            imageViewType = (ImageView) view.findViewById(R.id.imageView_type);
         }
 
         public ConstraintLayout getLayout() {
@@ -75,37 +76,39 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         }
     }
 
-    public BillListAdapter(Context context){
-        this.context=context;
-        application=(LifeManagerApplication) ((AppCompatActivity)context).getApplication();
+
+    public BillListAdapter(Context context, Integer form) {
+        this.form = form;
+        this.context = context;
+        application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         updateDataSet();
-        decimalFormat=new DecimalFormat(context.getString(R.string.amount_decimal_format));
-        dateFormatMonth=new SimpleDateFormat(context.getString(R.string.date_format_month));
-        dateFormatTime=new SimpleDateFormat(context.getString(R.string.date_format_time));
+        decimalFormat = new DecimalFormat(context.getString(R.string.amount_decimal_format));
+        dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
+        dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
     }
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view=null;
-        switch (viewType){
+        View view = null;
+        switch (viewType) {
             case 0:
-                view= LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_bill, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_bill, viewGroup, false);
                 break;
             case 1:
-                view= LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_month, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_month, viewGroup, false);
                 break;
         }
 
-        ViewHolder viewHolder=new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
 
-        switch (viewType){
+        switch (viewType) {
             case 0:
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, BillEditActivity.class);
-                        intent.putExtra("uuid",localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                        intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                         context.startActivity(intent);
                     }
                 });
@@ -124,7 +127,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                                     public void onClick(DialogInterface dialog, int id) {
                                     }
                                 });
-                        Dialog dialogFragment=builder.create();
+                        Dialog dialogFragment = builder.create();
                         dialogFragment.show();
                         return false;
                     }
@@ -135,7 +138,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, BillAuditActivity.class);
-                        intent.putExtra("uuid",localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                        intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                         context.startActivity(intent);
                     }
                 });
@@ -145,50 +148,64 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
 
     }
 
-    public void updateDataSet(){
-        localDataSet=application.getBillList();
-        if (localDataSet.size()>0){
-            localDataSet.add(0,new Bill(new BigDecimal("0"),localDataSet.get(0).getDate(),"",-1,""));
+    public void callUpdateDataSet(Integer form){
+        this.form=form;
+        updateDataSet();
+    }
+    private void updateDataSet() {
+        ArrayList<Bill> allDataSet = application.getBillList();
+        localDataSet = new ArrayList<>();
+        if (form != -1) {
+            for (int i = 0; i < allDataSet.size(); ++i) {
+                if (allDataSet.get(i).getForm().equals(form)) {
+                    localDataSet.add(allDataSet.get(i));
+                }
+            }
+        } else {
+            localDataSet = allDataSet;
         }
 
-        for (int i=1;i<localDataSet.size();++i){
-            Calendar pre=Calendar.getInstance();
-            pre.setTime(localDataSet.get(i-1).getDate());
-            Calendar curr=Calendar.getInstance();
+        if (localDataSet.size() > 0) {
+            localDataSet.add(0, new Bill(new BigDecimal("0"), localDataSet.get(0).getDate(), "", -1, ""));
+        }
+
+        for (int i = 1; i < localDataSet.size(); ++i) {
+            Calendar pre = Calendar.getInstance();
+            pre.setTime(localDataSet.get(i - 1).getDate());
+            Calendar curr = Calendar.getInstance();
             curr.setTime(localDataSet.get(i).getDate());
-            if (pre.get(Calendar.MONTH)!=curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR)!=curr.get(Calendar.YEAR)){
-                localDataSet.add(i,new Bill(new BigDecimal("0"),localDataSet.get(i).getDate(),"",-1,""));
-                i+=1;
+            if (pre.get(Calendar.MONTH) != curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR) != curr.get(Calendar.YEAR)) {
+                localDataSet.add(i, new Bill(new BigDecimal("0"), localDataSet.get(i).getDate(), "", -1, ""));
+                i += 1;
             }
         }
         BillListAdapter.this.notifyDataSetChanged();
     }
 
-    public boolean isAudit(int position){
+    public boolean isAudit(int position) {
         return localDataSet.get(position).getForm().equals(-1);
     }
 
     @Override
     public int getItemViewType(int position) {
-        return isAudit(position)?1:0;
+        return isAudit(position) ? 1 : 0;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Bill bill=localDataSet.get(position);
+        Bill bill = localDataSet.get(position);
         if (isAudit(position)) {
             viewHolder.getTextViewDate().setText(dateFormatMonth.format(bill.getDate()));
-        }else {
-            Integer form=bill.getForm();
+        } else {
+            Integer form = bill.getForm();
             viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate()));
             viewHolder.getTextViewType().setText(localDataSet.get(position).getType());
-            viewHolder.getImageViewType().setImageResource(TypeRes.ICONS[form][TypeRes.getId(bill.getForm(),bill.getType())]);
+            viewHolder.getImageViewType().setImageResource(TypeRes.ICONS[form][TypeRes.getId(bill.getForm(), bill.getType())]);
             viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(TypeRes.COLOR[bill.getForm()]));
-            if (bill.getForm()==0){
-                viewHolder.getTextViewAmount().setText("-"+decimalFormat.format(bill.getAmount()));
-            }
-            else {
-                viewHolder.getTextViewAmount().setText("+"+decimalFormat.format(bill.getAmount()));
+            if (bill.getForm() == 0) {
+                viewHolder.getTextViewAmount().setText("-" + decimalFormat.format(bill.getAmount()));
+            } else {
+                viewHolder.getTextViewAmount().setText("+" + decimalFormat.format(bill.getAmount()));
             }
         }
     }

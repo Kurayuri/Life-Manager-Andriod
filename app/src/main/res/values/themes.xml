@@ -14,14 +14,14 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <!--收入支出RadioBotton -->
     <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">25dp</item>
         <item name="android:button">@null</item>
-        <item name="android:paddingLeft">8dp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@drawable/selector_radiobutton_text</item>
+        <item name="android:background">@drawable/selector_radio_button</item>
     </style>
 </resources>

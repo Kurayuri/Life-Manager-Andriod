@@ -51,7 +51,9 @@ public class LifeManagerApplication extends Application {
     }
 
     public void delBill(String uuid){
-        billList.remove(getBill(uuid));
+        Bill bill=getBill(uuid);
+        if (bill!=null)
+            billList.remove(bill);
     }
 
     public void addBill(Bill bill) {

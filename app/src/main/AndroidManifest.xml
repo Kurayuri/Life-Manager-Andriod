@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
         <activity
+            android:name=".ui.bills.BillAuditActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.works.WorkEditActivity"
             android:exported="false" />
         <activity

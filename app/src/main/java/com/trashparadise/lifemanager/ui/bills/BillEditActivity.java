@@ -6,6 +6,8 @@ import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,13 +16,14 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.bean.TypeBean;
 import com.trashparadise.lifemanager.constants.TypeRes;
 import com.trashparadise.lifemanager.databinding.ActivityBillEditBinding;
-import com.trashparadise.lifemanager.listener.OnItemClickListener;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -31,10 +34,12 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class BillEditActivity extends AppCompatActivity implements View.OnClickListener {
+public class BillEditActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, BillTypeAdapter.OnItemClickListener {
     private ActivityBillEditBinding binding;
     private LifeManagerApplication application;
     private RecyclerView recyclerView;
+    private RadioGroup radioGroup;
+    private BillTypeAdapter billTypeAdapter;
 
     private BigDecimal amount;
     private Date date;
@@ -76,24 +81,16 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
             type = new String(TypeRes.NAMES[form][typeId]);
             date = new Date();
         } else {
-
             amount = new BigDecimal(bill.getAmount().toString());
             note = new String(bill.getNote());
             uuid = new String(bill.getUuid());
             date = new Date(bill.getDate().getTime());
             form = bill.getForm();
             type = bill.getType();
-            Log.e("hh","onCreate: Old"+form+type);
+            Log.e("hh", "onCreate: Old" + form + type);
         }
 
-        initTypeDate(form);
-
-        binding.textViewAmount.setText(decimalFormat.format(amount));
-        binding.editTextNote.setText(note);
-        binding.textViewDate.setText(dateFormatDate.format(date));
-        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        binding.textViewType.setText(typeList.get(typeId).getName());
-        binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
+        initTypeDate();
 
         buttonsAmount.add(R.id.button_0);
         buttonsAmount.add(R.id.button_1);
@@ -109,26 +106,37 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         buttonsAmount.add(R.id.button_clear);
         buttonsAmount.add(R.id.button_delete);
 
-        for (Integer id : buttonsAmount) {
-            Button x = findViewById(id);
-            x.setOnClickListener(this);
-        }
-        binding.buttonConfirm.setOnClickListener(this);
-        binding.textViewDate.setOnClickListener(this);
+
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.toolbar_expand_income);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        radioGroup = findViewById(R.id.radioGroup_form);
+        radioGroup.check(formToId(form));
+
 
 
         recyclerView = binding.typeRecycleView;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new BillTypeAdapter(typeList, new OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                typeList.get(typeId).setChecked(false);
-                typeList.get(position).setChecked(true);
-                typeId = position;
-                binding.textViewType.setText(typeList.get(typeId).getName());
-                binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
-            }
-        }));
+        billTypeAdapter = new BillTypeAdapter(typeList, this);
+        recyclerView.setAdapter(billTypeAdapter);
+
+        initView();
+        initListener();
+    }
+
+    // Actionbar Button
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -159,20 +167,38 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void initTypeDate(int form) {
+    private void initTypeDate() {
+        typeId = TypeRes.getId(form, type);
+        typeList.clear();
         for (int i = 0; i < TypeRes.NAMES[form].length; ++i) {
-            if (TypeRes.NAMES[form][i].equals(type)) {
-                typeId = i;
-            }
             typeList.add(new TypeBean(TypeRes.NAMES[form][i], TypeRes.ICONS[form][i], TypeRes.ICONS_GRAY[form][i], i));
         }
         typeList.get(typeId).setChecked(true);
     }
 
+    private void initView() {
+        binding.textViewAmount.setText(decimalFormat.format(amount));
+        binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
+        binding.editTextNote.setText(note);
+        binding.textViewDate.setText(dateFormatDate.format(date));
+        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        binding.textViewType.setText(typeList.get(typeId).getName());
+        binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
+    }
+
+    private void initListener(){
+        for (Integer id : buttonsAmount) {
+            Button x = findViewById(id);
+            x.setOnClickListener(this);
+        }
+        binding.buttonConfirm.setOnClickListener(this);
+        binding.textViewDate.setOnClickListener(this);
+        radioGroup.setOnCheckedChangeListener(this);
+    }
 
     private void onConfirm() {
         note = binding.editTextNote.getText().toString();
-        type=typeList.get(typeId).getName();
+        type = typeList.get(typeId).getName();
 
         if (uuid.equals("")) {
             application.addBill(new Bill(amount, date, type, form, note));
@@ -254,5 +280,41 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
 
         binding.textViewAmount.setText(decimalFormat.format(amount));
+    }
+
+    private int formToId(int form) {
+        return form == 0 ? R.id.rb_expend : R.id.rb_income;
+    }
+
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        int formNew = 0;
+        switch (checkedId) {
+            case R.id.rb_expend:
+                formNew = 0;
+                break;
+            case R.id.rb_income:
+                formNew = 1;
+                break;
+        }
+
+        if (formNew != form) {
+            form = formNew;
+            initTypeDate();
+            billTypeAdapter.notifyDataSetChanged();
+            onItemClick(0);
+            binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
+        }
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        typeList.get(typeId).setChecked(false);
+        typeList.get(position).setChecked(true);
+        typeId = position;
+        binding.textViewType.setText(typeList.get(typeId).getName());
+        binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
     }
 }

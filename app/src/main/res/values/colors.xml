@@ -25,7 +25,7 @@
     <!--账单总览深色文字-->
     <color name="colorTextBillAllDark">#918f9c</color>
     <!--黑色文字-->
-    <color name="colorTextBlack">#3f2c51</color>
+    <color name="colorTextBlack">#111</color>
     <!--黑色浅色文字-->
     <color name="colorTextBlackLight">#7e7d86</color>
 

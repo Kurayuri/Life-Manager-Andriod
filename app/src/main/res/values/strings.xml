@@ -1,22 +1,40 @@
 <resources>
     <string name="app_name">Life Manager</string>
-    <string name="title_home">Home</string>
-    <string name="title_bills">Bills</string>
-    <string name="title_works">Works</string>
-    <string name="title_me">Me</string>
-    <string name="positive">OK</string>
-    <string name="negative">Cancel</string>
+    <!--    <string name="title_home">Home</string>-->
+    <!--    <string name="title_bills">Bills</string>-->
+    <!--    <string name="title_works">Works</string>-->
+    <!--    <string name="title_me">Me</string>-->
+    <!--    <string name="positive">OK</string>-->
+    <!--    <string name="negative">Cancel</string>-->
     <string name="amount_decimal_format">0.00</string>
     <string name="amount_max">1E18</string>
-    <string name="date_picker_title">Time</string>
-    <string name="numeric_keyboard_clear">Clear</string>
-    <string name="numeric_keyboard_delete">del</string>
-    <string name="numeric_keyboard_confirm">Confirm</string>
-    <string name="note_input_hint">Please add note</string>
-    <string name="audit_month_bill">Month bill</string>
-    <string name="delete_confirm_text">Delete?</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--    <string name="date_picker_title">Time</string>-->
+    <!--    <string name="numeric_keyboard_clear">Clear</string>-->
+    <!--    <string name="numeric_keyboard_delete">del</string>-->
+    <!--    <string name="numeric_keyboard_confirm">Confirm</string>-->
+    <!--    <string name="note_input_hint">Please add note</string>-->
+    <!--    <string name="audit_month_bill">Month bill</string>-->
+    <!--    <string name="delete_confirm_text">Delete?</string>-->
+    <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
     <string name="date_format_month">yyyy-MM</string>
     <string name="date_format_date">yyyy-MM-dd hh:mm:ss</string>
     <string name="date_format_time">MM-dd hh:mm</string>
+
+    <string name="expend">支出</string>
+    <string name="income">收入</string>
+
+    <string name="title_home">首页</string>
+    <string name="title_bills">账单</string>
+    <string name="title_works">事项</string>
+    <string name="title_me">我</string>
+    <string name="positive">确认</string>
+    <string name="negative">取消</string>
+    <string name="date_picker_title">事件</string>
+    <string name="numeric_keyboard_clear">清除</string>
+    <string name="numeric_keyboard_delete">删除</string>
+    <string name="numeric_keyboard_confirm">确认</string>
+    <string name="note_input_hint">备注：说点什么吧...</string>
+    <string name="audit_month_bill">月账单统计</string>
+    <string name="delete_confirm_text">确认删除？</string>
+    <string name="hello_blank_fragment">首页</string>
 </resources>

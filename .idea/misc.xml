@@ -6,6 +6,11 @@
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/conor_button_green.xml" value="0.4453125" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/indicator_bg.xml" value="0.4453125" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/layout_round_corner.xml" value="0.4203703703703704" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/radiobutton_right_select.xml" value="0.4473958333333333" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/radiobutton_text_select.xml" value="0.4473958333333333" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/selector_amount.xml" value="0.34010416666666665" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/selector_numeric_keyboard.xml" value="0.34010416666666665" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/drawable/selector_radiobutton_text.xml" value="0.34010416666666665" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_bill_edit.xml" value="0.33" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/activity_work_edit.xml" value="0.3307291666666667" />
@@ -16,6 +21,9 @@
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_billx.xml" value="0.21467391304347827" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_month.xml" value="0.1" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/item_type.xml" value="0.33" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/toolbar_bill_edit.xml" value="0.325" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/layout/toolbar_expand_income.xml" value="0.5" />
+        <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4265625" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4185185185185185" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.4185185185185185" />
       </map>

@@ -7,11 +7,13 @@
     tools:context=".ui.bills.BillEditActivity">
 
     <RelativeLayout
+
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:background="@color/white"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView_type"
@@ -28,9 +30,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/imageView_type"
+            android:text="@string/title_bills"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp"
-            android:text="@string/title_bills" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textView_amount"

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.constants.TypeRes;
+import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 
 import java.math.BigDecimal;
@@ -132,7 +134,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, BillEditActivity.class);
+                        Intent intent = new Intent(context, BillAuditActivity.class);
                         intent.putExtra("uuid",localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                         context.startActivity(intent);
                     }
@@ -181,13 +183,12 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate()));
             viewHolder.getTextViewType().setText(localDataSet.get(position).getType());
             viewHolder.getImageViewType().setImageResource(TypeRes.ICONS[form][TypeRes.getId(bill.getForm(),bill.getType())]);
+            viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(TypeRes.COLOR[bill.getForm()]));
             if (bill.getForm()==0){
                 viewHolder.getTextViewAmount().setText("-"+decimalFormat.format(bill.getAmount()));
-                viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor (R.color.colorTextRed));
             }
             else {
                 viewHolder.getTextViewAmount().setText("+"+decimalFormat.format(bill.getAmount()));
-                viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(R.color.colorTextBlue));
             }
         }
     }

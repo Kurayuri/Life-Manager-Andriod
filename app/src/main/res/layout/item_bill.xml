@@ -36,11 +36,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/imageView_type"
             android:text="@string/title_bills"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView_type"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,7 +48,6 @@
             android:id="@+id/textView_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="@string/date_format_time"
 
             android:textColor="@color/gray_c3"

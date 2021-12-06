@@ -1,7 +1,7 @@
 package com.trashparadise.lifemanager.ui.bills;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
-import com.trashparadise.lifemanager.Adapter.BillTypeAdapter;
+import com.trashparadise.lifemanager.adapter.BillTypeAdapter;
 import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
@@ -10,12 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +35,6 @@ import java.util.Locale;
 public class BillEditActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, BillTypeAdapter.OnItemClickListener {
     private ActivityBillEditBinding binding;
     private LifeManagerApplication application;
-    private RecyclerView recyclerView;
     private RadioGroup radioGroup;
     private BillTypeAdapter billTypeAdapter;
 
@@ -109,7 +106,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_expand_income);
+        actionBar.setCustomView(R.layout.actionbar_bill_form);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
         radioGroup = findViewById(R.id.radioGroup_form);
@@ -117,10 +114,9 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
 
 
-        recyclerView = binding.typeRecycleView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.typeRecycleView.setLayoutManager(new LinearLayoutManager(this));
         billTypeAdapter = new BillTypeAdapter(typeList, this);
-        recyclerView.setAdapter(billTypeAdapter);
+        binding.typeRecycleView.setAdapter(billTypeAdapter);
 
         initView();
         initListener();

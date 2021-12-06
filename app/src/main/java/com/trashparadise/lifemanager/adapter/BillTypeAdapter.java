@@ -1,4 +1,4 @@
-package com.trashparadise.lifemanager.Adapter;
+package com.trashparadise.lifemanager.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

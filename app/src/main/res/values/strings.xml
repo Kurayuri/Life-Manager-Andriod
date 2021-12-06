@@ -31,7 +31,7 @@
     <string name="negative">取消</string>
     <string name="date_picker_title">时间</string>
     <string name="numeric_keyboard_clear">清除</string>
-    <string name="numeric_keyboard_delete">删除</string>
+    <string name="numeric_keyboard_backspace">←</string>
     <string name="numeric_keyboard_confirm">确认</string>
     <string name="note_input_hint">备注：说点什么吧...</string>
     <string name="audit_month_bill">月账单统计</string>

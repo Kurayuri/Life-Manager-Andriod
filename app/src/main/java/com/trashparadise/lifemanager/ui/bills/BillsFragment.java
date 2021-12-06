@@ -11,15 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.constants.TypeRes;
 import com.trashparadise.lifemanager.databinding.FragmentBillsBinding;
 
 public class BillsFragment extends Fragment {
@@ -48,14 +45,14 @@ public class BillsFragment extends Fragment {
         binding = FragmentBillsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        billListFragment=new BillListFragment(form);
+        billListFragment=new BillListFragment(form,true);
 
         getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_billList, billListFragment).commit();
 
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_expand_income);
+        actionBar.setCustomView(R.layout.actionbar_bill_form);
         radioGroupForm = actionBar.getCustomView().findViewById(R.id.radioGroup_form);
 
         initListener();

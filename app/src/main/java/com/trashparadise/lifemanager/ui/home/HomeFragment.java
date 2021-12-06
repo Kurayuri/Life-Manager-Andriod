@@ -13,17 +13,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
+import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
+import com.trashparadise.lifemanager.ui.bills.BillListFragment;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
 public class HomeFragment extends Fragment{
 
     private FragmentHomeBinding binding;
     private AppCompatActivity activity;
+    private FragmentTransaction fragmentTransaction;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,8 +40,18 @@ public class HomeFragment extends Fragment{
         View root = binding.getRoot();
 
 
+        fragmentTransaction=getChildFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragmentContainer_chart,new BillAuditPieFragment());
+        fragmentTransaction.add(R.id.fragmentContainer_list,new BillListFragment());
+        fragmentTransaction.commit();
 
 
+
+
+        initListener();
+        return root;
+    }
+    private void initListener(){
         binding.floatingActionButtonNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,9 +67,6 @@ public class HomeFragment extends Fragment{
                 startActivity(intent);
             }
         });
-
-
-        return root;
     }
 
     @Override

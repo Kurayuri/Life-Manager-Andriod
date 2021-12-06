@@ -1,7 +1,6 @@
 package com.trashparadise.lifemanager.ui.works;
 
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.databinding.ActivityBillEditBinding;
 import com.trashparadise.lifemanager.databinding.ActivityWorkEditBinding;
 
 import androidx.appcompat.app.AppCompatActivity;

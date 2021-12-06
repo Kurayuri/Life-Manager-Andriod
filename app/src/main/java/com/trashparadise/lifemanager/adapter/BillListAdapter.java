@@ -1,11 +1,10 @@
-package com.trashparadise.lifemanager.Adapter;
+package com.trashparadise.lifemanager.adapter;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,8 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private SimpleDateFormat dateFormatMonth;
     private SimpleDateFormat dateFormatTime;
     private Integer form;
+    private Boolean auditOn;
+    private int itemBillLayout;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -77,9 +78,12 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     }
 
 
-    public BillListAdapter(Context context, Integer form) {
+    public BillListAdapter(Context context, Integer form,Boolean auditOn,Boolean slimOn) {
         this.form = form;
         this.context = context;
+        this.auditOn=auditOn;
+        itemBillLayout=slimOn?R.layout.item_bill_slim:R.layout.item_bill;
+
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         updateDataSet();
         decimalFormat = new DecimalFormat(context.getString(R.string.amount_decimal_format));
@@ -88,12 +92,53 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     }
 
 
+    public void callUpdateDataSet(Integer form){
+        this.form=form;
+        updateDataSet();
+    }
+
+    private void updateDataSet() {
+        ArrayList<Bill> allDataSet = application.getBillList();
+        localDataSet = new ArrayList<>();
+        if (form != -1) {
+            for (int i = 0; i < allDataSet.size(); ++i) {
+                if (allDataSet.get(i).getForm().equals(form)) {
+                    localDataSet.add(allDataSet.get(i));
+                }
+            }
+        } else {
+            localDataSet = allDataSet;
+        }
+
+        if (auditOn){
+            if (localDataSet.size() > 0) {
+                localDataSet.add(0, new Bill(new BigDecimal("0"), localDataSet.get(0).getDate(), "", -1, ""));
+            }
+
+            for (int i = 1; i < localDataSet.size(); ++i) {
+                Calendar pre = Calendar.getInstance();
+                pre.setTime(localDataSet.get(i - 1).getDate());
+                Calendar curr = Calendar.getInstance();
+                curr.setTime(localDataSet.get(i).getDate());
+                if (pre.get(Calendar.MONTH) != curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR) != curr.get(Calendar.YEAR)) {
+                    localDataSet.add(i, new Bill(new BigDecimal("0"), localDataSet.get(i).getDate(), "", -1, ""));
+                    i += 1;
+                }
+            }}
+        BillListAdapter.this.notifyDataSetChanged();
+    }
+
+    public boolean isAudit(int position) {
+        return localDataSet.get(position).getForm().equals(-1);
+    }
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = null;
         switch (viewType) {
             case 0:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_bill, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemBillLayout, viewGroup, false);
                 break;
             case 1:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_month, viewGroup, false);
@@ -146,44 +191,6 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         }
         return viewHolder;
 
-    }
-
-    public void callUpdateDataSet(Integer form){
-        this.form=form;
-        updateDataSet();
-    }
-    private void updateDataSet() {
-        ArrayList<Bill> allDataSet = application.getBillList();
-        localDataSet = new ArrayList<>();
-        if (form != -1) {
-            for (int i = 0; i < allDataSet.size(); ++i) {
-                if (allDataSet.get(i).getForm().equals(form)) {
-                    localDataSet.add(allDataSet.get(i));
-                }
-            }
-        } else {
-            localDataSet = allDataSet;
-        }
-
-        if (localDataSet.size() > 0) {
-            localDataSet.add(0, new Bill(new BigDecimal("0"), localDataSet.get(0).getDate(), "", -1, ""));
-        }
-
-        for (int i = 1; i < localDataSet.size(); ++i) {
-            Calendar pre = Calendar.getInstance();
-            pre.setTime(localDataSet.get(i - 1).getDate());
-            Calendar curr = Calendar.getInstance();
-            curr.setTime(localDataSet.get(i).getDate());
-            if (pre.get(Calendar.MONTH) != curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR) != curr.get(Calendar.YEAR)) {
-                localDataSet.add(i, new Bill(new BigDecimal("0"), localDataSet.get(i).getDate(), "", -1, ""));
-                i += 1;
-            }
-        }
-        BillListAdapter.this.notifyDataSetChanged();
-    }
-
-    public boolean isAudit(int position) {
-        return localDataSet.get(position).getForm().equals(-1);
     }
 
     @Override

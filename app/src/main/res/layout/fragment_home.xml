@@ -28,6 +28,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@android:drawable/ic_menu_edit"
+        app:backgroundTint="@color/colorFabBill"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,7 +40,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@android:drawable/ic_menu_manage"
-        app:backgroundTint="@android:color/holo_orange_dark"
+        app:backgroundTint="@color/colorFabWork"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

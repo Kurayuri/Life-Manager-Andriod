@@ -1,11 +1,9 @@
 package com.trashparadise.lifemanager;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -13,17 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.trashparadise.lifemanager.databinding.ActivityMainBinding;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        application.saveDate();
+        application.saveData();
         super.onPause();
     }
 }

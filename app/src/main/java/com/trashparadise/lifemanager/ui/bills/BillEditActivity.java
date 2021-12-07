@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +40,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
     private BillTypeAdapter billTypeAdapter;
 
     private BigDecimal amount;
-    private Date date;
+    private Calendar date;
     private String type;
     private String note;
     private String uuid;
@@ -76,12 +77,13 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
             note = new String("");
             form = 0;
             type = new String(TypeRes.NAMES[form][typeId]);
-            date = new Date();
+            date = Calendar.getInstance();
         } else {
             amount = new BigDecimal(bill.getAmount().toString());
             note = new String(bill.getNote());
             uuid = new String(bill.getUuid());
-            date = new Date(bill.getDate().getTime());
+            date = Calendar.getInstance();
+            date.setTime(bill.getDate().getTime());
             form = bill.getForm();
             type = bill.getType();
         }
@@ -136,7 +138,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.textViewAmount.setText(decimalFormat.format(amount));
         binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
         binding.editTextNote.setText(note);
-        binding.textViewDate.setText(dateFormatDate.format(date));
+        binding.textViewDate.setText(dateFormatDate.format(date.getTime()));
         binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         binding.textViewType.setText(typeList.get(typeId).getName());
         binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
@@ -175,15 +177,14 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
         dateTimeDialogFragment.startAtTimeView();
         dateTimeDialogFragment.set24HoursMode(true);
-        dateTimeDialogFragment.setDefaultDateTime(date);
+        dateTimeDialogFragment.setDefaultDateTime(date.getTime());
 
         dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Date newDate) {
-                date = newDate;
-                binding.textViewDate.setText(dateFormatDate.format(date));
+                date.setTime(newDate);
+                binding.textViewDate.setText(dateFormatDate.format(date.getTime()));
             }
-
             @Override
             public void onNegativeButtonClick(Date newDate) {
             }

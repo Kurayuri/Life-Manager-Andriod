@@ -5,12 +5,14 @@
     <application
         android:name=".LifeManagerApplication"
         android:allowBackup="true"
-
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
+        <activity
+            android:name=".ui.bills.BillCheckActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.bills.BillAuditActivity"
             android:exported="false" />

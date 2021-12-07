@@ -2,13 +2,14 @@ package com.trashparadise.lifemanager;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 
 public class Bill implements Comparable<Bill>, Serializable {
     private BigDecimal amount;
-    private Date date;
+    private Calendar date;
     private String type;
     private Integer form;
     private String note;
@@ -16,7 +17,7 @@ public class Bill implements Comparable<Bill>, Serializable {
 
 
 
-    public Bill(BigDecimal amount, Date date, String type, Integer form, String note) {
+    public Bill(BigDecimal amount, Calendar date, String type, Integer form, String note) {
         this.amount = amount;
         this.date = date;
         this.type = type;
@@ -54,11 +55,11 @@ public class Bill implements Comparable<Bill>, Serializable {
         this.amount = amount;
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 

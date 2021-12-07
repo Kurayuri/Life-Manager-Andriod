@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_f6"
     tools:context=".ui.bills.BillEditActivity">
 
     <RelativeLayout
@@ -11,7 +12,6 @@
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:background="@color/white"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -86,21 +86,27 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/date_format_time"
-            android:textColor="@color/green"
+            android:textColor="@color/colorTextTeal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/editText_note"
             />
+
         <EditText
             android:id="@+id/editText_note"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:ems="12"
-            android:gravity="top|start"
-            android:hint="@string/note_input_hint"
-            android:inputType="textMultiLine"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:background="@null"
+            android:layout_marginEnd="8dp"
+            android:ems="15"
+            android:gravity="top|start"
+            android:textSize="15sp"
+            android:hint="@string/note_input_hint"
+            android:textColorHint="@color/gray_c3"
+            android:inputType="textMultiLine"
             android:textCursorDrawable="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

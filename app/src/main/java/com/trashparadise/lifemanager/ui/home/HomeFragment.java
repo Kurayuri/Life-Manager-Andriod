@@ -24,6 +24,7 @@ import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class HomeFragment extends Fragment{
@@ -31,6 +32,8 @@ public class HomeFragment extends Fragment{
     private FragmentHomeBinding binding;
     private AppCompatActivity activity;
     private FragmentTransaction fragmentTransaction;
+    private BillAuditPieFragment billAuditPieFragment;
+    private BillListFragment billListFragment;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,13 +44,12 @@ public class HomeFragment extends Fragment{
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
+        billAuditPieFragment=new BillAuditPieFragment(Calendar.getInstance(),0);
+        billListFragment=new BillListFragment();
         fragmentTransaction=getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragmentContainer_chart,new BillAuditPieFragment(new Date(),0));
-        fragmentTransaction.add(R.id.fragmentContainer_list,new BillListFragment());
+        fragmentTransaction.add(R.id.fragmentContainer_chart,billAuditPieFragment);
+        fragmentTransaction.add(R.id.fragmentContainer_list,billListFragment);
         fragmentTransaction.commit();
-
-
 
 
         initListener();
@@ -69,6 +71,13 @@ public class HomeFragment extends Fragment{
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        billAuditPieFragment.callUpdateData();
+        billListFragment.updateDateSet(-1);
     }
 
     @Override

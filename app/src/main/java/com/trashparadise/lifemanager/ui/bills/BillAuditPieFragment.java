@@ -5,15 +5,19 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.trashparadise.lifemanager.Bill;
@@ -23,7 +27,11 @@ import com.trashparadise.lifemanager.databinding.FragmentBillAuditPieBinding;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,18 +41,15 @@ public class BillAuditPieFragment extends Fragment {
     private PieChart chart;
     private FragmentBillAuditPieBinding binding;
     private LifeManagerApplication application;
-    private Date date;
+    private Calendar date;
     private Integer form;
+    private SimpleDateFormat dateFormat;
 
-    String[] parties = new String[] {
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
-            "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
-            "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
-            "Party Y", "Party Z"};
 
-    public BillAuditPieFragment(Date date,Integer form){
+    public BillAuditPieFragment(Calendar date, Integer form){
         this.date=date;
         this.form=form;
+
     }
 
     @Override
@@ -53,19 +58,19 @@ public class BillAuditPieFragment extends Fragment {
         binding=FragmentBillAuditPieBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
         application=(LifeManagerApplication)getActivity().getApplication();
+        dateFormat = new SimpleDateFormat(getString(R.string.date_format_month));
 
         chart=binding.chart;
 
         {
-            chart.setUsePercentValues(true);
             chart.getDescription().setEnabled(false);
-            chart.setExtraOffsets(5, 10, 5, 5);
+            chart.setExtraOffsets(5, 0, 5, 5);
 
             chart.setDragDecelerationFrictionCoef(0.95f);
 
-//            chart.setCenterTextTypeface(tfLight);
-//            chart.setCenterText(generateCenterSpannableText());
-
+            chart.setCenterText(dateFormat.format(date.getTime()));
+            chart.setCenterTextSize(16);
+            chart.setCenterTextColor(getResources().getColor(R.color.colorTextTeal));
             chart.setDrawHoleEnabled(true);
             chart.setHoleColor(Color.WHITE);
 
@@ -82,35 +87,50 @@ public class BillAuditPieFragment extends Fragment {
             chart.setRotationEnabled(true);
             chart.setHighlightPerTapEnabled(true);
 
-            // chart.setUnit(" €");
-            // chart.setDrawUnitsInChart(true);
+            chart.setUsePercentValues(false);
+            chart.animateY(1400, Easing.EaseInOutQuad);
+            Legend l = chart.getLegend();
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+//            l.setOrientation(Legend.LegendOrientation.VERTICAL);
+            l.setDrawInside(false);
+            l.setXEntrySpace(7f);
+            l.setYEntrySpace(0f);
+            l.setYOffset(0f);
 
             // add a selection listener
 //            chart.setOnChartValueSelectedListener(this);
         }
 
-        updateData(4,10);
+        updateData();
 
         return view;
     }
 
-    private void updateData(int count, float range) {
-        Date date=new Date();
 
-        ArrayList<Bill> localDataSet=application.getBillList();
+    public void callUpdateData(){
+        updateData();
+    }
+
+    private void updateData() {
+
+        Calendar dateStart=Calendar.getInstance();
+        Calendar dateEnd=Calendar.getInstance();
+        dateStart.setTime(date.getTime());
+        dateStart.set(Calendar.DAY_OF_MONTH,1);
+        dateStart.set(Calendar.HOUR_OF_DAY, 0);
+        dateStart.set(Calendar.MINUTE, 0);
+        dateStart.set(Calendar.SECOND, 0);
+        dateStart.set(Calendar.MILLISECOND, 0);
+        dateEnd.setTime(dateStart.getTime());
+        dateEnd.add(Calendar.MONTH,1);
+
+        ArrayList<Bill> localDataSet=application.getBillList(dateStart,dateEnd,0);
         TreeMap<String, Float>  localDataSetAudit=new TreeMap<>();
         Float float0=new Float(0);
         for (Bill bill:localDataSet) {
             localDataSetAudit.put(bill.getType(),localDataSetAudit.getOrDefault(bill.getType(),float0)+bill.getAmount().floatValue());
         }
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-//        for (int i = 0; i < count ; i++) {
-//            entries.add(new PieEntry((float) ((Math.random() * range) + range / 5),
-//                    parties[i % parties.length],
-//                    getResources().getDrawable(R.drawable.ic_launcher_background)));
-//        }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         for (Map.Entry<String,Float> entry:localDataSetAudit.entrySet()) {
@@ -119,7 +139,7 @@ public class BillAuditPieFragment extends Fragment {
             entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
         }
 
-        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+        PieDataSet dataSet = new PieDataSet(entries, "");
 
         dataSet.setDrawIcons(false);
 
@@ -149,13 +169,20 @@ public class BillAuditPieFragment extends Fragment {
         colors.add(ColorTemplate.getHoloBlue());
 
         dataSet.setColors(colors);
-        //dataSet.setSelectionShift(0f);
+//        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setSelectionShift(1f);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        data.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                DecimalFormat decimalFormat=new DecimalFormat("0.00");
+                return decimalFormat.format(new BigDecimal(value));
+            }
+        });
         data.setValueTextSize(11f);
+//        data.setValueTextColor(Color.BLACK);
         data.setValueTextColor(Color.WHITE);
-//        data.setValueTypeface(tfLight);
         chart.setData(data);
 
         // undo all highlights

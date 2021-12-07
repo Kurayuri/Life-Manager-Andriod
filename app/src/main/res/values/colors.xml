@@ -12,11 +12,13 @@
     <color name="gray_da">#FFDADADA</color>
     <color name="gray_f6">#FFF6F6F6</color>
     <color name="gray_c3">#FFC3C3C3</color>
-    <drawable name="numeric_keyboard_unpressed">#FFFFFFFF</drawable>
+    <drawable name="numeric_keyboard_unpressed">#FFFDFDFD</drawable>
     <drawable name="numeric_keyboard_pressed">#FFAAAAAA</drawable>
     <color name="colorFabBill">#c9a7f6</color>
     <color name="colorFabWork">#ffa35c</color>
 
+
+    <color name="colorTextTeal">#19a3a2</color>
     <color name="colorPrimary">#3f3c51</color>
     <color name="colorPrimaryDark">#3f3c51</color>
     <color name="colorAccent">#3f3c51</color>
@@ -48,6 +50,8 @@
     <!--红色文字-->
     <color name="colorTextRed">#ff5363</color>
     <color name="colorTextBlue">#5eb9ff</color>
+
+    <color name="colorTextGrayBlue">#627292</color>
 
     <!--viewpager文字灰色-->
     <color name="colorTextPagerGray">#949494</color>

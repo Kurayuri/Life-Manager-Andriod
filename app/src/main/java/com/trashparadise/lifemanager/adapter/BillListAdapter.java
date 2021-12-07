@@ -20,6 +20,7 @@ import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.constants.TypeRes;
 import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
+import com.trashparadise.lifemanager.ui.bills.BillCheckActivity;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private SimpleDateFormat dateFormatTime;
     private Integer form;
     private Boolean auditOn;
+    private Boolean slimOn;
     private int itemBillLayout;
 
 
@@ -78,11 +80,12 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     }
 
 
-    public BillListAdapter(Context context, Integer form,Boolean auditOn,Boolean slimOn) {
+    public BillListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn) {
         this.form = form;
         this.context = context;
-        this.auditOn=auditOn;
-        itemBillLayout=slimOn?R.layout.item_bill_slim:R.layout.item_bill;
+        this.auditOn = auditOn;
+        this.slimOn = slimOn;
+        itemBillLayout = slimOn ? R.layout.item_bill_slim : R.layout.item_bill;
 
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         updateDataSet();
@@ -92,8 +95,8 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     }
 
 
-    public void callUpdateDataSet(Integer form){
-        this.form=form;
+    public void callUpdateDataSet(Integer form) {
+        this.form = form;
         updateDataSet();
     }
 
@@ -110,21 +113,22 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             localDataSet = allDataSet;
         }
 
-        if (auditOn){
+        if (auditOn) {
             if (localDataSet.size() > 0) {
                 localDataSet.add(0, new Bill(new BigDecimal("0"), localDataSet.get(0).getDate(), "", -1, ""));
             }
 
             for (int i = 1; i < localDataSet.size(); ++i) {
                 Calendar pre = Calendar.getInstance();
-                pre.setTime(localDataSet.get(i - 1).getDate());
+                pre.setTime(localDataSet.get(i - 1).getDate().getTime());
                 Calendar curr = Calendar.getInstance();
-                curr.setTime(localDataSet.get(i).getDate());
+                curr.setTime(localDataSet.get(i).getDate().getTime());
                 if (pre.get(Calendar.MONTH) != curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR) != curr.get(Calendar.YEAR)) {
                     localDataSet.add(i, new Bill(new BigDecimal("0"), localDataSet.get(i).getDate(), "", -1, ""));
                     i += 1;
                 }
-            }}
+            }
+        }
         BillListAdapter.this.notifyDataSetChanged();
     }
 
@@ -152,38 +156,40 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, BillEditActivity.class);
+                        Intent intent = new Intent(context, BillCheckActivity.class);
                         intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                         context.startActivity(intent);
                     }
                 });
-                viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setMessage(R.string.delete_confirm_text)
-                                .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        application.delBill(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
-                                        updateDataSet();
-                                    }
-                                })
-                                .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                    }
-                                });
-                        Dialog dialogFragment = builder.create();
-                        dialogFragment.show();
-                        return false;
-                    }
-                });
+                if (!slimOn) {
+                    viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setMessage(R.string.delete_confirm_text)
+                                    .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            application.delBill(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                                            updateDataSet();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    });
+                            Dialog dialogFragment = builder.create();
+                            dialogFragment.show();
+                            return false;
+                        }
+                    });
+                }
                 break;
             case 1:
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, BillAuditActivity.class);
-                        intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                        intent.putExtra("date", localDataSet.get(viewHolder.getBindingAdapterPosition()).getDate().getTime().getTime());
                         context.startActivity(intent);
                     }
                 });
@@ -202,10 +208,10 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Bill bill = localDataSet.get(position);
         if (isAudit(position)) {
-            viewHolder.getTextViewDate().setText(dateFormatMonth.format(bill.getDate()));
+            viewHolder.getTextViewDate().setText(dateFormatMonth.format(bill.getDate().getTime()));
         } else {
             Integer form = bill.getForm();
-            viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate()));
+            viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate().getTime()));
             viewHolder.getTextViewType().setText(localDataSet.get(position).getType());
             viewHolder.getImageViewType().setImageResource(TypeRes.ICONS[form][TypeRes.getId(bill.getForm(), bill.getType())]);
             viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(TypeRes.COLOR[bill.getForm()]));

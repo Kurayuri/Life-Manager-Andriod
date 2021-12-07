@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -38,7 +39,7 @@ public class LifeManagerApplication extends Application {
         }
     }
 
-    public void saveDate() {
+    public void saveData() {
         ObjectOutput out;
         Log.e("User Date Operation", "Write");
         try {
@@ -77,10 +78,10 @@ public class LifeManagerApplication extends Application {
         billList.add(billNew);
     }
 
-    public ArrayList<Bill> getBillList(Date dateStart, Date dateEnd, Integer form) {
+    public ArrayList<Bill> getBillList(Calendar dateStart, Calendar dateEnd, Integer form) {
         ArrayList<Bill> billFiltered = new ArrayList<>();
         for (Bill bill : billList) {
-            if (bill.getDate().compareTo(dateStart) >= 0 && bill.getDate().compareTo(dateEnd) <= 0 &&
+            if (bill.getDate().compareTo(dateStart) >= 0 && bill.getDate().compareTo(dateEnd) < 0 &&
                     (bill.getForm().equals(form)||form.equals(-1))) {
                 billFiltered.add(bill);
             }

@@ -24,6 +24,8 @@ import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
+import java.util.Date;
+
 public class HomeFragment extends Fragment{
 
     private FragmentHomeBinding binding;
@@ -41,7 +43,7 @@ public class HomeFragment extends Fragment{
 
 
         fragmentTransaction=getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragmentContainer_chart,new BillAuditPieFragment());
+        fragmentTransaction.add(R.id.fragmentContainer_chart,new BillAuditPieFragment(new Date(),0));
         fragmentTransaction.add(R.id.fragmentContainer_list,new BillListFragment());
         fragmentTransaction.commit();
 

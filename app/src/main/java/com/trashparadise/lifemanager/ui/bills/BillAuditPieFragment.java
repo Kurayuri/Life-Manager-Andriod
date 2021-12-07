@@ -16,27 +16,43 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.trashparadise.lifemanager.Bill;
+import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.databinding.FragmentBillAuditPieBinding;
-import com.trashparadise.lifemanager.databinding.FragmentBillListBinding;
 
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class BillAuditPieFragment extends Fragment {
     private PieChart chart;
     private FragmentBillAuditPieBinding binding;
+    private LifeManagerApplication application;
+    private Date date;
+    private Integer form;
+
     String[] parties = new String[] {
             "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
             "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
             "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
             "Party Y", "Party Z"};
 
+    public BillAuditPieFragment(Date date,Integer form){
+        this.date=date;
+        this.form=form;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding=FragmentBillAuditPieBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
+        application=(LifeManagerApplication)getActivity().getApplication();
 
         chart=binding.chart;
 
@@ -73,20 +89,34 @@ public class BillAuditPieFragment extends Fragment {
 //            chart.setOnChartValueSelectedListener(this);
         }
 
-        setData(4,10);
+        updateData(4,10);
 
         return view;
     }
 
-    private void setData(int count, float range) {
-        ArrayList<PieEntry> entries = new ArrayList<>();
+    private void updateData(int count, float range) {
+        Date date=new Date();
+
+        ArrayList<Bill> localDataSet=application.getBillList();
+        TreeMap<String, Float>  localDataSetAudit=new TreeMap<>();
+        Float float0=new Float(0);
+        for (Bill bill:localDataSet) {
+            localDataSetAudit.put(bill.getType(),localDataSetAudit.getOrDefault(bill.getType(),float0)+bill.getAmount().floatValue());
+        }
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (int i = 0; i < count ; i++) {
-            entries.add(new PieEntry((float) ((Math.random() * range) + range / 5),
-                    parties[i % parties.length],
-                    getResources().getDrawable(R.drawable.ic_launcher_background)));
+//        for (int i = 0; i < count ; i++) {
+//            entries.add(new PieEntry((float) ((Math.random() * range) + range / 5),
+//                    parties[i % parties.length],
+//                    getResources().getDrawable(R.drawable.ic_launcher_background)));
+//        }
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        for (Map.Entry<String,Float> entry:localDataSetAudit.entrySet()) {
+            if (entry.getValue().equals(float0))
+                continue;
+            entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "Election Results");

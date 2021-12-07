@@ -286,7 +286,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_numeric_keyboard"
                 android:text="@string/numeric_keyboard_backspace"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textColor="@android:color/black"
                 app:backgroundTint="@null"
 

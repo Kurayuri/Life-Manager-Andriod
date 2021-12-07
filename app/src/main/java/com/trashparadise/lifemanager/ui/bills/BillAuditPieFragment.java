@@ -44,12 +44,16 @@ public class BillAuditPieFragment extends Fragment {
     private Calendar date;
     private Integer form;
     private SimpleDateFormat dateFormat;
+    private Legend legend;
 
 
     public BillAuditPieFragment(Calendar date, Integer form){
         this.date=date;
         this.form=form;
-
+    }
+    public BillAuditPieFragment(){
+        this.date=Calendar.getInstance();
+        this.form=-1;
     }
 
     @Override
@@ -64,13 +68,13 @@ public class BillAuditPieFragment extends Fragment {
 
         {
             chart.getDescription().setEnabled(false);
-            chart.setExtraOffsets(5, 0, 5, 5);
+            chart.setExtraOffsets(5, 5, 5, 5);
 
             chart.setDragDecelerationFrictionCoef(0.95f);
 
             chart.setCenterText(dateFormat.format(date.getTime()));
             chart.setCenterTextSize(16);
-            chart.setCenterTextColor(getResources().getColor(R.color.colorTextTeal));
+            chart.setCenterTextColor(getResources().getColor(R.color.colorPrimary));
             chart.setDrawHoleEnabled(true);
             chart.setHoleColor(Color.WHITE);
 
@@ -89,14 +93,14 @@ public class BillAuditPieFragment extends Fragment {
 
             chart.setUsePercentValues(false);
 //            chart.animateY(1400, Easing.EaseInOutQuad);
-            Legend l = chart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-//            l.setOrientation(Legend.LegendOrientation.VERTICAL);
-            l.setDrawInside(false);
-            l.setXEntrySpace(7f);
-            l.setYEntrySpace(0f);
-            l.setYOffset(0f);
+            legend = chart.getLegend();
+            legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+            legend.setDrawInside(true);
+            legend.setXEntrySpace(7f);
+            legend.setYEntrySpace(0f);
+            legend.setYOffset(0f);
 
             // add a selection listener
 //            chart.setOnChartValueSelectedListener(this);
@@ -133,10 +137,20 @@ public class BillAuditPieFragment extends Fragment {
         }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
+
         for (Map.Entry<String,Float> entry:localDataSetAudit.entrySet()) {
             if (entry.getValue().equals(float0))
                 continue;
             entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
+        }
+
+        // if entries is empty
+        legend.setEnabled(true);
+        chart.setCenterText(dateFormat.format(date.getTime()));
+        if (entries.size()==0){
+            entries.add(new PieEntry((float) 0.001,""));
+            legend.setEnabled(false);
+            chart.setCenterText(chart.getCenterText()+"\n"+getString(R.string.empty));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -145,7 +159,6 @@ public class BillAuditPieFragment extends Fragment {
 
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
 
         // add a lot of colors
 
@@ -170,7 +183,7 @@ public class BillAuditPieFragment extends Fragment {
 
         dataSet.setColors(colors);
 //        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        dataSet.setSelectionShift(1f);
+        dataSet.setSelectionShift(5f);
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new ValueFormatter() {

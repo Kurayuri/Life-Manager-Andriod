@@ -99,8 +99,9 @@
 
     <Button
         android:id="@+id/button_edit"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/selector_primary_color_button"
         android:backgroundTint="@null"
+        app:backgroundTint="@null"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         app:layout_constraintHorizontal_weight="1"
@@ -111,9 +112,10 @@
 
     <Button
         android:id="@+id/button_delete"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/selector_primary_color_button"
         app:layout_constraintHorizontal_weight="1"
         android:backgroundTint="@null"
+        app:backgroundTint="@null"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         app:layout_constraintStart_toEndOf="@id/button_edit"

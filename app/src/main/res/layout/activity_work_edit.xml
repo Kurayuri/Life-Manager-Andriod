@@ -7,134 +7,283 @@
     android:background="@color/gray_f6"
     tools:context=".ui.works.WorkEditActivity">
 
-    <TextView
-        android:id="@+id/textView_month"
-        android:layout_width="wrap_content"
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_month"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:hint="@string/amount_decimal_format"-->
+    <!--        android:text="@string/amount_max" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_week"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="@string/amount_decimal_format"-->
+    <!--        android:text="@string/amount_max"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/textView_month" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_day"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="@string/amount_decimal_format"-->
+    <!--        android:text="@string/amount_max"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/textView_week" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_hour"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="@string/amount_decimal_format"-->
+    <!--        android:text="@string/amount_max"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/textView_day" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView_minute"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="@string/amount_decimal_format"-->
+    <!--        android:text="@string/amount_max"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/textView_hour" />-->
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <EditText
+            android:id="@+id/editText_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="left|center_vertical"
+            android:textColorHint="@color/colorTextHint"
+            android:hint="@string/work_title_input_hint"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@id/textView_amount"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textView_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:gravity="right|center"
+            android:text="+"
+            android:textColor="@color/colorTextRed"
+            android:textColorHint="@color/colorTextRed"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/constraint_layout_deadline"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:hint="@string/amount_decimal_format"
-        android:text="@string/amount_max" />
+        app:layout_constraintTop_toBottomOf="@id/constraint_layout_title">
 
-    <TextView
-        android:id="@+id/textView_week"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textView_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/date_format_date"
+            android:textColor="@color/colorTextTeal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/button_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/today"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@+id/button_week"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_date" />
+
+        <Button
+            android:id="@+id/button_week"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/this_week"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@+id/button_month"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/button_day"
+            app:layout_constraintTop_toBottomOf="@+id/textView_date" />
+
+        <Button
+
+            android:id="@+id/button_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/this_month"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@+id/button_year"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/button_week"
+            app:layout_constraintTop_toBottomOf="@+id/textView_date" />
+
+        <Button
+            android:id="@+id/button_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/this_year"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/button_month"
+            app:layout_constraintTop_toBottomOf="@+id/textView_date" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraint_layout_deadline" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout_repeat"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/amount_decimal_format"
-        android:text="@string/amount_max"
-        app:layout_constraintStart_toEndOf="@id/textView_month" />
-    <TextView
-        android:id="@+id/textView_day"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/amount_decimal_format"
-        android:text="@string/amount_max"
-        app:layout_constraintStart_toEndOf="@id/textView_week" />
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraint_layout_deadline">
 
-    <TextView
-        android:id="@+id/textView_hour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/amount_decimal_format"
-        android:text="@string/amount_max"
-        app:layout_constraintStart_toEndOf="@id/textView_day" />
-    <TextView
-        android:id="@+id/textView_minute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/amount_decimal_format"
-        android:text="@string/amount_max"
-        app:layout_constraintStart_toEndOf="@id/textView_hour" />
+        <TextView
+            android:id="@+id/textView_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/repeat_policy"
+            android:textColor="@color/colorTextTeal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
 
+        <Button
+            android:id="@+id/button_every_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/every_day"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@+id/button_every_week"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_repeat" />
 
-    <!--    <RelativeLayout-->
+        <Button
+            android:id="@+id/button_every_week"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/every_week"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@+id/button_every_month"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/button_every_day"
+            app:layout_constraintTop_toBottomOf="@+id/textView_repeat" />
 
-    <!--        android:id="@+id/relative_layout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="58dp"-->
-    <!--        android:gravity="center_vertical"-->
-    <!--        app:layout_constraintTop_toTopOf="parent">-->
+        <Button
 
-    <!--        <ImageView-->
-    <!--            android:id="@+id/imageView_type"-->
-    <!--            android:layout_width="38dp"-->
-    <!--            android:layout_height="38dp"-->
-    <!--            android:layout_centerVertical="true"-->
-    <!--            android:layout_marginLeft="15dp"-->
-    <!--            android:src="@drawable/classify_eat" />-->
+            android:id="@+id/button_every_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/every_month"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@+id/button_every_year"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/button_every_week"
+            app:layout_constraintTop_toBottomOf="@+id/textView_repeat" />
 
-    <!--        <TextView-->
-    <!--            android:id="@+id/textView_type"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_centerVertical="true"-->
-    <!--            android:layout_marginLeft="15dp"-->
-    <!--            android:layout_toRightOf="@id/imageView_type"-->
-    <!--            android:text="@string/title_bills"-->
-    <!--            android:textColor="@color/colorPrimary"-->
-    <!--            android:textSize="18sp" />-->
+        <Button
+            android:id="@+id/button_every_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_deadline"
+            android:text="@string/every_year"
+            android:textColor="@color/colorTextBlue"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/button_every_month"
+            app:layout_constraintTop_toBottomOf="@+id/textView_repeat" />
 
-    <!--        <TextView-->
-    <!--            android:id="@+id/textView_amount"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_alignParentRight="true"-->
-    <!--            android:layout_centerVertical="true"-->
-    <!--            android:layout_marginRight="15dp"-->
-    <!--            android:background="@null"-->
-    <!--            android:gravity="right"-->
-    <!--            android:text="@string/amount_decimal_format"-->
-    <!--            android:textColor="@color/colorTextRed"-->
-    <!--            android:textColorHint="@color/colorTextRed"-->
-    <!--            android:textSize="20sp" />-->
-    <!--    </RelativeLayout>-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraint_layout_repeat" />
 
-    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-    <!--        android:id="@+id/constraint_layout_right"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_weight="3"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/relative_layout"-->
-    <!--        app:layout_constraintVertical_bias="0.0">-->
+    <EditText
+        android:id="@+id/editText_note"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:ems="15"
+        android:gravity="top|start"
+        android:hint="@string/work_note_input_hint"
+        android:inputType="textMultiLine"
+        android:textColorHint="@color/colorTextHint"
+        android:textCursorDrawable="@null"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraint_layout_repeat" />
 
-    <!--        <TextView-->
-    <!--            android:id="@+id/textView_date"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:gravity="center"-->
-    <!--            android:text="@string/date_format_time"-->
-    <!--            android:textColor="@color/colorTextTeal"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toTopOf="parent"-->
-    <!--            app:layout_constraintBottom_toTopOf="@id/editText_note"-->
-    <!--            />-->
-
-    <!--        <EditText-->
-    <!--            android:id="@+id/editText_note"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="0dp"-->
-    <!--            android:focusable="false"-->
-    <!--            android:layout_marginStart="8dp"-->
-    <!--            android:layout_marginTop="16dp"-->
-    <!--            android:background="@null"-->
-    <!--            android:layout_marginEnd="8dp"-->
-    <!--            android:ems="15"-->
-    <!--            android:gravity="top|start"-->
-    <!--            android:textSize="15sp"-->
-    <!--            android:hint="@string/note_none_hint"-->
-    <!--            android:textColorHint="@color/gray_c3"-->
-    <!--            android:inputType="textMultiLine"-->
-    <!--            android:textCursorDrawable="@null"-->
-    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@id/textView_date" />-->
-
-    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    <Button
+        android:id="@+id/button_confirm"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@drawable/selector_primary_color_button"
+        android:text="@string/numeric_keyboard_confirm"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

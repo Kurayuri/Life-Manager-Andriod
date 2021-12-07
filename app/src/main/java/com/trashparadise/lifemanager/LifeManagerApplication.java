@@ -17,6 +17,7 @@ import java.util.TreeSet;
 
 public class LifeManagerApplication extends Application {
     private TreeSet<Bill> billList;
+    private TreeSet<Work> workList;
 
     @Override
 
@@ -33,8 +34,13 @@ public class LifeManagerApplication extends Application {
             billList = (TreeSet<Bill>) in.readObject();
             in.close();
             Log.e("billList.data", billList.size() + "");
+            in = new ObjectInputStream(openFileInput("workList.data"));
+            workList = (TreeSet<Work>) in.readObject();
+            in.close();
+            Log.e("workList.data", workList.size() + "");
         } catch (Exception e) {
             billList = new TreeSet<>();
+            workList = new TreeSet<>();
             Log.e("Read Error", e.toString());
         }
     }
@@ -46,6 +52,10 @@ public class LifeManagerApplication extends Application {
             out = new ObjectOutputStream(openFileOutput("billList.data", MODE_PRIVATE));
             out.writeObject(billList);
             Log.e("billList.data", billList.size() + "");
+            out.close();
+            out = new ObjectOutputStream(openFileOutput("workList.data", MODE_PRIVATE));
+            out.writeObject(workList);
+            Log.e("workList.data", workList.size() + "");
             out.close();
         } catch (Exception e) {
             Log.e("Write Error", e.toString());
@@ -73,8 +83,8 @@ public class LifeManagerApplication extends Application {
         return null;
     }
 
-    public void setBill(Bill bill, Bill billNew) {
-        billList.remove(bill);
+    public void setBill(String uuid, Bill billNew) {
+        delBill(uuid);
         billList.add(billNew);
     }
 
@@ -92,5 +102,47 @@ public class LifeManagerApplication extends Application {
     public ArrayList<Bill> getBillList() {
         return new ArrayList<Bill>(billList);
     }
+
+    public void delWork(String uuid) {
+        Work work = getWork(uuid);
+        if (work != null)
+            workList.remove(work);
+    }
+
+    public void addWork(Work work) {
+        workList.add(work);
+    }
+
+    public Work getWork(String uuid) {
+        if (uuid == null || uuid.equals(""))
+            return null;
+        for (Work work : workList) {
+            if (work.getUuid().equals(uuid)) {
+                return work;
+            }
+        }
+        return null;
+    }
+
+    public void setWork(String uuid, Work workNew) {
+        delWork(uuid);
+        workList.add(workNew);
+    }
+
+    public ArrayList<Work> getWorkList(Calendar dateStart, Calendar dateEnd, Integer form) {
+        ArrayList<Work> workFiltered = new ArrayList<>();
+        for (Work work : workList) {
+            if (work.getDate().compareTo(dateStart) >= 0 && work.getDate().compareTo(dateEnd) < 0 &&
+                    (work.getForm().equals(form)||form.equals(-1))) {
+                workFiltered.add(work);
+            }
+        }
+        return workFiltered;
+    }
+
+    public ArrayList<Work> getWorkList() {
+        return new ArrayList<Work>(workList);
+    }
+
 
 }

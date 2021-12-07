@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,13 +26,13 @@
             android:layout_centerVertical="true"
 
             android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/classify_eat"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView_type"
+            android:id="@+id/textView_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -48,27 +49,59 @@
             android:id="@+id/textView_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:text="@string/date_format_time"
 
-            android:textColor="@color/gray_c3"
-            android:textSize="12dp"
-            app:layout_constraintStart_toStartOf="@+id/textView_type"
-            app:layout_constraintTop_toBottomOf="@+id/textView_type" />
+            android:textColor="@color/colorTextRed"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_repeat" />
 
         <TextView
-            android:id="@+id/textView_amount"
+            android:id="@+id/textView_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
             android:maxLines="1"
-            android:textColor="@color/colorTextRed"
+            android:text="@string/repeat_policy"
+            android:textColor="@color/colorTextTeal"
             android:textSize="16sp"
-            android:text="@string/amount_decimal_format"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView_title"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <TextView
+            android:id="@+id/textView_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/work_note_input_hint"
+            android:textColor="@color/colorTextHint"
+            app:layout_constraintTop_toBottomOf="@id/textView_date" />
+
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/editText_note"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_marginStart="8dp"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:layout_marginEnd="8dp"-->
+        <!--            android:background="@null"-->
+        <!--            android:ems="15"-->
+        <!--            android:gravity="top|start"-->
+        <!--            android:hint="@string/work_note_input_hint"-->
+        <!--            android:inputType="textMultiLine"-->
+        <!--            android:textColorHint="@color/colorTextHint"-->
+        <!--            android:textCursorDrawable="@null"-->
+        <!--            android:textSize="15sp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/constraint_layout_repeat" />-->
+        <!--            />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

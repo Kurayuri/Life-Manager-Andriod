@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="44dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
         android:background="@drawable/shape_round_corner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +18,8 @@
 
         <ImageView
             android:id="@+id/imageView_type"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerVertical="true"
 
             android:layout_marginStart="16dp"
@@ -36,11 +34,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
             android:layout_toRightOf="@id/imageView_type"
+            android:layout_marginTop="3dp"
             android:text="@string/title_bills"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/imageView_type"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,11 +46,9 @@
             android:id="@+id/textView_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:text="@string/date_format_time"
-
+            android:textSize="10sp"
             android:textColor="@color/gray_c3"
-            android:textSize="12dp"
             app:layout_constraintStart_toStartOf="@+id/textView_type"
             app:layout_constraintTop_toBottomOf="@+id/textView_type" />
 

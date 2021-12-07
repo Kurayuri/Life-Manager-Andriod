@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,45 +16,50 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.trashparadise.lifemanager.Bill;
+import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.constants.TypeRes;
-import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
-import com.trashparadise.lifemanager.ui.bills.BillCheckActivity;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
+
+import com.trashparadise.lifemanager.constants.RepeatRes;
+import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHolder> {
-    private ArrayList<Bill> localDataSet;
+public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHolder> {
+    private ArrayList<Work> localDataSet;
     private Context context;
     private LifeManagerApplication application;
-    private DecimalFormat decimalFormat;
     private SimpleDateFormat dateFormatMonth;
     private SimpleDateFormat dateFormatTime;
     private Integer form;
     private Boolean auditOn;
     private Boolean slimOn;
-    private int itemBillLayout;
+    private int itemWorkLayout;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ConstraintLayout layout;
         private final TextView textViewDate;
-        private final TextView textViewAmount;
-        private final TextView textViewType;
+        private final TextView textViewNote;
+        private final TextView textViewTitle;
+        private final TextView textViewRepeat;
         private final ImageView imageViewType;
+
+        public TextView getTextViewRepeat() {
+            return textViewRepeat;
+        }
 
         public ViewHolder(View view) {
             super(view);
             layout = (ConstraintLayout) view.findViewById(R.id.layout);
             textViewDate = (TextView) view.findViewById(R.id.textView_date);
-            textViewAmount = (TextView) view.findViewById(R.id.textView_amount);
-            textViewType = (TextView) view.findViewById(R.id.textView_type);
+            textViewNote = (TextView) view.findViewById(R.id.textView_amount);
+            textViewTitle = (TextView) view.findViewById(R.id.textView_title);
+            textViewRepeat = (TextView) view.findViewById(R.id.textView_repeat);
+
             imageViewType = (ImageView) view.findViewById(R.id.imageView_type);
         }
 
@@ -61,8 +67,8 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             return layout;
         }
 
-        public TextView getTextViewType() {
-            return textViewType;
+        public TextView getTextViewTitle() {
+            return textViewTitle;
         }
 
         public ImageView getImageViewType() {
@@ -73,22 +79,21 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             return textViewDate;
         }
 
-        public TextView getTextViewAmount() {
-            return textViewAmount;
+        public TextView getTextViewNote() {
+            return textViewNote;
         }
     }
 
 
-    public BillListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn) {
+    public WorkListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn) {
         this.form = form;
         this.context = context;
         this.auditOn = auditOn;
         this.slimOn = slimOn;
-        itemBillLayout = slimOn ? R.layout.item_bill_slim : R.layout.item_bill;
+        itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
 
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         updateDataSet();
-        decimalFormat = new DecimalFormat(context.getString(R.string.amount_decimal_format));
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
     }
@@ -100,7 +105,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     }
 
     private void updateDataSet() {
-        ArrayList<Bill> allDataSet = application.getBillList();
+        ArrayList<Work> allDataSet = application.getWorkList();
         localDataSet = new ArrayList<>();
         if (form != -1) {
             for (int i = 0; i < allDataSet.size(); ++i) {
@@ -114,7 +119,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
 
         if (auditOn) {
             if (localDataSet.size() > 0) {
-                localDataSet.add(0, new Bill(new BigDecimal("0"), localDataSet.get(0).getDate(), "", -1, ""));
+                localDataSet.add(0, new Work("", localDataSet.get(0).getDate(), 0, -1, ""));
             }
 
             for (int i = 1; i < localDataSet.size(); ++i) {
@@ -123,12 +128,12 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 Calendar curr = Calendar.getInstance();
                 curr.setTime(localDataSet.get(i).getDate().getTime());
                 if (pre.get(Calendar.MONTH) != curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR) != curr.get(Calendar.YEAR)) {
-                    localDataSet.add(i, new Bill(new BigDecimal("0"), localDataSet.get(i).getDate(), "", -1, ""));
+                    localDataSet.add(i, new Work("", localDataSet.get(0).getDate(), 0, -1, ""));
                     i += 1;
                 }
             }
         }
-        BillListAdapter.this.notifyDataSetChanged();
+        WorkListAdapter.this.notifyDataSetChanged();
     }
 
     public boolean isAudit(int position) {
@@ -141,7 +146,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         View view = null;
         switch (viewType) {
             case 0:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemBillLayout, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemWorkLayout, viewGroup, false);
                 break;
             case 1:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_month, viewGroup, false);
@@ -155,7 +160,8 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, BillCheckActivity.class);
+//                        Intent intent = new Intent(context, WorkCheckActivity.class);
+                        Intent intent = new Intent(context, WorkEditActivity.class);
                         intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                         context.startActivity(intent);
                     }
@@ -168,7 +174,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                             builder.setMessage(R.string.delete_confirm_text)
                                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            application.delBill(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                                            application.delWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                                             updateDataSet();
                                         }
                                     })
@@ -187,8 +193,9 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, BillAuditActivity.class);
+                        Intent intent = new Intent(context, WorkEditActivity.class);
                         intent.putExtra("date", localDataSet.get(viewHolder.getBindingAdapterPosition()).getDate().getTime().getTime());
+                        intent.putExtra("uuid","");
                         context.startActivity(intent);
                     }
                 });
@@ -205,20 +212,17 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Bill bill = localDataSet.get(position);
+        Work work = localDataSet.get(position);
+//        Log.e("get",RepeatRes.getStringId(work.getRepeat())+"sad"+work.getRepeat());
         if (isAudit(position)) {
-            viewHolder.getTextViewDate().setText(dateFormatMonth.format(bill.getDate().getTime()));
+            viewHolder.getTextViewDate().setText(dateFormatMonth.format(work.getDate().getTime()));
         } else {
-            Integer form = bill.getForm();
-            viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate().getTime()));
-            viewHolder.getTextViewType().setText(localDataSet.get(position).getType());
-            viewHolder.getImageViewType().setImageResource(TypeRes.ICONS[form][TypeRes.getId(bill.getForm(), bill.getType())]);
-            viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(TypeRes.COLOR[bill.getForm()]));
-            if (bill.getForm() == 0) {
-                viewHolder.getTextViewAmount().setText("-" + decimalFormat.format(bill.getAmount()));
-            } else {
-                viewHolder.getTextViewAmount().setText("+" + decimalFormat.format(bill.getAmount()));
-            }
+            Integer form = work.getForm();
+            viewHolder.getTextViewDate().setText(dateFormatTime.format(work.getDate().getTime()));
+            viewHolder.getTextViewTitle().setText(work.getTitle());
+
+            viewHolder.getTextViewRepeat().setText(application.getResources().getString(RepeatRes.getStringId(work.getRepeat())));
+            viewHolder.getTextViewDate().setTextColor(application.getResources().getColor(form==0?R.color.colorTextRed:R.color.colorTextBlue));
         }
     }
 

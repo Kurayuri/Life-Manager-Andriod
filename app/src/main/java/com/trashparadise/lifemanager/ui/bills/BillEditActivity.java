@@ -59,17 +59,18 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // init
         super.onCreate(savedInstanceState);
         binding = ActivityBillEditBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
         application = (LifeManagerApplication) this.getApplication();
         Intent intent = getIntent();
-
         decimalFormat = new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
         dateFormatDate = new SimpleDateFormat(getResources().getString(R.string.date_format_date));
         amountMax = new BigDecimal(getResources().getString(R.string.amount_max));
 
+        // get object
         uuid = intent.getStringExtra("uuid");
         bill = application.getBill(uuid);
         if (bill == null) {
@@ -105,21 +106,6 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         buttonsAmount.add(R.id.button_delete);
 
 
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_bill_form);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        radioGroup = findViewById(R.id.radioGroup_form);
-        radioGroup.check(formToId(form));
-
-
-
-        binding.typeRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        billTypeAdapter = new BillTypeAdapter(typeList, this);
-        binding.typeRecycleView.setAdapter(billTypeAdapter);
-
         initView();
         initListener();
     }
@@ -142,6 +128,18 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         binding.textViewType.setText(typeList.get(typeId).getName());
         binding.imageViewType.setImageResource(typeList.get(typeId).getIcon());
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.actionbar_bill_form);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        radioGroup = findViewById(R.id.radioGroup_form);
+        radioGroup.check(formToId(form));
+
+        binding.typeRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        billTypeAdapter = new BillTypeAdapter(typeList, this);
+        binding.typeRecycleView.setAdapter(billTypeAdapter);
     }
 
     private void initListener(){
@@ -161,7 +159,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         if (uuid.equals("")) {
             application.addBill(new Bill(amount, date, type, form, note));
         } else {
-            application.setBill(bill, new Bill(amount, date, type, form, note));
+            application.setBill(uuid, new Bill(amount, date, type, form, note));
         }
         finish();
     }

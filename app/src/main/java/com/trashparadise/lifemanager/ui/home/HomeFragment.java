@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getContext(), WorkEditActivity.class);
+                intent.putExtra("uuid", "");
                 startActivity(intent);
             }
         });

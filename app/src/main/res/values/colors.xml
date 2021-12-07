@@ -14,12 +14,18 @@
     <color name="gray_c3">#FFC3C3C3</color>
     <drawable name="numeric_keyboard_unpressed">#FFFDFDFD</drawable>
     <drawable name="numeric_keyboard_pressed">#FFAAAAAA</drawable>
+    <drawable name="deadline_unpressed">#00FFFFFF</drawable>
+    <drawable name="deadline_pressed">#FFAAAAAA</drawable>
+
+    <drawable name="primary_color_unpressed">@color/colorPrimary</drawable>
+    <drawable name="primary_color_pressed">@color/colorPrimaryPressed</drawable>
+
     <color name="colorFabBill">#c9a7f6</color>
     <color name="colorFabWork">#ffa35c</color>
 
-
     <color name="colorTextTeal">#19a3a2</color>
-    <color name="colorPrimary">#3f3c51</color>
+    <color name="colorPrimary">#5eb9ff</color>
+    <color name="colorPrimaryPressed">#4d91c5</color>
     <color name="colorPrimaryDark">#3f3c51</color>
     <color name="colorAccent">#3f3c51</color>
     <!--主背景颜色-->
@@ -60,7 +66,7 @@
     <color name="colorKeyboardPress">#504c66</color>
 
     <color name="colorTextAddRemark">#b7b5c3</color>
-    <color name="colorTextHint">#b7b5c3</color>
+    <color name="colorTextHint">#C3C3C3</color>
 
     <color name="colorRemarkDialogBgPress">#d9d7d7</color>
 

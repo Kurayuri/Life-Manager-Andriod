@@ -19,12 +19,16 @@
     <string name="date_format_month">yyyy年MM月</string>z
     <string name="date_format_month_home">yyyy年\nMM月</string>z
     <string name="date_format_date">yyyy年MM月dd日 HH:mm:ss</string>
-    <string name="date_format_time">MM-dd HH:mm</string>
+    <string name="date_format_time">MM月dd日 HH:mm</string>
 
     <string name="expend">支出</string>
     <string name="income">收入</string>
     <string name="edit">修改</string>
     <string name="delete">删除</string>
+    <string name="empty">空空如也</string>
+
+    <string name="done">已完成</string>
+    <string name="todo">未完成</string>
 
     <string name="title_home">首页</string>
     <string name="title_bills">账单</string>
@@ -36,9 +40,25 @@
     <string name="numeric_keyboard_clear">清除</string>
     <string name="numeric_keyboard_backspace">←</string>
     <string name="numeric_keyboard_confirm">确认</string>
-    <string name="note_input_hint">备注：说点什么吧...</string>
+
+    <string name="bill_note_input_hint">备注：说点什么吧...</string>
+    <string name="work_note_input_hint">备注：说说怎么办吧...</string>
+    <string name="work_title_input_hint">事项标题</string>
     <string name="note_none_hint">备注：这里空空如也...</string>
     <string name="audit_month_bill">月账单统计</string>
     <string name="delete_confirm_text">确认删除？</string>
+    <string name="work_confirm_warning">还没说干什么呢</string>
     <string name="hello_blank_fragment">首页</string>
+
+    <string name="today">今天</string>
+    <string name="this_week">本周</string>
+    <string name="this_month">本月</string>
+    <string name="this_year">今年</string>
+
+    <string name="repeat_policy">单次</string>
+    <string name="every_day">每天</string>
+    <string name="every_week">每周</string>
+    <string name="every_month">每月</string>
+    <string name="every_year">每年</string>
+
 </resources>

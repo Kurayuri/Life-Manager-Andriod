@@ -4,12 +4,137 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_f6"
     tools:context=".ui.works.WorkEditActivity">
 
     <TextView
+        android:id="@+id/textView_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="worknew"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:hint="@string/amount_decimal_format"
+        android:text="@string/amount_max" />
+
+    <TextView
+        android:id="@+id/textView_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/amount_decimal_format"
+        android:text="@string/amount_max"
+        app:layout_constraintStart_toEndOf="@id/textView_month" />
+    <TextView
+        android:id="@+id/textView_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/amount_decimal_format"
+        android:text="@string/amount_max"
+        app:layout_constraintStart_toEndOf="@id/textView_week" />
+
+    <TextView
+        android:id="@+id/textView_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/amount_decimal_format"
+        android:text="@string/amount_max"
+        app:layout_constraintStart_toEndOf="@id/textView_day" />
+    <TextView
+        android:id="@+id/textView_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/amount_decimal_format"
+        android:text="@string/amount_max"
+        app:layout_constraintStart_toEndOf="@id/textView_hour" />
+
+
+
+    <!--    <RelativeLayout-->
+
+    <!--        android:id="@+id/relative_layout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="58dp"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--        <ImageView-->
+    <!--            android:id="@+id/imageView_type"-->
+    <!--            android:layout_width="38dp"-->
+    <!--            android:layout_height="38dp"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginLeft="15dp"-->
+    <!--            android:src="@drawable/classify_eat" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/textView_type"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginLeft="15dp"-->
+    <!--            android:layout_toRightOf="@id/imageView_type"-->
+    <!--            android:text="@string/title_bills"-->
+    <!--            android:textColor="@color/colorPrimary"-->
+    <!--            android:textSize="18sp" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/textView_amount"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_alignParentRight="true"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginRight="15dp"-->
+    <!--            android:background="@null"-->
+    <!--            android:gravity="right"-->
+    <!--            android:text="@string/amount_decimal_format"-->
+    <!--            android:textColor="@color/colorTextRed"-->
+    <!--            android:textColorHint="@color/colorTextRed"-->
+    <!--            android:textSize="20sp" />-->
+    <!--    </RelativeLayout>-->
+
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:id="@+id/constraint_layout_right"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_weight="3"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/relative_layout"-->
+    <!--        app:layout_constraintVertical_bias="0.0">-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/textView_date"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:gravity="center"-->
+    <!--            android:text="@string/date_format_time"-->
+    <!--            android:textColor="@color/colorTextTeal"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toTopOf="@id/editText_note"-->
+    <!--            />-->
+
+    <!--        <EditText-->
+    <!--            android:id="@+id/editText_note"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="0dp"-->
+    <!--            android:focusable="false"-->
+    <!--            android:layout_marginStart="8dp"-->
+    <!--            android:layout_marginTop="16dp"-->
+    <!--            android:background="@null"-->
+    <!--            android:layout_marginEnd="8dp"-->
+    <!--            android:ems="15"-->
+    <!--            android:gravity="top|start"-->
+    <!--            android:textSize="15sp"-->
+    <!--            android:hint="@string/note_none_hint"-->
+    <!--            android:textColorHint="@color/gray_c3"-->
+    <!--            android:inputType="textMultiLine"-->
+    <!--            android:textCursorDrawable="@null"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/textView_date" />-->
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

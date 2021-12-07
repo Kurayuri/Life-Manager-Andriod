@@ -16,7 +16,8 @@
     <!--    <string name="audit_month_bill">Month bill</string>-->
     <!--    <string name="delete_confirm_text">Delete?</string>-->
     <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
-    <string name="date_format_month">yyyy年MM月</string>
+    <string name="date_format_month">yyyy年MM月</string>z
+    <string name="date_format_month_home">yyyy年\nMM月</string>z
     <string name="date_format_date">yyyy年MM月dd日 HH:mm:ss</string>
     <string name="date_format_time">MM-dd HH:mm</string>
 

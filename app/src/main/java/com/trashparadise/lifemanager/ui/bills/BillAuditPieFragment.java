@@ -88,7 +88,7 @@ public class BillAuditPieFragment extends Fragment {
             chart.setHighlightPerTapEnabled(true);
 
             chart.setUsePercentValues(false);
-            chart.animateY(1400, Easing.EaseInOutQuad);
+//            chart.animateY(1400, Easing.EaseInOutQuad);
             Legend l = chart.getLegend();
             l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
             l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -113,7 +113,7 @@ public class BillAuditPieFragment extends Fragment {
     }
 
     private void updateData() {
-
+        chart.animateY(1400, Easing.EaseInOutQuad);
         Calendar dateStart=Calendar.getInstance();
         Calendar dateEnd=Calendar.getInstance();
         dateStart.setTime(date.getTime());

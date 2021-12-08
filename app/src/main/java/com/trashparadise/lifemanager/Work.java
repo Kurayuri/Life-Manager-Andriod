@@ -8,13 +8,13 @@ import java.util.UUID;
 
 
 public class Work implements Comparable<Work>, Serializable {
-    private String title;
-    private Integer repeat;
-    private Calendar date;
-    private Integer form;
-    private String note;
-    private String uuid;
-    private String classUuid;
+    private String title;       // 标题
+    private Integer repeat;     // 重复策略
+    private Calendar date;      // 时间
+    private Integer form;       // 形式，未完成/已完成
+    private String note;        // 备注
+    private String uuid;        // uuid
+    private String classUuid;   // 关联项目类uuid
 
     public static final int EVERY_NONE=0;
 
@@ -43,7 +43,39 @@ public class Work implements Comparable<Work>, Serializable {
     public static final int TODO=0;
     public static final int DONE=1;
 
+    public static final int TITLE=0;
+    public static final int FORM=1;
+    public static final int REPEAT=2;
+    public static final int NOTE=3;
+    public static final int DATE=4;
+    public static final int UUID=5;
+    public static final int CLASSUUID=6;
 
+    public void set(int field,Object object){
+        switch (field){
+            case TITLE:
+                this.setTitle((String) object);
+                break;
+            case FORM:
+                this.setForm((Integer) object);
+                break;
+            case REPEAT:
+                this.setRepeat((Integer) object);
+                break;
+            case NOTE:
+                this.setNote((String) object);
+                break;
+            case DATE:
+                this.setDate((Calendar) object);
+                break;
+            case UUID:
+                this.setUuid((String) object);
+                break;
+            case CLASSUUID:
+                this.setClassUuid((String) object);
+                break;
+        }
+    }
 
 
     public Work(String title, Calendar date,Integer repeat,Integer form, String note) {
@@ -52,8 +84,8 @@ public class Work implements Comparable<Work>, Serializable {
         this.date = date;
         this.form = form;
         this.note = note;
-        this.uuid = UUID.randomUUID().toString().replaceAll("-","");
-        this.classUuid = UUID.randomUUID().toString().replaceAll("-","");
+        this.uuid = java.util.UUID.randomUUID().toString().replaceAll("-","");
+        this.classUuid = java.util.UUID.randomUUID().toString().replaceAll("-","");
     }
 
     public String getTitle() {

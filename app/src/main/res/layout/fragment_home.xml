@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/fragmentContainer_list"
+        app:layout_constraintVertical_weight="2"
         android:layout_height="0dp"/>
 
     <androidx.fragment.app.FragmentContainerView
@@ -18,7 +19,9 @@
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/fragmentContainer_chart"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_weight="2"
         android:layout_height="0dp"/>
+
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

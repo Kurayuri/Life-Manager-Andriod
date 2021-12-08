@@ -8,12 +8,12 @@ import java.util.UUID;
 
 
 public class Bill implements Comparable<Bill>, Serializable {
-    private BigDecimal amount;
-    private Calendar date;
-    private String type;
-    private Integer form;
-    private String note;
-    private String uuid;
+    private BigDecimal amount;  // 金额
+    private Calendar date;      // 时间
+    private String type;        // 类型名称
+    private Integer form;       // 形式，输入/指出
+    private String note;        // 备注
+    private String uuid;        // uuid
 
     public static final int ALL=-1;
     public static final int EXPAND=0;

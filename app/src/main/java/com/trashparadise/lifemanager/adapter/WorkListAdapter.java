@@ -5,9 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,7 +50,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         private final TextView textViewNote;
         private final TextView textViewTitle;
         private final TextView textViewRepeat;
-        private final ImageView imageViewType;
+        private final ImageView imageViewForm;
 
         public TextView getTextViewRepeat() {
             return textViewRepeat;
@@ -61,7 +64,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             textViewTitle = (TextView) view.findViewById(R.id.textView_title);
             textViewRepeat = (TextView) view.findViewById(R.id.textView_repeat);
 
-            imageViewType = (ImageView) view.findViewById(R.id.imageView_type);
+            imageViewForm = (ImageView) view.findViewById(R.id.imageView_form);
         }
 
         public ConstraintLayout getLayout() {
@@ -72,8 +75,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             return textViewTitle;
         }
 
-        public ImageView getImageViewType() {
-            return imageViewType;
+        public ImageView getImageViewForm() {
+            return imageViewForm;
         }
 
         public TextView getTextViewDate() {
@@ -159,6 +162,14 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
         switch (viewType) {
             case 0:
+                viewHolder.imageViewForm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        application.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(),Work.FORM,Work.DONE);
+
+                        updateDataSet();
+                    }
+                });
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -223,9 +234,11 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             viewHolder.getTextViewDate().setText(dateFormatTime.format(work.getDate().getTime()));
             viewHolder.getTextViewTitle().setText(work.getTitle());
             viewHolder.getTextViewNote().setText(work.getNote());
+            viewHolder.getImageViewForm().setColorFilter(application.getResources().getColor(form==0?R.color.iconTodo:R.color.iconDone));
+            viewHolder.getImageViewForm().setImageResource((form==0?R.drawable.ic_todo:R.drawable.ic_done));
 
             viewHolder.getTextViewRepeat().setText(application.getResources().getString(RepeatRes.getStringId(work.getRepeat())));
-            viewHolder.getTextViewDate().setTextColor(application.getResources().getColor(form==0?R.color.colorTextRed:R.color.colorTextBlue));
+            viewHolder.getTextViewDate().setTextColor(application.getResources().getColor(form==0?R.color.colorTextRed:R.color.colorPrimary));
         }
     }
 

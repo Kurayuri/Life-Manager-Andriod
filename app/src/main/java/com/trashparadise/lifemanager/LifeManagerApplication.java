@@ -180,7 +180,7 @@ public class LifeManagerApplication extends Application {
         Work x;
         while (i.hasNext()) {
             x = (Work) i.next();
-            // Done delete what has done before，todo delete what to do in the future
+            // Done delete what has done before，to_do delete what to do in the future
             if (x.getClassUuid().equals(classUuid) &&
                     x.getForm().equals(form) && ((
                     (x.getDate().compareTo(calendar) < 0 ? 1 : 0) + (form.equals(0) ? 1 : 0)) == 1 ? true : false)
@@ -195,6 +195,12 @@ public class LifeManagerApplication extends Application {
         workNew.setClassUuid(getWork(uuid).getClassUuid());
         delWork(uuid);
         workList.add(workNew);
+    }
+    public void setWork(String uuid, int field,Object object) {
+        Work work=getWork(uuid);
+        if (work!=null){
+            work.set(field,object);
+        }
     }
 
     public ArrayList<Work> getWorkList(Calendar dateStart, Calendar dateEnd, Integer form) {

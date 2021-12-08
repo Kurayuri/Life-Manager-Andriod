@@ -77,6 +77,9 @@
 
     <color name="indicator_bg">#cdcdcd</color>
 
+    <color name="iconTodo">@color/colorGreen</color>
+    <color name="iconDone">@color/colorPrimary</color>
+
 
     <color name="white40">#40ffffff</color>
 

@@ -44,6 +44,7 @@ public class BillAuditPieFragment extends Fragment {
     private Calendar date;
     private Integer form;
     private SimpleDateFormat dateFormat;
+    private DecimalFormat decimalFormat;
     private Legend legend;
 
 
@@ -63,6 +64,7 @@ public class BillAuditPieFragment extends Fragment {
         View view=binding.getRoot();
         application=(LifeManagerApplication)getActivity().getApplication();
         dateFormat = new SimpleDateFormat(getString(R.string.date_format_month));
+        decimalFormat=new DecimalFormat(getString(R.string.amount_decimal_format_unit));
 
         chart=binding.chart;
 
@@ -129,20 +131,22 @@ public class BillAuditPieFragment extends Fragment {
         dateEnd.setTime(dateStart.getTime());
         dateEnd.add(Calendar.MONTH,1);
 
+
         ArrayList<Bill> localDataSet=application.getBillList(dateStart,dateEnd,0);
         TreeMap<String, Float>  localDataSetAudit=new TreeMap<>();
-        Float float0=new Float(0);
         for (Bill bill:localDataSet) {
-            localDataSetAudit.put(bill.getType(),localDataSetAudit.getOrDefault(bill.getType(),float0)+bill.getAmount().floatValue());
+            localDataSetAudit.put(bill.getType(),localDataSetAudit.getOrDefault(bill.getType(),0f)+bill.getAmount().floatValue());
         }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
+
         for (Map.Entry<String,Float> entry:localDataSetAudit.entrySet()) {
-            if (entry.getValue().equals(float0))
+            if (entry.getValue().equals(0f))
                 continue;
             entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
         }
+
 
         // if entries is empty
         legend.setEnabled(true);
@@ -196,12 +200,15 @@ public class BillAuditPieFragment extends Fragment {
         data.setValueTextSize(11f);
 //        data.setValueTextColor(Color.BLACK);
         data.setValueTextColor(Color.WHITE);
+
         chart.setData(data);
 
         // undo all highlights
         chart.highlightValues(null);
 
         chart.invalidate();
+
+        binding.textViewAmount.setText(decimalFormat.format(data.getYValueSum()));
     }
 
 

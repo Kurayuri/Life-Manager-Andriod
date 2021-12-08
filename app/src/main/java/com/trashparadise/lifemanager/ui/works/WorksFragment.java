@@ -48,7 +48,7 @@ public class WorksFragment extends Fragment {
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        workListFragment=new WorkListFragment(form,true);
+        workListFragment=new WorkListFragment(form,true,false);
 
         getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_workList,workListFragment).commit();
 

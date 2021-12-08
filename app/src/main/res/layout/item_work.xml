@@ -26,7 +26,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="6dp"
             android:layout_marginTop="6dp"
-            android:tint="@color/colorGreen"
+            app:tint="@color/colorGreen"
             android:src="@drawable/ic_todo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -17,12 +17,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.trashparadise.lifemanager.LifeManagerApplication;
+import com.trashparadise.lifemanager.Preference;
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.adapter.WorkListAdapter;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
+import com.trashparadise.lifemanager.ui.works.WorkListFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -31,25 +36,47 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private AppCompatActivity activity;
+    private LifeManagerApplication application;
     private FragmentTransaction fragmentTransaction;
     private BillAuditPieFragment billAuditPieFragment;
     private BillListFragment billListFragment;
+    private WorkListFragment workListAFragment;
     private Integer init;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        billAuditPieFragment = new BillAuditPieFragment(Calendar.getInstance(), 0);
+        billListFragment = new BillListFragment();
+        workListAFragment = new WorkListFragment(Work.TODO, false, true);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         activity = (AppCompatActivity) getActivity();
+        application = (LifeManagerApplication) activity.getApplication();
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        billAuditPieFragment = new BillAuditPieFragment(Calendar.getInstance(), 0);
-        billListFragment = new BillListFragment();
+
+
         fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.fragmentContainer_chart, billAuditPieFragment);
-        fragmentTransaction.add(R.id.fragmentContainer_list, billListFragment);
+
+        switch (application.getPreference().getHome()) {
+            case Preference.HOME_BILL:
+                fragmentTransaction.add(R.id.fragmentContainer_list, billListFragment);
+                break;
+            case Preference.HOME_WORK:
+                fragmentTransaction.add(R.id.fragmentContainer_list, workListAFragment);
+                break;
+        }
+
+
+//        fragmentTransaction.add(R.id.fragmentContainer_list, billListFragment);
+//        fragmentTransaction.add(R.id.fragmentContainer_list, workListAFragment);
         fragmentTransaction.commit();
         init = 0;
 
@@ -67,6 +94,8 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
         binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,14 +104,45 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        // for test
+        binding.floatingActionButtonNewBill.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                fragmentTransaction = getChildFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainer_list, billListFragment);
+                fragmentTransaction.commit();
+                application.getPreference().setHome(Preference.HOME_BILL);
+                billAuditPieFragment.callUpdateData();
+                return true;
+            }
+        });
+        binding.floatingActionButtonNewWork.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                fragmentTransaction = getChildFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragmentContainer_list, workListAFragment);
+                fragmentTransaction.commit();
+                application.getPreference().setHome(Preference.HOME_WORK);
+                billAuditPieFragment.callUpdateData();
+                return true;
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         if (init != 0) {
-            billAuditPieFragment.callUpdateData();
-            billListFragment.updateDateSet(-1);
+            try {
+                billAuditPieFragment.callUpdateData();
+                billListFragment.updateDateSet(-1);
+                workListAFragment.updateDateSet(0);
+            }
+            catch (Exception e){
+
+            }
+
         }
         init = 1;
     }

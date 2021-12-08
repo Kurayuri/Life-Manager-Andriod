@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="44dp">
@@ -8,6 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
         android:background="@drawable/shape_round_corner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,54 +20,66 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
-            android:id="@+id/imageView_type"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:id="@+id/imageView_form"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="10dp"
             android:layout_centerVertical="true"
-
-            android:layout_marginStart="16dp"
-            android:src="@drawable/classify_eat"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@color/colorGreen"
+            android:src="@drawable/ic_todo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView_type"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView_title"
+            style="@style/autoscroll"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toRightOf="@id/imageView_type"
-            android:layout_marginTop="3dp"
-            android:text="@string/title_bills"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="6dp"
+            android:hint="@string/work_title_input_hint"
             android:textColor="@color/black"
+            android:layout_marginTop="6dp"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/imageView_type"
+            app:layout_constraintEnd_toStartOf="@id/textView_date"
+            app:layout_constraintStart_toEndOf="@+id/imageView_form"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/autoscroll"
+            android:id="@+id/textView_note"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/work_note_input_hint"
+            android:textSize="10sp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/gray_c3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView_title"
+            app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
         <TextView
             android:id="@+id/textView_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textSize="12dp"
             android:text="@string/date_format_time"
-            android:textSize="10sp"
-            android:textColor="@color/gray_c3"
-            app:layout_constraintStart_toStartOf="@+id/textView_type"
-            app:layout_constraintTop_toBottomOf="@+id/textView_type" />
+            android:textColor="@color/colorTextRed"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView_title"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/textView_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
+            android:id="@+id/textView_repeat"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:maxLines="1"
-            android:textColor="@color/colorTextRed"
-            android:textSize="16sp"
-            android:text="@string/amount_decimal_format"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            android:text="@string/repeat_policy"
+            android:textColor="@color/colorTextHint"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_date"
+            app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

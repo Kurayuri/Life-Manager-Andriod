@@ -14,6 +14,8 @@ import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.adapter.WorkListAdapter;
 
+import java.text.SimpleDateFormat;
+
 
 public class WorkListFragment extends Fragment {
     private LifeManagerApplication application;
@@ -24,36 +26,32 @@ public class WorkListFragment extends Fragment {
     private Boolean auditOn;
     private Boolean slimOn;
     private int workListLayout;
-    
-    public WorkListFragment(Integer form,Boolean auditOn) {
-        this.form=form;
-        this.auditOn=auditOn;
-        slimOn=false;
-    }
-    public WorkListFragment() {
-        this.form=-1;
-        this.auditOn=false;
-        slimOn=true;
+
+    public WorkListFragment(Integer form, Boolean auditOn, Boolean slimOn) {
+        this.form = form;
+        this.auditOn = auditOn;
+        this.slimOn = slimOn;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        
-        workListLayout=slimOn?R.layout.fragment_work_list_slim:R.layout.fragment_work_list;
-        view=inflater.inflate(workListLayout, container, false);
+
+        workListLayout = slimOn ? R.layout.fragment_work_list_slim : R.layout.fragment_work_list;
+        view = inflater.inflate(workListLayout, container, false);
 
         application = (LifeManagerApplication) this.getActivity().getApplication();
 
-        recyclerView=view.findViewById(R.id.recyclerView);
-        workListAdapter=new WorkListAdapter(getContext(),form,auditOn,slimOn);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        workListAdapter = new WorkListAdapter(getContext(), form, auditOn, slimOn);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(workListAdapter);
+
 
         return view;
     }
 
-    public void updateDateSet(Integer form){
+    public void updateDateSet(Integer form) {
         workListAdapter.callUpdateDataSet(form);
     }
 }

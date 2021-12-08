@@ -3,22 +3,19 @@ package com.trashparadise.lifemanager;
 import android.app.Application;
 import android.util.Log;
 
-import com.trashparadise.lifemanager.constants.TypeRes;
-
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class LifeManagerApplication extends Application {
     private TreeSet<Bill> billList;
     private TreeSet<Work> workList;
+    private Preference preference;
 
     @Override
 
@@ -35,13 +32,19 @@ public class LifeManagerApplication extends Application {
             billList = (TreeSet<Bill>) in.readObject();
             in.close();
             Log.e("billList.data", billList.size() + "");
+
             in = new ObjectInputStream(openFileInput("workList.data"));
             workList = (TreeSet<Work>) in.readObject();
             in.close();
             Log.e("workList.data", workList.size() + "");
+
+            in = new ObjectInputStream(openFileInput("preference.data"));
+            preference = (Preference) in.readObject();
+            in.close();
         } catch (Exception e) {
             billList = new TreeSet<>();
             workList = new TreeSet<>();
+            preference=new Preference();
             Log.e("Read Error", e.toString());
         }
     }
@@ -54,9 +57,14 @@ public class LifeManagerApplication extends Application {
             out.writeObject(billList);
             Log.e("billList.data", billList.size() + "");
             out.close();
+
             out = new ObjectOutputStream(openFileOutput("workList.data", MODE_PRIVATE));
             out.writeObject(workList);
             Log.e("workList.data", workList.size() + "");
+            out.close();
+
+            out = new ObjectOutputStream(openFileOutput("preference.data", MODE_PRIVATE));
+            out.writeObject(preference);
             out.close();
         } catch (Exception e) {
             Log.e("Write Error", e.toString());
@@ -110,6 +118,8 @@ public class LifeManagerApplication extends Application {
             workList.remove(work);
     }
 
+
+
     // auto unfold
     public void addWork(Work work) {
         Integer repeat = work.getRepeat();
@@ -121,11 +131,11 @@ public class LifeManagerApplication extends Application {
 
         switch (repeat) {
             case Work.EVERY_DAY:
-                unfoldTime = 7;
+                unfoldTime = 14;
                 addFeild = Calendar.DATE;
                 break;
             case Work.EVERY_WEEK:
-                unfoldTime = 5;
+                unfoldTime = 8;
                 addFeild = Calendar.WEEK_OF_MONTH;
                 break;
             case Work.EVERY_MONTH:
@@ -216,5 +226,9 @@ public class LifeManagerApplication extends Application {
 
     public ArrayList<Work> getWorkList() {
         return new ArrayList<Work>(workList);
+    }
+
+    public Preference getPreference() {
+        return preference;
     }
 }

@@ -36,7 +36,8 @@ public class BillAuditActivity extends AppCompatActivity {
         date.setTime(new Date(dateLong));
 
         fragmentTransaction=getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.chart_pie_expand,new BillAuditPieFragment(date,0));
+//        fragmentTransaction.add(R.id.chart_pie_expand,new BillAuditPieFragment(date,0));
+        fragmentTransaction.add(R.id.chart_pie_expand,new BillAuditLineFragment(date,0));
         fragmentTransaction.commit();
 
         setContentView(view);

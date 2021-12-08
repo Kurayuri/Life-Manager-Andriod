@@ -7,45 +7,6 @@
     android:background="@color/gray_f6"
     tools:context=".ui.works.WorkEditActivity">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView_month"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        android:hint="@string/amount_decimal_format"-->
-    <!--        android:text="@string/amount_max" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView_week"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="@string/amount_decimal_format"-->
-    <!--        android:text="@string/amount_max"-->
-    <!--        app:layout_constraintStart_toEndOf="@id/textView_month" />-->
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView_day"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="@string/amount_decimal_format"-->
-    <!--        android:text="@string/amount_max"-->
-    <!--        app:layout_constraintStart_toEndOf="@id/textView_week" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView_hour"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="@string/amount_decimal_format"-->
-    <!--        android:text="@string/amount_max"-->
-    <!--        app:layout_constraintStart_toEndOf="@id/textView_day" />-->
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView_minute"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="@string/amount_decimal_format"-->
-    <!--        android:text="@string/amount_max"-->
-    <!--        app:layout_constraintStart_toEndOf="@id/textView_hour" />-->
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout_title"
         android:layout_width="match_parent"
@@ -262,7 +223,7 @@
         android:background="@null"
         android:ems="15"
         android:gravity="top|start"
-        android:hint="@string/work_note_input_hint"
+        android:hint="@string/note_none_hint"
         android:inputType="textMultiLine"
         android:textColorHint="@color/colorTextHint"
         android:textCursorDrawable="@null"

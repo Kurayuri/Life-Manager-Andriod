@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
         <activity
+            android:name=".ui.works.WorkCheckActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.bills.BillCheckActivity"
             android:exported="false" />
         <activity

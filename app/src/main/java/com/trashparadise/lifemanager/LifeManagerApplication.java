@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -85,7 +86,7 @@ public class LifeManagerApplication extends Application {
 
     public void setBill(String uuid, Bill billNew) {
         delBill(uuid);
-        billList.add(billNew);
+        addBill(billNew);
     }
 
     public ArrayList<Bill> getBillList(Calendar dateStart, Calendar dateEnd, Integer form) {
@@ -146,6 +147,10 @@ public class LifeManagerApplication extends Application {
         }
     }
 
+    public void addWorkChain(Work work) {
+        addWork(work);
+    }
+
     public Work getWork(String uuid) {
         if (uuid == null || uuid.equals(""))
             return null;
@@ -157,11 +162,37 @@ public class LifeManagerApplication extends Application {
         return null;
     }
 
-//    public void setWorkChain(String uuid, Work workNew){
-//
-//    }
+    public void setWorkChain(String uuid, Work workNew) {
+        delWorkChain(uuid);
+        addWork(workNew);
+    }
+
+    public void delWorkChain(String uuid) {
+        Work work = getWork(uuid);
+        Calendar calendar = (Calendar) work.getDate().clone();
+        String classUuid = work.getClassUuid();
+        Integer form = work.getForm();
+
+        if (work != null)
+            workList.remove(work);
+
+        Iterator i = workList.iterator();
+        Work x;
+        while (i.hasNext()) {
+            x = (Work) i.next();
+            // Done delete what has done before，todo delete what to do in the future
+            if (x.getClassUuid().equals(classUuid) &&
+                    x.getForm().equals(form) && ((
+                    (x.getDate().compareTo(calendar) < 0 ? 1 : 0) + (form.equals(0) ? 1 : 0)) == 1 ? true : false)
+            ) {
+                i.remove();
+            }
+        }
+    }
+
 
     public void setWork(String uuid, Work workNew) {
+        workNew.setClassUuid(getWork(uuid).getClassUuid());
         delWork(uuid);
         workList.add(workNew);
     }

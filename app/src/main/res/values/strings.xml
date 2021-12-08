@@ -34,7 +34,7 @@
     <string name="title_bills">账单</string>
     <string name="title_works">事项</string>
     <string name="title_me">我</string>
-    <string name="positive">确认</string>
+    <string name="positive">确定</string>
     <string name="negative">取消</string>
     <string name="date_picker_title">时间</string>
     <string name="numeric_keyboard_clear">清除</string>
@@ -47,6 +47,10 @@
     <string name="note_none_hint">备注：这里空空如也...</string>
     <string name="audit_month_bill">月账单统计</string>
     <string name="delete_confirm_text">确认删除？</string>
+    <string name="delete_confirm_text_chain">选择删除方式</string>
+    <string name="single_item">仅当前项</string>
+    <string name="chain_item">所有相关项</string>
+    <string name="edit_confirm_text_chain">选择修改方式</string>
     <string name="work_confirm_warning">还没说干什么呢</string>
     <string name="hello_blank_fragment">首页</string>
 

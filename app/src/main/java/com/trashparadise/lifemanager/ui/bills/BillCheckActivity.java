@@ -81,7 +81,7 @@ public class BillCheckActivity extends AppCompatActivity {
         binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
         binding.editTextNote.setText(note);
         binding.textViewDate.setText(dateFormatDate.format(date.getTime()));
-        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+//        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         binding.textViewType.setText(type);
         binding.imageViewType.setImageResource(TypeRes.ICONS[form][TypeRes.getId(form, type)]);

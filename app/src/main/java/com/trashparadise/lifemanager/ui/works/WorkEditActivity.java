@@ -6,7 +6,6 @@ import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.constants.RepeatRes;
-import com.trashparadise.lifemanager.constants.TypeRes;
 import com.trashparadise.lifemanager.databinding.ActivityWorkEditBinding;
 
 import androidx.annotation.NonNull;
@@ -22,11 +21,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -198,17 +194,41 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         title = binding.editTextTitle.getText().toString();
         if (title.length() == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.work_confirm_warning);
+            builder.setMessage(R.string.work_confirm_warning).setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
             Dialog dialogFragment = builder.create();
             dialogFragment.show();
 
         } else {
+            Work workNew=new Work(title, dateNew, repeat, form, note);
             if (uuid.equals("")) {
-                application.addWork(new Work(title, dateNew, repeat, form, note));
+                //New
+                application.addWork(workNew);
+                finish();
             } else {
-                application.setWork(uuid, new Work(title, dateNew, repeat, form, note));
+                //Edit
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.edit_confirm_text_chain)
+                        .setPositiveButton(R.string.single_item, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                application.setWork(uuid,workNew);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.chain_item, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                application.setWorkChain(uuid,workNew);
+                                finish();
+                            }
+                        });
+                Dialog dialogFragment = builder.create();
+                dialogFragment.show();
             }
-            finish();
+
         }
 
     }

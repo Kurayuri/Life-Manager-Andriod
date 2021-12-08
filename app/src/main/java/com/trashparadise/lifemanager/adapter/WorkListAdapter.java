@@ -21,6 +21,7 @@ import com.trashparadise.lifemanager.R;
 
 
 import com.trashparadise.lifemanager.constants.RepeatRes;
+import com.trashparadise.lifemanager.ui.works.WorkCheckActivity;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
 import java.text.SimpleDateFormat;
@@ -162,7 +163,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                     @Override
                     public void onClick(View v) {
 //                        Intent intent = new Intent(context, WorkCheckActivity.class);
-                        Intent intent = new Intent(context, WorkEditActivity.class);
+                        Intent intent = new Intent(context, WorkCheckActivity.class);
                         intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                         context.startActivity(intent);
                     }

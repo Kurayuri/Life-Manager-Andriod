@@ -166,8 +166,28 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                     @Override
                     public void onClick(View v) {
                         application.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(),Work.FORM,Work.DONE);
+                        Animation animation=AnimationUtils.loadAnimation(context,R.anim.text);
+                        viewHolder.imageViewForm.startAnimation(animation);
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
 
-                        updateDataSet();
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
+                                viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
+                                updateDataSet();
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+
+
                     }
                 });
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {

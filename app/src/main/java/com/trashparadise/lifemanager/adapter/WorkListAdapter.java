@@ -5,12 +5,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -166,9 +168,13 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                     @Override
                     public void onClick(View v) {
                         application.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(),Work.FORM,Work.DONE);
-                        Animation animation=AnimationUtils.loadAnimation(context,R.anim.text);
-                        viewHolder.imageViewForm.startAnimation(animation);
-                        animation.setAnimationListener(new Animation.AnimationListener() {
+                        Animation animationOut=AnimationUtils.loadAnimation(context,R.anim.anim_scale_rotate_out);
+                        Animation animationIn=AnimationUtils.loadAnimation(context,R.anim.anim_scale_rotate_in);
+                        Animation animationLOut=AnimationUtils.loadAnimation(context,R.anim.anim_left_out);
+                        animationIn.setStartOffset(500);
+
+                        viewHolder.imageViewForm.startAnimation(animationOut);
+                        animationLOut.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
 
@@ -176,9 +182,41 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
+                                updateDataSet();
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        animationIn.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                viewHolder.layout.startAnimation(animationLOut);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        animationOut.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
                                 viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
                                 viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
-                                updateDataSet();
+                                viewHolder.imageViewForm.startAnimation(animationIn);
+                                //
                             }
 
                             @Override

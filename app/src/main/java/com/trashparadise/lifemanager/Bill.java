@@ -15,6 +15,9 @@ public class Bill implements Comparable<Bill>, Serializable {
     private String note;
     private String uuid;
 
+    public static final int ALL=-1;
+    public static final int EXPAND=0;
+    public static final int INCOME=1;
 
 
     public Bill(BigDecimal amount, Calendar date, String type, Integer form, String note) {

@@ -1,6 +1,7 @@
 package com.trashparadise.lifemanager.constants;
 
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.Work;
 
 import java.util.Calendar;
 import java.util.TreeMap;
@@ -9,11 +10,11 @@ public class RepeatRes {
     private static TreeMap<Integer, Integer> treeMap;
     static {
         TreeMap<Integer, Integer> tmp=new TreeMap<>();
-        tmp.put(0,R.string.repeat_policy);
-        tmp.put(Calendar.DAY_OF_WEEK,R.string.every_day);
-        tmp.put(Calendar.WEEK_OF_MONTH,R.string.every_week);
-        tmp.put(Calendar.MONTH,R.string.every_month);
-        tmp.put(Calendar.YEAR,R.string.every_year);
+        tmp.put(Work.EVERY_NONE,R.string.repeat_policy);
+        tmp.put(Work.EVERY_DAY,R.string.every_day);
+        tmp.put(Work.EVERY_WEEK,R.string.every_week);
+        tmp.put(Work.EVERY_MONTH,R.string.every_month);
+        tmp.put(Work.EVERY_YEAR,R.string.every_year);
         treeMap= (TreeMap<Integer, Integer>) tmp;
     }
 

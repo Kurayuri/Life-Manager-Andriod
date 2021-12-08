@@ -144,7 +144,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(itemBillLayout, viewGroup, false);
                 break;
             case 1:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_month, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_bill_month, viewGroup, false);
                 break;
         }
 

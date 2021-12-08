@@ -32,6 +32,7 @@
     <color name="mainBg">#fbf9ff</color>
     <!--白色文字-->
     <color name="colorTextWhite">#fff</color>
+    <color name="colorTextWhiteDeep">#eeeeee</color>
     <!--账单总览深色文字-->
     <color name="colorTextBillAllDark">#918f9c</color>
     <!--黑色文字-->
@@ -67,6 +68,7 @@
 
     <color name="colorTextAddRemark">#b7b5c3</color>
     <color name="colorTextHint">#C3C3C3</color>
+    <color name="colorTextHintDeep">#A0A0A0</color>
 
     <color name="colorRemarkDialogBgPress">#d9d7d7</color>
 

@@ -60,6 +60,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:gravity="left|center_vertical"
+            android:maxLines="1"
+            android:inputType="text"
             android:textColorHint="@color/colorTextHint"
             android:hint="@string/work_title_input_hint"
             android:textColor="@color/colorPrimary"

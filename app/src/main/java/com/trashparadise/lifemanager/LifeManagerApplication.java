@@ -92,11 +92,11 @@ public class LifeManagerApplication extends Application {
         ArrayList<Bill> billFiltered = new ArrayList<>();
         for (Bill bill : billList) {
             if (bill.getDate().compareTo(dateStart) >= 0 && bill.getDate().compareTo(dateEnd) < 0 &&
-                    (bill.getForm().equals(form)||form.equals(-1))) {
+                    (bill.getForm().equals(form) || form.equals(-1))) {
                 billFiltered.add(bill);
             }
         }
-                return billFiltered;
+        return billFiltered;
     }
 
     public ArrayList<Bill> getBillList() {
@@ -109,8 +109,41 @@ public class LifeManagerApplication extends Application {
             workList.remove(work);
     }
 
+    // auto unfold
     public void addWork(Work work) {
+        Integer repeat = work.getRepeat();
+        String classUuid = work.getClassUuid();
+        Integer unfoldTime = 1;
+        Integer addFeild = Calendar.SECOND;
+        Calendar date = (Calendar) work.getDate().clone();
+        Work workNew;
+
+        switch (repeat) {
+            case Work.EVERY_DAY:
+                unfoldTime = 7;
+                addFeild = Calendar.DATE;
+                break;
+            case Work.EVERY_WEEK:
+                unfoldTime = 5;
+                addFeild = Calendar.WEEK_OF_MONTH;
+                break;
+            case Work.EVERY_MONTH:
+                unfoldTime = 6;
+                addFeild = Calendar.MONTH;
+                break;
+            case Work.EVERY_YEAR:
+                unfoldTime = 2;
+                addFeild = Calendar.YEAR;
+                break;
+        }
         workList.add(work);
+
+        for (int i = 2; i <= unfoldTime; ++i) {
+            workNew = work.clone();
+            date.add(addFeild, 1);
+            workNew.setDate((Calendar) date.clone());
+            workList.add(workNew);
+        }
     }
 
     public Work getWork(String uuid) {
@@ -124,6 +157,10 @@ public class LifeManagerApplication extends Application {
         return null;
     }
 
+//    public void setWorkChain(String uuid, Work workNew){
+//
+//    }
+
     public void setWork(String uuid, Work workNew) {
         delWork(uuid);
         workList.add(workNew);
@@ -133,7 +170,7 @@ public class LifeManagerApplication extends Application {
         ArrayList<Work> workFiltered = new ArrayList<>();
         for (Work work : workList) {
             if (work.getDate().compareTo(dateStart) >= 0 && work.getDate().compareTo(dateEnd) < 0 &&
-                    (work.getForm().equals(form)||form.equals(-1))) {
+                    (work.getForm().equals(form) || form.equals(-1))) {
                 workFiltered.add(work);
             }
         }
@@ -143,6 +180,4 @@ public class LifeManagerApplication extends Application {
     public ArrayList<Work> getWorkList() {
         return new ArrayList<Work>(workList);
     }
-
-
 }

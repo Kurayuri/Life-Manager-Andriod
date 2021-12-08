@@ -27,47 +27,50 @@ import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private AppCompatActivity activity;
     private FragmentTransaction fragmentTransaction;
     private BillAuditPieFragment billAuditPieFragment;
     private BillListFragment billListFragment;
+    private Integer init;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        activity=(AppCompatActivity)getActivity();
-        ActionBar actionBar=activity.getSupportActionBar();
+        activity = (AppCompatActivity) getActivity();
+        ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        billAuditPieFragment=new BillAuditPieFragment(Calendar.getInstance(),0);
-        billListFragment=new BillListFragment();
-        fragmentTransaction=getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragmentContainer_chart,billAuditPieFragment);
-        fragmentTransaction.add(R.id.fragmentContainer_list,billListFragment);
+        billAuditPieFragment = new BillAuditPieFragment(Calendar.getInstance(), 0);
+        billListFragment = new BillListFragment();
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragmentContainer_chart, billAuditPieFragment);
+        fragmentTransaction.add(R.id.fragmentContainer_list, billListFragment);
         fragmentTransaction.commit();
+        init = 0;
 
 
         initListener();
         return root;
     }
-    private void initListener(){
+
+    private void initListener() {
         binding.floatingActionButtonNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getContext(), BillEditActivity.class);
-                intent.putExtra("uuid","");
+                Intent intent = new Intent(getContext(), BillEditActivity.class);
+                intent.putExtra("uuid", "");
                 startActivity(intent);
             }
         });
         binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getContext(), WorkEditActivity.class);
+                Intent intent = new Intent(getContext(), WorkEditActivity.class);
                 intent.putExtra("uuid", "");
                 startActivity(intent);
             }
@@ -77,8 +80,11 @@ public class HomeFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        billAuditPieFragment.callUpdateData();
-        billListFragment.updateDateSet(-1);
+        if (init != 0) {
+            billAuditPieFragment.callUpdateData();
+            billListFragment.updateDateSet(-1);
+        }
+        init = 1;
     }
 
     @Override

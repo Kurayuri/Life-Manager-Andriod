@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanager;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.UUID;
@@ -12,6 +14,36 @@ public class Work implements Comparable<Work>, Serializable {
     private Integer form;
     private String note;
     private String uuid;
+    private String classUuid;
+
+    public static final int EVERY_NONE=0;
+
+    public String getClassUuid() {
+        return classUuid;
+    }
+
+    public Work clone(){
+        Calendar calendar;
+        calendar=(Calendar) this.date.clone();
+        Work workNew=new Work(this.title,calendar,this.repeat,this.form,this.note);
+        workNew.setClassUuid(this.classUuid);
+        return workNew;
+    }
+
+    public void setClassUuid(String classUuid) {
+        this.classUuid = classUuid;
+    }
+
+    public static final int EVERY_DAY=7;
+    public static final int EVERY_WEEK=4;
+    public static final int EVERY_MONTH=2;
+    public static final int EVERY_YEAR=1;
+
+    public static final int ALL=-1;
+    public static final int TODO=0;
+    public static final int DONE=1;
+
+
 
 
     public Work(String title, Calendar date,Integer repeat,Integer form, String note) {
@@ -21,6 +53,7 @@ public class Work implements Comparable<Work>, Serializable {
         this.form = form;
         this.note = note;
         this.uuid = UUID.randomUUID().toString().replaceAll("-","");
+        this.classUuid = UUID.randomUUID().toString().replaceAll("-","");
     }
 
     public String getTitle() {

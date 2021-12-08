@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
 import com.trashparadise.lifemanager.databinding.FragmentWorksBinding;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
@@ -40,8 +41,8 @@ public class WorksFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(WorksViewModel.class);
-        form = -1;
-        formNew = -1;
+        form = Work.TODO;
+        formNew = Work.TODO;
 
         activity=(AppCompatActivity)getActivity();
         binding = FragmentWorksBinding.inflate(inflater, container, false);
@@ -56,6 +57,7 @@ public class WorksFragment extends Fragment {
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.actionbar_work_form);
         radioGroupForm=actionBar.getCustomView().findViewById(R.id.radioGroup_form);
+        radioGroupForm.check(R.id.rb_todo);
 
         initListener();
 

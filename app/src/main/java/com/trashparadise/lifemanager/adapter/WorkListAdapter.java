@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHolder> {
     private ArrayList<Work> localDataSet;
@@ -56,7 +56,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             super(view);
             layout = (ConstraintLayout) view.findViewById(R.id.layout);
             textViewDate = (TextView) view.findViewById(R.id.textView_date);
-            textViewNote = (TextView) view.findViewById(R.id.textView_amount);
+            textViewNote = (TextView) view.findViewById(R.id.textView_note);
             textViewTitle = (TextView) view.findViewById(R.id.textView_title);
             textViewRepeat = (TextView) view.findViewById(R.id.textView_repeat);
 
@@ -107,11 +107,14 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private void updateDataSet() {
         ArrayList<Work> allDataSet = application.getWorkList();
         localDataSet = new ArrayList<>();
-        if (form != -1) {
+        if (form != Work.ALL) {
             for (int i = 0; i < allDataSet.size(); ++i) {
                 if (allDataSet.get(i).getForm().equals(form)) {
                     localDataSet.add(allDataSet.get(i));
                 }
+            }
+            if (form == Work.TODO){
+                Collections.reverse(localDataSet);
             }
         } else {
             localDataSet = allDataSet;
@@ -123,12 +126,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             }
 
             for (int i = 1; i < localDataSet.size(); ++i) {
-                Calendar pre = Calendar.getInstance();
-                pre.setTime(localDataSet.get(i - 1).getDate().getTime());
-                Calendar curr = Calendar.getInstance();
-                curr.setTime(localDataSet.get(i).getDate().getTime());
+                Calendar pre =(Calendar)localDataSet.get(i - 1).getDate().clone();
+                Calendar curr=(Calendar)localDataSet.get(i ).getDate().clone();
                 if (pre.get(Calendar.MONTH) != curr.get(Calendar.MONTH) || pre.get(Calendar.YEAR) != curr.get(Calendar.YEAR)) {
-                    localDataSet.add(i, new Work("", localDataSet.get(0).getDate(), 0, -1, ""));
+                    localDataSet.add(i, new Work("", localDataSet.get(i).getDate(), 0, -1, ""));
                     i += 1;
                 }
             }
@@ -149,7 +150,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(itemWorkLayout, viewGroup, false);
                 break;
             case 1:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_month, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_work_month, viewGroup, false);
                 break;
         }
 
@@ -220,6 +221,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             Integer form = work.getForm();
             viewHolder.getTextViewDate().setText(dateFormatTime.format(work.getDate().getTime()));
             viewHolder.getTextViewTitle().setText(work.getTitle());
+            viewHolder.getTextViewNote().setText(work.getNote());
 
             viewHolder.getTextViewRepeat().setText(application.getResources().getString(RepeatRes.getStringId(work.getRepeat())));
             viewHolder.getTextViewDate().setTextColor(application.getResources().getColor(form==0?R.color.colorTextRed:R.color.colorTextBlue));

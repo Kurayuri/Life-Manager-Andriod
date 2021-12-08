@@ -17,6 +17,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -117,6 +118,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         binding.editTextNote.setText(note);
         binding.editTextTitle.setText(title);
         binding.textViewRepeat.setText(getString(RepeatRes.getStringId(repeat)));
+        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -171,20 +173,20 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         Integer repeatNew = 0;
         switch (id) {
             case R.id.button_every_year:
-                repeatNew = Calendar.YEAR;
+                repeatNew = Work.EVERY_YEAR;
                 break;
             case R.id.button_every_month:
-                repeatNew = Calendar.MONTH;
+                repeatNew = Work.EVERY_MONTH;
                 break;
             case R.id.button_every_week:
-                repeatNew = Calendar.WEEK_OF_MONTH;
+                repeatNew = Work.EVERY_WEEK;
                 break;
             case R.id.button_every_day:
-                repeatNew = Calendar.DAY_OF_WEEK;
+                repeatNew = Work.EVERY_DAY;
                 break;
         }
         if (repeat.equals(repeatNew)) {
-            repeatNew = 0;
+            repeatNew = Work.EVERY_NONE;
         }
         repeat = repeatNew;
         binding.textViewRepeat.setText(getString(RepeatRes.getStringId(repeat)));

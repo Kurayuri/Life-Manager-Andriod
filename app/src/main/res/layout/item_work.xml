@@ -26,7 +26,7 @@
             android:layout_centerVertical="true"
 
             android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/classify_eat"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,6 +38,8 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
+            android:maxLines="1"
+            android:inputType="text"
             android:layout_toRightOf="@id/imageView_type"
             android:text="@string/title_bills"
             android:textColor="@color/black"
@@ -49,37 +51,39 @@
             android:id="@+id/textView_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+
             android:text="@string/date_format_time"
-
             android:textColor="@color/colorTextRed"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_repeat" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView_title"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/textView_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
             android:maxLines="1"
             android:text="@string/repeat_policy"
-            android:textColor="@color/colorTextTeal"
-            android:textSize="16sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/textView_title"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:textColor="@color/colorTextHint"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_date"
+            app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
         <TextView
             android:id="@+id/textView_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
 
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/work_note_input_hint"
-            android:textColor="@color/colorTextHint"
-            app:layout_constraintTop_toBottomOf="@id/textView_date" />
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="12dp"
+            android:background="@null"
+            android:hint="@string/work_note_input_hint"
+            android:textColor="@color/colorTextHintDeep"
+            android:textColorHint="@color/colorTextHint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
 
         <!--        <EditText-->

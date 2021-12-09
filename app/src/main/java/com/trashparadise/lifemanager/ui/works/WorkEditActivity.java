@@ -8,10 +8,15 @@ import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.databinding.ActivityWorkEditBinding;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -24,6 +29,7 @@ import android.view.View;
 import android.widget.RadioGroup;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -39,8 +45,11 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
     private String note;
     private String title;
     private String uuid;
+    private ArrayList<String> mergeList;
     private Calendar dateNew;
     private Integer repeat;
+
+    ActivityResultLauncher<Intent> launcher;
 
     private SimpleDateFormat dateFormatDate;
     private Work work;
@@ -55,6 +64,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         application = (LifeManagerApplication) this.getApplication();
         Intent intent = getIntent();
         dateFormatDate = new SimpleDateFormat(getString(R.string.date_format_date));
+        mergeList=new ArrayList<>();
 
 
         // get object
@@ -82,7 +92,6 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         initView();
         initListrner();
 
-
     }
 
     @Override
@@ -105,6 +114,9 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.textView_date:
                 onDateInput();
+                break;
+            case R.id.imageView_merge:
+                onMerge();
                 break;
         }
     }
@@ -136,12 +148,32 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         binding.buttonEveryYear.setOnClickListener(this);
         binding.textViewDate.setOnClickListener(this);
         binding.buttonConfirm.setOnClickListener(this);
+        binding.imageViewMerge.setOnClickListener(this);
         radioGroup.setOnCheckedChangeListener(this);
+
+        launcher=registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode()==Activity.RESULT_OK){
+                            Intent data=result.getData();
+                            String mergeUuid=data.getStringExtra("uuid");
+                            Work mergeWork=application.getWork(mergeUuid);
+                            if (!uuid.equals(mergeUuid)) {
+                                mergeList.add(mergeUuid);
+                                binding.editTextTitle.setText(binding.editTextTitle.getText()+ "\n" + mergeWork.getTitle());
+                                binding.editTextNote.setText(binding.editTextNote.getText()+ " " + mergeWork.getNote());
+                            }
+                        }
+                    }
+                }
+        );
     }
 
 
     private int formToId(int form) {
-        return form == 0 ? R.id.rb_todo : R.id.rb_done;
+        return form == Work.TODO ? R.id.rb_todo : R.id.rb_done;
     }
 
     private void onDeadlineInput(int id) {
@@ -211,22 +243,34 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                 finish();
             } else {
                 //Edit
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.edit_confirm_text_chain)
-                        .setPositiveButton(R.string.single_item, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                application.setWork(uuid,workNew);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(R.string.chain_item, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                application.setWorkChain(uuid,workNew);
-                                finish();
-                            }
-                        });
-                Dialog dialogFragment = builder.create();
-                dialogFragment.show();
+                if (workNew.equals(work)) {
+                    // edited
+                    finish();
+                }else {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.edit_confirm_text_chain)
+                            .setPositiveButton(R.string.single_item, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    application.setWork(uuid, workNew);
+                                    for (String mergeUUid:mergeList){
+                                        application.delWork(mergeUUid);
+                                    }
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton(R.string.chain_item, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    application.setWorkChain(uuid, workNew);
+                                    for (String mergeUUid:mergeList){
+                                        application.delWorkChain(mergeUUid);
+                                    }
+                                    finish();
+                                }
+                            });
+                    Dialog dialogFragment = builder.create();
+                    dialogFragment.show();
+                }
             }
 
         }
@@ -261,6 +305,12 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time");
     }
 
+
+    private void onMerge(){
+        Intent intent=new Intent(this,WorkMergeActivity.class);
+        intent.putExtra("form",form);
+        launcher.launch(intent);
+    }
 
 
     @Override

@@ -40,7 +40,15 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private Integer form;
     private Boolean auditOn;
     private Boolean slimOn;
+    private Boolean openOn;
     private int itemWorkLayout;
+
+    private WorkListAdapter.OnItemClickListener listener;
+
+
+    public interface OnItemClickListener {
+        void onItemClick(String uuid);
+    }
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -87,12 +95,13 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         }
     }
 
-
-    public WorkListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn) {
+    public WorkListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn,Boolean openOn, OnItemClickListener listener) {
         this.form = form;
         this.context = context;
         this.auditOn = auditOn;
         this.slimOn = slimOn;
+        this.openOn=openOn;
+        this.listener=listener;
         itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
 
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
@@ -101,6 +110,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
 
     }
+
 
 
     public void callUpdateDataSet(Integer form) {
@@ -159,167 +169,185 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
         ViewHolder viewHolder = new ViewHolder(view);
 
-        switch (viewType) {
-            case 0:
-                viewHolder.imageViewForm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int currForm=localDataSet.get(viewHolder.getBindingAdapterPosition()).getForm();
-                        Animation animationScaleRotateOut = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_out);
-                        Animation animationScaleRotateIn = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_in);
-                        Animation animationTranslateLeft = AnimationUtils.loadAnimation(context, R.anim.anim_traslate_left);
-                        Animation animationRotateShake = AnimationUtils.loadAnimation(context, R.anim.anim_rotate_shake);
-                        application.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
+        if (openOn) {
+            //open mode
 
-                        switch (currForm){
-                            case Work.DONE:
-                                viewHolder.imageViewForm.startAnimation(animationRotateShake);
-                                break;
-                            case Work.TODO:
-                                switch (form){
-                                    case Work.TODO:
-                                        viewHolder.imageViewForm.startAnimation(animationScaleRotateOut);
-                                        animationScaleRotateOut.setAnimationListener(new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(Animation animation) {
-
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(Animation animation) {
-                                                viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
-                                                viewHolder.textViewDate.setTextColor(application.getResources().getColor(R.color.iconDone));
-                                                viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
-                                                viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(Animation animation) {
-
-                                            }
-                                        });
-                                        animationScaleRotateIn.setAnimationListener(new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(Animation animation) {
-
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(Animation animation) {
-                                                viewHolder.layout.startAnimation(animationTranslateLeft);
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(Animation animation) {
-
-                                            }
-                                        });
-                                        animationTranslateLeft.setAnimationListener(new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(Animation animation) {
-
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(Animation animation) {
-                                                updateDataSet();
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(Animation animation) {
-
-                                            }
-                                        });
-                                        break;
-                                    case Work.ALL:
-                                        viewHolder.imageViewForm.startAnimation(animationScaleRotateOut);
-                                        animationScaleRotateOut.setAnimationListener(new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(Animation animation) {
-
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(Animation animation) {
-                                                viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
-                                                viewHolder.textViewDate.setTextColor(application.getResources().getColor(R.color.iconDone));
-                                                viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
-                                                viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(Animation animation) {
-
-                                            }
-                                        });
-                                        animationScaleRotateIn.setAnimationListener(new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(Animation animation) {
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(Animation animation) {
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(Animation animation) {
-
-                                            }
-                                        });
-                                        break;
-                                }
-
-                        }
-
-                    }
-                });
-
-
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        Intent intent = new Intent(context, WorkCheckActivity.class);
-                        Intent intent = new Intent(context, WorkCheckActivity.class);
-                        intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
-                        context.startActivity(intent);
-                    }
-                });
-
-
-                if (!slimOn) {
-                    viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
+            switch (viewType) {
+                case 0:
+                    viewHolder.imageViewForm.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public boolean onLongClick(View v) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setMessage(R.string.delete_confirm_text)
-                                    .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            application.delWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
-                                            updateDataSet();
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                        }
-                                    });
-                            Dialog dialogFragment = builder.create();
-                            dialogFragment.show();
-                            return false;
+                        public void onClick(View v) {
+                            int currForm = localDataSet.get(viewHolder.getBindingAdapterPosition()).getForm();
+                            Animation animationScaleRotateOut = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_out);
+                            Animation animationScaleRotateIn = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_in);
+                            Animation animationTranslateLeft = AnimationUtils.loadAnimation(context, R.anim.anim_traslate_left);
+                            Animation animationRotateShake = AnimationUtils.loadAnimation(context, R.anim.anim_rotate_shake);
+                            application.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
+
+                            switch (currForm) {
+                                case Work.DONE:
+                                    viewHolder.imageViewForm.startAnimation(animationRotateShake);
+                                    break;
+                                case Work.TODO:
+                                    switch (form) {
+                                        case Work.TODO:
+                                            viewHolder.imageViewForm.startAnimation(animationScaleRotateOut);
+                                            animationScaleRotateOut.setAnimationListener(new Animation.AnimationListener() {
+                                                @Override
+                                                public void onAnimationStart(Animation animation) {
+
+                                                }
+
+                                                @Override
+                                                public void onAnimationEnd(Animation animation) {
+                                                    viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
+                                                    viewHolder.textViewDate.setTextColor(application.getResources().getColor(R.color.iconDone));
+                                                    viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
+                                                    viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
+                                                }
+
+                                                @Override
+                                                public void onAnimationRepeat(Animation animation) {
+
+                                                }
+                                            });
+                                            animationScaleRotateIn.setAnimationListener(new Animation.AnimationListener() {
+                                                @Override
+                                                public void onAnimationStart(Animation animation) {
+
+                                                }
+
+                                                @Override
+                                                public void onAnimationEnd(Animation animation) {
+                                                    viewHolder.layout.startAnimation(animationTranslateLeft);
+                                                }
+
+                                                @Override
+                                                public void onAnimationRepeat(Animation animation) {
+
+                                                }
+                                            });
+                                            animationTranslateLeft.setAnimationListener(new Animation.AnimationListener() {
+                                                @Override
+                                                public void onAnimationStart(Animation animation) {
+
+                                                }
+
+                                                @Override
+                                                public void onAnimationEnd(Animation animation) {
+                                                    updateDataSet();
+                                                }
+
+                                                @Override
+                                                public void onAnimationRepeat(Animation animation) {
+
+                                                }
+                                            });
+                                            break;
+                                        case Work.ALL:
+                                            viewHolder.imageViewForm.startAnimation(animationScaleRotateOut);
+                                            animationScaleRotateOut.setAnimationListener(new Animation.AnimationListener() {
+                                                @Override
+                                                public void onAnimationStart(Animation animation) {
+
+                                                }
+
+                                                @Override
+                                                public void onAnimationEnd(Animation animation) {
+                                                    viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
+                                                    viewHolder.textViewDate.setTextColor(application.getResources().getColor(R.color.iconDone));
+                                                    viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
+                                                    viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
+                                                }
+
+                                                @Override
+                                                public void onAnimationRepeat(Animation animation) {
+
+                                                }
+                                            });
+                                            animationScaleRotateIn.setAnimationListener(new Animation.AnimationListener() {
+                                                @Override
+                                                public void onAnimationStart(Animation animation) {
+                                                }
+
+                                                @Override
+                                                public void onAnimationEnd(Animation animation) {
+                                                }
+
+                                                @Override
+                                                public void onAnimationRepeat(Animation animation) {
+
+                                                }
+                                            });
+                                            break;
+                                    }
+
+                            }
+
                         }
                     });
-                }
-                break;
-            case 1:
-                viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, WorkEditActivity.class);
-                        intent.putExtra("date", localDataSet.get(viewHolder.getBindingAdapterPosition()).getDate().getTime().getTime());
-                        intent.putExtra("uuid", "");
-                        context.startActivity(intent);
+
+
+                    viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                        Intent intent = new Intent(context, WorkCheckActivity.class);
+                            Intent intent = new Intent(context, WorkCheckActivity.class);
+                            intent.putExtra("uuid", localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                            context.startActivity(intent);
+                        }
+                    });
+
+
+                    if (!slimOn) {
+                        viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setMessage(R.string.delete_confirm_text)
+                                        .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                application.delWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                                                updateDataSet();
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                            }
+                                        });
+                                Dialog dialogFragment = builder.create();
+                                dialogFragment.show();
+                                return false;
+                            }
+                        });
                     }
-                });
-                break;
+                    break;
+                case 1:
+                    viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, WorkEditActivity.class);
+                            intent.putExtra("date", localDataSet.get(viewHolder.getBindingAdapterPosition()).getDate().getTime().getTime());
+                            intent.putExtra("uuid", "");
+                            context.startActivity(intent);
+                        }
+                    });
+                    break;
+            }
+        }
+        else {
+            // select mode
+            switch (viewType){
+                case 0:
+                    viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Work work=localDataSet.get(viewHolder.getBindingAdapterPosition());
+                            listener.onItemClick(work.getUuid());
+                        }
+                    });
+            }
+
         }
         return viewHolder;
 

@@ -18,9 +18,7 @@ import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.Work;
-import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
 import com.trashparadise.lifemanager.databinding.FragmentWorksBinding;
-import com.trashparadise.lifemanager.ui.bills.BillListFragment;
 
 public class WorksFragment extends Fragment {
 
@@ -48,7 +46,7 @@ public class WorksFragment extends Fragment {
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        workListFragment=new WorkListFragment(form,true,false);
+        workListFragment=new WorkListFragment(form,true,false,true);
 
         getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_workList,workListFragment).commit();
 

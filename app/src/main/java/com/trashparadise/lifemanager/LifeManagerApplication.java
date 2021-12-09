@@ -16,6 +16,7 @@ public class LifeManagerApplication extends Application {
     private TreeSet<Bill> billList;
     private TreeSet<Work> workList;
     private Preference preference;
+    private TreeSet<Contact> contactList;
 
     @Override
 
@@ -41,10 +42,16 @@ public class LifeManagerApplication extends Application {
             in = new ObjectInputStream(openFileInput("preference.data"));
             preference = (Preference) in.readObject();
             in.close();
+
+            in = new ObjectInputStream(openFileInput("contactList.data"));
+            contactList = (TreeSet<Contact>) in.readObject();
+            in.close();
+            Log.e("contactList.data", contactList.size() + "");
         } catch (Exception e) {
             billList = new TreeSet<>();
             workList = new TreeSet<>();
             preference=new Preference();
+            contactList=new TreeSet<>();
             Log.e("Read Error", e.toString());
         }
     }
@@ -65,6 +72,11 @@ public class LifeManagerApplication extends Application {
 
             out = new ObjectOutputStream(openFileOutput("preference.data", MODE_PRIVATE));
             out.writeObject(preference);
+            out.close();
+
+            out = new ObjectOutputStream(openFileOutput("contactList.data", MODE_PRIVATE));
+            out.writeObject(contactList);
+            Log.e("contactList.data", contactList.size() + "");
             out.close();
         } catch (Exception e) {
             Log.e("Write Error", e.toString());
@@ -231,4 +243,36 @@ public class LifeManagerApplication extends Application {
     public Preference getPreference() {
         return preference;
     }
+
+
+    public void delContact(String uuid) {
+        Contact contact = getContact(uuid);
+        if (contact != null)
+            contactList.remove(contact);
+    }
+
+    public void addContact(Contact contact) {
+        contactList.add(contact);
+    }
+
+    public Contact getContact(String uuid) {
+        if (uuid == null || uuid.equals(""))
+            return null;
+        for (Contact contact : contactList) {
+            if (contact.getUuid().equals(uuid)) {
+                return contact;
+            }
+        }
+        return null;
+    }
+
+    public void setContact(String uuid, Contact contactNew) {
+        delContact(uuid);
+        addContact(contactNew);
+    }
+
+    public ArrayList<Contact> getContactList() {
+        return new ArrayList<Contact>(contactList);
+    }
+
 }

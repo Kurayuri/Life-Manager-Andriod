@@ -170,6 +170,7 @@ public class BillAuditPieFragment extends Fragment {
 
         for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
+        colors.remove(1);
 
         for (int c : ColorTemplate.JOYFUL_COLORS)
             colors.add(c);

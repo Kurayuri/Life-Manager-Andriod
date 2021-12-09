@@ -1,6 +1,7 @@
 package com.trashparadise.lifemanager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -28,6 +29,16 @@ public class Work implements Comparable<Work>, Serializable {
         Work workNew=new Work(this.title,calendar,this.repeat,this.form,this.note);
         workNew.setClassUuid(this.classUuid);
         return workNew;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+
+        return this.title.equals(((Work)obj).getTitle()) &&
+                this.date.equals(((Work)obj).getDate()) &&
+                this.repeat.equals(((Work)obj).getRepeat()) &&
+                this.note.equals(((Work)obj).getNote()) &&
+                this.form.equals(((Work)obj).getForm()) ;
     }
 
     public void setClassUuid(String classUuid) {

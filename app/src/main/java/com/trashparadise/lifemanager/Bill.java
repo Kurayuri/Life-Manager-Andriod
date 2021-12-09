@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanager;
 
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -34,6 +36,17 @@ public class Bill implements Comparable<Bill>, Serializable {
         int ans=o.getDate().compareTo(this.getDate());
         return ans == 0 ? o.getUuid().compareTo(this.getUuid()) : ans;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+
+        return this.amount.equals(((Bill)obj).getAmount()) &&
+                this.date.equals(((Bill)obj).getDate()) &&
+                this.type.equals(((Bill)obj).getType()) &&
+                this.note.equals(((Bill)obj).getNote()) &&
+                this.form.equals(((Bill)obj).getForm()) ;
+    }
+
     public Integer getForm() {
         return form;
     }

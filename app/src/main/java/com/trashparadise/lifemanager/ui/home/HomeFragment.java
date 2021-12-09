@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,14 +12,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.Preference;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.Work;
-import com.trashparadise.lifemanager.adapter.WorkListAdapter;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
@@ -30,7 +25,6 @@ import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 import com.trashparadise.lifemanager.ui.works.WorkListFragment;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class HomeFragment extends Fragment {
 
@@ -48,7 +42,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         billAuditPieFragment = new BillAuditPieFragment(Calendar.getInstance(), 0);
         billListFragment = new BillListFragment();
-        workListAFragment = new WorkListFragment(Work.TODO, false, true);
+        workListAFragment = new WorkListFragment(Work.TODO, false, true,true);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

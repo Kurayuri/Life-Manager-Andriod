@@ -11,6 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
         <activity
+            android:name=".ui.contact.ContactSelectActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.works.WorkMergeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.works.WorkCheckActivity"
             android:exported="false" />
         <activity

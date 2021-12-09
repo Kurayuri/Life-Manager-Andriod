@@ -47,8 +47,6 @@ public class BillAuditPieFragment extends Fragment {
     private DecimalFormat decimalFormat;
     private Legend legend;
 
-    private BigDecimal sum0;
-    private BigDecimal sum1;
 
 
     public BillAuditPieFragment(Calendar date, Integer form) {
@@ -72,8 +70,7 @@ public class BillAuditPieFragment extends Fragment {
         application = (LifeManagerApplication) getActivity().getApplication();
         dateFormat = new SimpleDateFormat(getString(R.string.date_format_month));
         decimalFormat = new DecimalFormat(getString(R.string.amount_decimal_format_unit));
-        sum0 = new BigDecimal("0");
-        sum1 = new BigDecimal("0");
+
 
         chart = binding.chart;
 
@@ -139,21 +136,10 @@ public class BillAuditPieFragment extends Fragment {
         dateEnd.add(Calendar.MONTH, 1);
 
 
-        sum0 = new BigDecimal("0");
-        sum1 = new BigDecimal("0");
 
-        ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, Bill.ALL);
+        ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, form);
         TreeMap<String, Float> localDataSetAudit = new TreeMap<>();
         for (Bill bill : localDataSet) {
-            switch (bill.getForm()) {
-                case Bill.EXPAND:
-                    sum0=sum0.add(bill.getAmount());
-                    break;
-                case Bill.INCOME:
-                    sum1=sum1.add(bill.getAmount());
-                    break;
-            }
-            if (bill.getForm().equals(form))
                 localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
         }
 
@@ -224,16 +210,9 @@ public class BillAuditPieFragment extends Fragment {
         // undo all highlights
         chart.highlightValues(null);
 
+
         chart.invalidate();
     }
 
-    public BigDecimal getValueSum(int field) {
-        switch (field) {
-            case Bill.EXPAND:
-                return sum0;
-            case Bill.INCOME:
-                return sum1;
-        }
-        return new BigDecimal("0");
-    }
+
 }

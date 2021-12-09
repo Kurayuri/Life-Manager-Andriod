@@ -4,12 +4,169 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.bills.BillAuditActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/chart_pie_expand"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_date_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/date_format_day"
+            android:textColor="@color/colorTextTeal"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/textView_date_end"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+
+            android:id="@+id/textView_date_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/to"
+            android:textColor="@color/colorTextTeal"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/textView_date_start"
+            app:layout_constraintEnd_toStartOf="@id/textView_date_end"
+            app:layout_constraintStart_toEndOf="@id/textView_date_start" />
+
+        <TextView
+            android:id="@+id/textView_date_end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/date_format_day"
+            android:textColor="@color/colorTextTeal"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/textView_date_start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textView_date_start" />
+
+        <TextView
+            android:id="@+id/textView_amount_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/amount_decimal_format"
+            android:textColor="@color/colorTextRed"
+            app:layout_constraintEnd_toEndOf="@id/textView_date_start"
+            app:layout_constraintStart_toStartOf="@id/textView_date_start"
+            app:layout_constraintTop_toBottomOf="@id/textView_date_start" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expend"
+            android:textColor="@color/colorTextRed"
+            app:layout_constraintBottom_toTopOf="@id/textView_amount_expand"
+            app:layout_constraintEnd_toEndOf="@id/textView_amount_expand"
+            app:layout_constraintStart_toStartOf="@id/textView_amount_expand" />
+
+        <TextView
+            android:id="@+id/textView_amount_income"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_decimal_format"
+            android:textColor="@color/colorTextBlue"
+            app:layout_constraintBaseline_toBaselineOf="@id/textView_amount_expand"
+            app:layout_constraintEnd_toEndOf="@id/textView_date_end"
+            app:layout_constraintStart_toStartOf="@id/textView_date_end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/income"
+            android:textColor="@color/colorTextBlue"
+            app:layout_constraintBottom_toTopOf="@id/textView_amount_income"
+            app:layout_constraintEnd_toEndOf="@id/textView_amount_income"
+            app:layout_constraintStart_toStartOf="@id/textView_amount_income" />
+
+        <TextView
+            android:id="@+id/textView_amount_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="@string/amount_decimal_format"
+            android:textColor="@color/colorTextBlue"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@id/textView_amount_income"
+            app:layout_constraintStart_toStartOf="@id/textView_amount_expand"
+            app:layout_constraintTop_toBottomOf="@id/textView_amount_expand" />
+
+        <TextView
+            android:id="@+id/textView_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/balance"
+            android:textColor="@color/colorTextBlue"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/textView_amount_balance"
+            app:layout_constraintEnd_toEndOf="@id/textView_amount_balance"
+            app:layout_constraintStart_toStartOf="@id/textView_amount_balance" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/layout_text"
+
+        />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/layout_text">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.PieChart
+
+                android:id="@+id/chart_pie_expand"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="4dp" />
+
+            <com.github.mikephil.charting.charts.PieChart
+
+                android:id="@+id/chart_pie_income"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="4dp" />
+
+            <com.github.mikephil.charting.charts.PieChart
+
+                android:id="@+id/chart_bar_expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp" />
+
+            <com.github.mikephil.charting.charts.PieChart
+
+                android:id="@+id/chart_bar_income"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

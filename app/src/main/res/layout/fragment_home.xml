@@ -43,27 +43,17 @@
         app:layout_constraintStart_toStartOf="@id/textView_amount_income"
         app:layout_constraintEnd_toEndOf="@id/textView_amount_income"/>
 
-    <TextView
-        android:id="@+id/textView_date"
-        android:layout_width="wrap_content"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/fragmentContainer_chart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="20dp"
-        android:text="@string/date_format_month"
-        android:textColor="@color/colorPrimary"/>
+
 
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer_chart"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/fragmentContainer_list"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="2"
-        android:layout_height="0dp"/>
+        tools:layout_editor_absoluteX="1dp" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer_list"
@@ -107,5 +97,17 @@
         app:layout_constraintTop_toBottomOf="@id/fragmentContainer_chart"
 
  />
+    <TextView
+        android:id="@+id/textView_date"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/fragmentContainer_chart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="20dp"
+        android:text="@string/date_format_month"
+        android:textColor="@color/colorPrimary"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

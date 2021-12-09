@@ -20,6 +20,7 @@ import com.trashparadise.lifemanager.Preference;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
+import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
     private void audit(){
-        Map<Integer, BigDecimal> sum=BillAudit.getSum(application.getBillList(Calendar.getInstance(), Bill.EXPAND));
+        Map<Integer, BigDecimal> sum=BillAudit.getSum(application.getBillList(Calendar.getInstance(), Bill.ALL));
 
         binding.textViewDate.setText(simpleDateFormat.format(Calendar.getInstance().getTime()));
 
@@ -102,6 +103,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void initListener() {
+        binding.textViewDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), BillAuditActivity.class);
+                intent.putExtra("uuid", "");
+                startActivity(intent);
+            }
+        });
+
         binding.floatingActionButtonNewBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,13 +159,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("21322",billAuditPieFragment.getValueSum(Bill.EXPAND).toString());
         if (init != 0) {
             try {
                 billAuditPieFragment.callUpdateData();
                 audit();
             } catch (Exception e) {
-                Log.e("213",e.getMessage());
             }
             try {
                 workListAFragment.updateDateSet(0);

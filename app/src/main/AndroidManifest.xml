@@ -10,6 +10,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeManager">
+        <service
+            android:name=".service.NotificationService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <receiver
+            android:name=".service.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+        </receiver>
+
         <activity
             android:name=".ui.contact.ContactSelectActivity"
             android:exported="false" />

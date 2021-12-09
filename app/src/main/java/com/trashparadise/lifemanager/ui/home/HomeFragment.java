@@ -2,6 +2,7 @@ package com.trashparadise.lifemanager.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +127,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         if (init != 0) {
             try {
                 billAuditPieFragment.callUpdateData();
@@ -134,9 +134,7 @@ public class HomeFragment extends Fragment {
                 workListAFragment.updateDateSet(0);
             }
             catch (Exception e){
-
             }
-
         }
         init = 1;
     }

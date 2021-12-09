@@ -4,8 +4,11 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -94,4 +97,5 @@ public class Bill implements Comparable<Bill>, Serializable {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
 }

@@ -72,11 +72,11 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         work = application.getWork(uuid);
         if (work == null) {
             date = Calendar.getInstance();
+            date.add(Calendar.HOUR,1);
             form = 0;
             note = new String("");
             title = new String("");
             repeat = 0;
-            date = Calendar.getInstance();
         } else {
             date = (Calendar) work.getDate().clone();
             form = work.getForm();

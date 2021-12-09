@@ -47,26 +47,35 @@ public class BillAuditPieFragment extends Fragment {
     private DecimalFormat decimalFormat;
     private Legend legend;
 
+    private BigDecimal sum0;
+    private BigDecimal sum1;
 
-    public BillAuditPieFragment(Calendar date, Integer form){
-        this.date=date;
-        this.form=form;
+
+    public BillAuditPieFragment(Calendar date, Integer form) {
+        this.date = date;
+        this.form = form;
+
+
     }
-    public BillAuditPieFragment(){
-        this.date=Calendar.getInstance();
-        this.form=-1;
+
+    public BillAuditPieFragment() {
+        this.date = Calendar.getInstance();
+        this.form = Bill.EXPAND;
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding=FragmentBillAuditPieBinding.inflate(inflater,container,false);
-        View view=binding.getRoot();
-        application=(LifeManagerApplication)getActivity().getApplication();
+        binding = FragmentBillAuditPieBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        application = (LifeManagerApplication) getActivity().getApplication();
         dateFormat = new SimpleDateFormat(getString(R.string.date_format_month));
-        decimalFormat=new DecimalFormat(getString(R.string.amount_decimal_format_unit));
+        decimalFormat = new DecimalFormat(getString(R.string.amount_decimal_format_unit));
+        sum0 = new BigDecimal("0");
+        sum1 = new BigDecimal("0");
 
-        chart=binding.chart;
+        chart = binding.chart;
 
         {
             chart.getDescription().setEnabled(false);
@@ -74,11 +83,9 @@ public class BillAuditPieFragment extends Fragment {
 
             chart.setDragDecelerationFrictionCoef(0.95f);
 
-            chart.setCenterText(dateFormat.format(date.getTime()));
-            chart.setCenterTextSize(16);
-            chart.setCenterTextColor(getResources().getColor(R.color.colorPrimary));
+
             chart.setDrawHoleEnabled(true);
-            chart.setHoleColor(Color.WHITE);
+            chart.setHoleColor(getResources().getColor(R.color.transparent));
 
             chart.setTransparentCircleColor(Color.WHITE);
             chart.setTransparentCircleAlpha(110);
@@ -114,47 +121,57 @@ public class BillAuditPieFragment extends Fragment {
     }
 
 
-    public void callUpdateData(){
+    public void callUpdateData() {
         updateData();
     }
 
     private void updateData() {
         chart.animateY(1400, Easing.EaseInOutQuad);
-        Calendar dateStart=Calendar.getInstance();
-        Calendar dateEnd=Calendar.getInstance();
+        Calendar dateStart = Calendar.getInstance();
+        Calendar dateEnd = Calendar.getInstance();
         dateStart.setTime(date.getTime());
-        dateStart.set(Calendar.DAY_OF_MONTH,1);
+        dateStart.set(Calendar.DAY_OF_MONTH, 1);
         dateStart.set(Calendar.HOUR_OF_DAY, 0);
         dateStart.set(Calendar.MINUTE, 0);
         dateStart.set(Calendar.SECOND, 0);
         dateStart.set(Calendar.MILLISECOND, 0);
         dateEnd.setTime(dateStart.getTime());
-        dateEnd.add(Calendar.MONTH,1);
+        dateEnd.add(Calendar.MONTH, 1);
 
 
-        ArrayList<Bill> localDataSet=application.getBillList(dateStart,dateEnd,0);
-        TreeMap<String, Float>  localDataSetAudit=new TreeMap<>();
-        for (Bill bill:localDataSet) {
-            localDataSetAudit.put(bill.getType(),localDataSetAudit.getOrDefault(bill.getType(),0f)+bill.getAmount().floatValue());
+        sum0 = new BigDecimal("0");
+        sum1 = new BigDecimal("0");
+
+        ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, Bill.ALL);
+        TreeMap<String, Float> localDataSetAudit = new TreeMap<>();
+        for (Bill bill : localDataSet) {
+            switch (bill.getForm()) {
+                case Bill.EXPAND:
+                    sum0=sum0.add(bill.getAmount());
+                    break;
+                case Bill.INCOME:
+                    sum1=sum1.add(bill.getAmount());
+                    break;
+            }
+            if (bill.getForm().equals(form))
+                localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
         }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
 
-        for (Map.Entry<String,Float> entry:localDataSetAudit.entrySet()) {
+        for (Map.Entry<String, Float> entry : localDataSetAudit.entrySet()) {
             if (entry.getValue().equals(0f))
                 continue;
-            entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
+            entries.add(new PieEntry(entry.getValue().floatValue(), entry.getKey()));
         }
 
 
         // if entries is empty
         legend.setEnabled(true);
-        chart.setCenterText(dateFormat.format(date.getTime()));
-        if (entries.size()==0){
-            entries.add(new PieEntry((float) 0.001,""));
+        if (entries.size() == 0) {
+            entries.add(new PieEntry((float) 0.001, ""));
             legend.setEnabled(false);
-            chart.setCenterText(chart.getCenterText()+"\n"+getString(R.string.empty));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -194,7 +211,7 @@ public class BillAuditPieFragment extends Fragment {
         data.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                DecimalFormat decimalFormat=new DecimalFormat("0.00");
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 return decimalFormat.format(new BigDecimal(value));
             }
         });
@@ -208,9 +225,15 @@ public class BillAuditPieFragment extends Fragment {
         chart.highlightValues(null);
 
         chart.invalidate();
-
-        binding.textViewAmount.setText(decimalFormat.format(data.getYValueSum()));
     }
 
-
+    public BigDecimal getValueSum(int field) {
+        switch (field) {
+            case Bill.EXPAND:
+                return sum0;
+            case Bill.INCOME:
+                return sum1;
+        }
+        return new BigDecimal("0");
+    }
 }

@@ -14,24 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/textView_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/amount_decimal_format_unit"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginBottom="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/in_sum"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@id/textView_amount"
-        app:layout_constraintStart_toStartOf="@id/textView_amount"
-        app:layout_constraintEnd_toEndOf="@id/textView_amount"/>
 
 
 

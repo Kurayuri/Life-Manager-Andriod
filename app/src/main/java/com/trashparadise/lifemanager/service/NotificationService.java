@@ -98,7 +98,7 @@ public class NotificationService extends Service {
             }
         }
 
-        Log.e("Notification Service", "Execute");
+//        Log.e("Notification Service", "Execute");
 
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

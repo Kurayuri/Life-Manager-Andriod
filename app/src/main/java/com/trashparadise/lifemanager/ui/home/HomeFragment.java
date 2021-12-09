@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.Preference;
 import com.trashparadise.lifemanager.R;
@@ -22,10 +23,15 @@ import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
+import com.trashparadise.lifemanager.ui.works.BillAudit;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 import com.trashparadise.lifemanager.ui.works.WorkListFragment;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -36,14 +42,19 @@ public class HomeFragment extends Fragment {
     private BillAuditPieFragment billAuditPieFragment;
     private BillListFragment billListFragment;
     private WorkListFragment workListAFragment;
+    private SimpleDateFormat simpleDateFormat;
     private Integer init;
+
+    private DecimalFormat decimalFormat;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        billAuditPieFragment = new BillAuditPieFragment(Calendar.getInstance(), 0);
+        billAuditPieFragment = new BillAuditPieFragment(Calendar.getInstance(), Bill.EXPAND);
         billListFragment = new BillListFragment();
-        workListAFragment = new WorkListFragment(Work.TODO, false, true,true);
+        workListAFragment = new WorkListFragment(Work.TODO, false, true, true);
+        decimalFormat = new DecimalFormat(getString(R.string.amount_decimal_format_unit));
+        simpleDateFormat=new SimpleDateFormat(getString(R.string.date_format_month));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,7 +65,6 @@ public class HomeFragment extends Fragment {
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
 
 
         fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -70,14 +80,25 @@ public class HomeFragment extends Fragment {
         }
 
 
-//        fragmentTransaction.add(R.id.fragmentContainer_list, billListFragment);
-//        fragmentTransaction.add(R.id.fragmentContainer_list, workListAFragment);
+
         fragmentTransaction.commit();
         init = 0;
 
-
+        audit();
         initListener();
         return root;
+    }
+    private void audit(){
+        Map<Integer, BigDecimal> sum=BillAudit.getSum(application.getBillList(Calendar.getInstance(), Bill.EXPAND));
+
+        binding.textViewDate.setText(simpleDateFormat.format(Calendar.getInstance().getTime()));
+
+        binding.textViewAmountExpand.setText(decimalFormat.format(sum.get(Bill.EXPAND)));
+        binding.textViewAmountIncome.setText(decimalFormat.format(sum.get(Bill.INCOME)));
+
+        if (sum.get(Bill.EXPAND).equals(new BigDecimal(0))){
+            binding.textViewDate.setText(binding.textViewDate.getText()+"\n"+getString(R.string.empty));
+        }
     }
 
     private void initListener() {
@@ -122,19 +143,29 @@ public class HomeFragment extends Fragment {
                 return true;
             }
         });
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.e("21322",billAuditPieFragment.getValueSum(Bill.EXPAND).toString());
         if (init != 0) {
             try {
                 billAuditPieFragment.callUpdateData();
-                billListFragment.updateDateSet(-1);
+                audit();
+            } catch (Exception e) {
+                Log.e("213",e.getMessage());
+            }
+            try {
                 workListAFragment.updateDateSet(0);
+            } catch (Exception e) {
             }
-            catch (Exception e){
+            try {
+                billListFragment.updateDateSet(-1);
+            } catch (Exception e) {
             }
+
         }
         init = 1;
     }

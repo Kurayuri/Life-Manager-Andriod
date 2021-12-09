@@ -119,18 +119,37 @@ public class LifeManagerApplication extends Application {
         }
         return billFiltered;
     }
+    public ArrayList<Bill> getBillList(Calendar date, Integer form) {
+        Calendar dateStart = Calendar.getInstance();
+        Calendar dateEnd = Calendar.getInstance();
+        dateStart.setTime(date.getTime());
+        dateStart.set(Calendar.DAY_OF_MONTH, 1);
+        dateStart.set(Calendar.HOUR_OF_DAY, 0);
+        dateStart.set(Calendar.MINUTE, 0);
+        dateStart.set(Calendar.SECOND, 0);
+        dateStart.set(Calendar.MILLISECOND, 0);
+        dateEnd.setTime(dateStart.getTime());
+        dateEnd.add(Calendar.MONTH, 1);
 
+        ArrayList<Bill> billFiltered = new ArrayList<>();
+        for (Bill bill : billList) {
+            if (bill.getDate().compareTo(dateStart) >= 0 && bill.getDate().compareTo(dateEnd) < 0 &&
+                    (bill.getForm().equals(form) || form.equals(-1))) {
+                billFiltered.add(bill);
+            }
+        }
+        return billFiltered;
+    }
     public ArrayList<Bill> getBillList() {
         return new ArrayList<Bill>(billList);
     }
+
 
     public void delWork(String uuid) {
         Work work = getWork(uuid);
         if (work != null)
             workList.remove(work);
     }
-
-
 
     // auto unfold
     public void addWork(Work work) {
@@ -274,5 +293,6 @@ public class LifeManagerApplication extends Application {
     public ArrayList<Contact> getContactList() {
         return new ArrayList<Contact>(contactList);
     }
+
 
 }

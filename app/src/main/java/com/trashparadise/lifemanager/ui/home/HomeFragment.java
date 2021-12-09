@@ -1,6 +1,12 @@
 package com.trashparadise.lifemanager.ui.home;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,15 +17,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
+import com.trashparadise.lifemanager.MainActivity;
 import com.trashparadise.lifemanager.Preference;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
+import com.trashparadise.lifemanager.service.NotificationService;
 import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
@@ -33,6 +43,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class HomeFragment extends Fragment {
 
@@ -109,6 +120,29 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getContext(), BillAuditActivity.class);
                 intent.putExtra("uuid", "");
                 startActivity(intent);
+//                String CHANNEL_ID="213";
+//                    CharSequence name = getString(R.string.app_name);
+//                    String description = getString(R.string.app_name);
+//                    int importance = NotificationManager.IMPORTANCE_MAX;
+//                    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//                    channel.setDescription(description);
+//                Intent i = new Intent(getContext(), MainActivity.class);
+//                PendingIntent pi = PendingIntent.getActivity(getContext(), 0, i, 0);
+//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+//                notificationManager.createNotificationChannel(channel);
+//                Bitmap icon= BitmapFactory.decodeResource(getResources(),
+//                        R.drawable.icon_notification);
+//
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.icon_notification)
+//                        .setContentIntent(pi)
+//                        .setAutoCancel(true)
+//                        .setLargeIcon(icon)
+//                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+//                notificationManager.createNotificationChannel(channel);
+//                builder.setContentTitle("213").setContentTitle("333");
+//                notificationManager.notify(9999,builder.build());
+
             }
         });
 

@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,7 @@ import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.ui.works.WorkCheckActivity;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
+import com.trashparadise.lifemanager.util.SoundPoolUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +45,9 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private Boolean auditOn;
     private Boolean slimOn;
     private Boolean openOn;
+
+    private Vibrator vibrator;
+    private SoundPoolUtil soundPoolUtil;
     private int itemWorkLayout;
 
     private WorkListAdapter.OnItemClickListener listener;
@@ -95,22 +102,22 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         }
     }
 
-    public WorkListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn,Boolean openOn, OnItemClickListener listener) {
+    public WorkListAdapter(Context context, Integer form, Boolean auditOn, Boolean slimOn, Boolean openOn, OnItemClickListener listener) {
         this.form = form;
         this.context = context;
         this.auditOn = auditOn;
         this.slimOn = slimOn;
-        this.openOn=openOn;
-        this.listener=listener;
-        itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
-
+        this.openOn = openOn;
+        this.listener = listener;
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         updateDataSet();
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
+        itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
+        vibrator = (Vibrator) application.getSystemService(Context.VIBRATOR_SERVICE);
+        soundPoolUtil=SoundPoolUtil.getInstance(context);
 
     }
-
 
 
     public void callUpdateDataSet(Integer form) {
@@ -177,6 +184,14 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                     viewHolder.imageViewForm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                vibrator.vibrate(200);
+                            }
+
+
                             int currForm = localDataSet.get(viewHolder.getBindingAdapterPosition()).getForm();
                             Animation animationScaleRotateOut = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_out);
                             Animation animationScaleRotateIn = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_in);
@@ -186,9 +201,11 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
                             switch (currForm) {
                                 case Work.DONE:
+                                    soundPoolUtil.play(2);
                                     viewHolder.imageViewForm.startAnimation(animationRotateShake);
                                     break;
                                 case Work.TODO:
+                                    soundPoolUtil.play(1);
                                     switch (form) {
                                         case Work.TODO:
                                             viewHolder.imageViewForm.startAnimation(animationScaleRotateOut);
@@ -323,26 +340,25 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                     }
                     break;
                 case 1:
-                    viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, WorkEditActivity.class);
-                            intent.putExtra("date", localDataSet.get(viewHolder.getBindingAdapterPosition()).getDate().getTime().getTime());
-                            intent.putExtra("uuid", "");
-                            context.startActivity(intent);
-                        }
-                    });
+//                    viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(context, WorkEditActivity.class);
+//                            intent.putExtra("date", localDataSet.get(viewHolder.getBindingAdapterPosition()).getDate().getTime().getTime());
+//                            intent.putExtra("uuid", "");
+//                            context.startActivity(intent);
+//                        }
+//                    });
                     break;
             }
-        }
-        else {
+        } else {
             // select mode
-            switch (viewType){
+            switch (viewType) {
                 case 0:
                     viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Work work=localDataSet.get(viewHolder.getBindingAdapterPosition());
+                            Work work = localDataSet.get(viewHolder.getBindingAdapterPosition());
                             listener.onItemClick(work.getUuid());
                         }
                     });

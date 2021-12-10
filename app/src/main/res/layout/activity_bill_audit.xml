@@ -152,19 +152,19 @@
                 android:layout_height="400dp"
                 android:layout_marginBottom="4dp" />
 
-            <com.github.mikephil.charting.charts.PieChart
+            <com.github.mikephil.charting.charts.BarChart
 
                 android:id="@+id/chart_bar_expand"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_marginBottom="4dp" />
 
-            <com.github.mikephil.charting.charts.PieChart
+            <com.github.mikephil.charting.charts.BarChart
 
                 android:id="@+id/chart_bar_income"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp" />
+                android:layout_height="300dp"
+                android:layout_marginBottom="200dp" />
         </LinearLayout>
     </ScrollView>
 

@@ -100,7 +100,6 @@ public class NotificationService extends Service {
 
         Log.e("Notification Service", "Execute");
 
-
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         long th = SystemClock.elapsedRealtime() + 5000; // 5 s
         Intent intent1 = new Intent(this, AlarmReceiver.class);

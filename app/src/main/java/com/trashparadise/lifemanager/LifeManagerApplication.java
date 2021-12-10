@@ -1,7 +1,25 @@
 package com.trashparadise.lifemanager;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.trashparadise.lifemanager.service.GetMessageThread;
+import com.trashparadise.lifemanager.service.NotificationThread;
+import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -15,14 +33,64 @@ import java.util.TreeSet;
 public class LifeManagerApplication extends Application {
     private TreeSet<Bill> billList;
     private TreeSet<Work> workList;
+    private TreeSet<Work> workListTmp;
     private Preference preference;
     private TreeSet<Contact> contactList;
-
+    private NotificationChannel channel;
+    private NotificationManagerCompat notificationManager;
+    NotificationCompat.Builder builder;
+    private static final String CHANNEL_ID = "Life Manager";
+    Bitmap icon;
     @Override
 
     public void onCreate() {
         super.onCreate();
         readDate();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.app_name);
+            String description = getString(R.string.app_name);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+        }
+        icon= BitmapFactory.decodeResource(getResources(),
+                R.drawable.icon_notification);
+        notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.createNotificationChannel(channel);
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        Intent i = new Intent(this, MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon_notification)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .setLargeIcon(icon)
+                .setContentText(getString(R.string.need_todo))
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        workListTmp=new TreeSet<>();
+        NotificationThread notificationThread=new NotificationThread(this);
+        notificationThread.start();
+        GetMessageThread getMessageThread=new GetMessageThread(this);
+        getMessageThread.start();
+    }
+
+    public void Msg(String text){
+//        workList.add()
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Intent intent=new Intent(this, WorkEditActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("tmpUuid",text);
+        startActivity(intent);
+
+    }
+
+    public void Notify(int id,String uuid){
+        Work work=getWork(uuid);
+        builder.setContentTitle(work.getTitle());
+        Notification notification=builder.build();
+        notificationManager.notify(id,notification);
     }
 
     public void readDate() {
@@ -159,7 +227,7 @@ public class LifeManagerApplication extends Application {
         Integer addFeild = Calendar.SECOND;
         Calendar date = (Calendar) work.getDate().clone();
         Work workNew;
-
+        Log.e("uuid",work.getUuid());
         switch (repeat) {
             case Work.EVERY_DAY:
                 unfoldTime = 14;
@@ -200,6 +268,21 @@ public class LifeManagerApplication extends Application {
                 return work;
             }
         }
+        return null;
+    }
+
+    public Work getWorkTmp(String tmpUuid) {
+        Work w=null;
+        if (tmpUuid == null || tmpUuid.equals(""))
+            return null;
+        for (Work work : workListTmp) {
+            if (work.getUuid().equals(tmpUuid)) {
+                w=work;
+                return work;
+            }
+        }
+        if (w!=null)
+            workListTmp.remove(w);
         return null;
     }
 

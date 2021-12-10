@@ -1,14 +1,7 @@
 package com.trashparadise.lifemanager.ui.home;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
-import com.trashparadise.lifemanager.MainActivity;
 import com.trashparadise.lifemanager.Preference;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.Work;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
-import com.trashparadise.lifemanager.service.NotificationService;
 import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
@@ -43,7 +32,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class HomeFragment extends Fragment {
 

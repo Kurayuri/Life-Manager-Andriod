@@ -34,7 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class WorkEditActivity extends AppCompatActivity implements View.OnClickListener,RadioGroup.OnCheckedChangeListener {
+public class WorkEditActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     private ActivityWorkEditBinding binding;
     private RadioGroup radioGroup;
     private LifeManagerApplication application;
@@ -64,19 +64,34 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         application = (LifeManagerApplication) this.getApplication();
         Intent intent = getIntent();
         dateFormatDate = new SimpleDateFormat(getString(R.string.date_format_date));
-        mergeList=new ArrayList<>();
+        mergeList = new ArrayList<>();
 
 
         // get object
         uuid = intent.getStringExtra("uuid");
+
         work = application.getWork(uuid);
         if (work == null) {
-            date = Calendar.getInstance();
-            date.add(Calendar.HOUR,1);
-            form = 0;
-            note = new String("");
-            title = new String("");
-            repeat = 0;
+            String tmpUuid = intent.getStringExtra("extraUuid");
+            work = application.getWork(tmpUuid);
+            if (work == null)
+                work = application.getWorkTmp(tmpUuid);
+            if (work == null) {
+                date = Calendar.getInstance();
+                date.add(Calendar.HOUR, 1);
+                form = 0;
+                note = new String("");
+                title = new String("");
+                repeat = 0;
+            } else {
+                date = (Calendar) work.getDate().clone();
+                form = work.getForm();
+                note = new String(work.getNote());
+                uuid = new String(work.getUuid());
+                repeat = work.getRepeat();
+                title = new String(work.getTitle());
+                uuid = "";
+            }
         } else {
             date = (Calendar) work.getDate().clone();
             form = work.getForm();
@@ -151,19 +166,19 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         binding.imageViewMerge.setOnClickListener(this);
         radioGroup.setOnCheckedChangeListener(this);
 
-        launcher=registerForActivityResult(
+        launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode()==Activity.RESULT_OK){
-                            Intent data=result.getData();
-                            String mergeUuid=data.getStringExtra("uuid");
-                            Work mergeWork=application.getWork(mergeUuid);
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            String mergeUuid = data.getStringExtra("uuid");
+                            Work mergeWork = application.getWork(mergeUuid);
                             if (!uuid.equals(mergeUuid)) {
                                 mergeList.add(mergeUuid);
-                                binding.editTextTitle.setText(binding.editTextTitle.getText()+ "\n" + mergeWork.getTitle());
-                                binding.editTextNote.setText(binding.editTextNote.getText()+ " " + mergeWork.getNote());
+                                binding.editTextTitle.setText(binding.editTextTitle.getText() + "\n" + mergeWork.getTitle());
+                                binding.editTextNote.setText(binding.editTextNote.getText() + " " + mergeWork.getNote());
                             }
                         }
                     }
@@ -236,7 +251,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
             dialogFragment.show();
 
         } else {
-            Work workNew=new Work(title, dateNew, repeat, form, note);
+            Work workNew = new Work(title, dateNew, repeat, form, note);
             if (uuid.equals("")) {
                 //New
                 application.addWork(workNew);
@@ -246,14 +261,14 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                 if (workNew.equals(work)) {
                     // edited
                     finish();
-                }else {
+                } else {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setMessage(R.string.edit_confirm_text_chain)
                             .setPositiveButton(R.string.single_item, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     application.setWork(uuid, workNew);
-                                    for (String mergeUUid:mergeList){
+                                    for (String mergeUUid : mergeList) {
                                         application.delWork(mergeUUid);
                                     }
                                     finish();
@@ -262,7 +277,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                             .setNegativeButton(R.string.chain_item, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     application.setWorkChain(uuid, workNew);
-                                    for (String mergeUUid:mergeList){
+                                    for (String mergeUUid : mergeList) {
                                         application.delWorkChain(mergeUUid);
                                     }
                                     finish();
@@ -306,17 +321,18 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    private void onMerge(){
-        Intent intent=new Intent(this,WorkMergeActivity.class);
-        intent.putExtra("form",form);
+    private void onMerge() {
+        Intent intent = new Intent(this, WorkMergeActivity.class);
+        intent.putExtra("form", form);
         launcher.launch(intent);
     }
 
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        form= form==1?0:1;
+        form = form == 1 ? 0 : 1;
     }
+
     // Actionbar Button
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

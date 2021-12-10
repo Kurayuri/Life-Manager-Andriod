@@ -1,6 +1,5 @@
 package com.trashparadise.lifemanager;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -12,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.trashparadise.lifemanager.databinding.ActivityMainBinding;
-import com.trashparadise.lifemanager.service.NotificationService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,8 +22,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent serviceIntent=new Intent(this, NotificationService.class);
-        startService(serviceIntent);
+//        Intent serviceIntent=new Intent(this, NotificationService.class);
+//        startService(serviceIntent);
+
 
         application=(LifeManagerApplication)getApplication();
         binding = ActivityMainBinding.inflate(getLayoutInflater());

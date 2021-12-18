@@ -1,5 +1,7 @@
 package com.trashparadise.lifemanager.ui.bills;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -9,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -24,6 +27,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -45,11 +49,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class BillAuditActivity extends AppCompatActivity   implements OnChartValueSelectedListener {
+public class BillAuditActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     private ActivityBillAuditBinding binding;
     private LifeManagerApplication application;
-    private FragmentTransaction fragmentTransaction;
     private SimpleDateFormat simpleDateFormat;
+    private SimpleDateFormat simpleDateFormatMonthDay;
     private DecimalFormat decimalFormat;
 
     private Calendar dateStart;
@@ -57,9 +61,8 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
     private BigDecimal amountExpand;
     private BigDecimal amountIncome;
     private BigDecimal amountAll;
+    private static int millisecondOfDay = 86400000;
 
-    private PieChart chartExpand;
-    private PieChart chartIncome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,15 +92,19 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         dateEnd.add(Calendar.MILLISECOND, -1);
 
         simpleDateFormat = new SimpleDateFormat(getString(R.string.date_format_day));
-        decimalFormat=new DecimalFormat(getString(R.string.amount_decimal_format));
-
+        simpleDateFormatMonthDay = new SimpleDateFormat(getString(R.string.date_format_month_day));
+        decimalFormat = new DecimalFormat(getString(R.string.amount_decimal_format));
 
         initView();
         initListener();
         setContentView(view);
     }
 
-    private void initView(){
+    private void initView() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.bill_audit);
+
         binding.textViewDateStart.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         binding.textViewDateEnd.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
@@ -106,17 +113,16 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
 
         initPieChart(Bill.EXPAND);
         initPieChart(Bill.INCOME);
-        amountExpand= updatePieChart(Bill.EXPAND);
-        amountIncome= updatePieChart(Bill.INCOME);
-        amountAll=amountIncome.subtract(amountExpand);
+        amountExpand = updatePieChart(Bill.EXPAND);
+        amountIncome = updatePieChart(Bill.INCOME);
+        amountAll = amountIncome.subtract(amountExpand);
         binding.textViewAmountExpand.setText(decimalFormat.format(amountExpand));
         binding.textViewAmountIncome.setText(decimalFormat.format(amountIncome));
         binding.textViewAmountBalance.setText(decimalFormat.format(amountAll));
-        if (amountAll.compareTo(new BigDecimal(0))<0){
+        if (amountAll.compareTo(new BigDecimal(0)) < 0) {
             binding.textViewBalance.setTextColor(getResources().getColor(R.color.colorTextRed));
             binding.textViewAmountBalance.setTextColor(getResources().getColor(R.color.colorTextRed));
-        }
-        else {
+        } else {
             binding.textViewBalance.setTextColor(getResources().getColor(R.color.colorTextBlue));
             binding.textViewAmountBalance.setTextColor(getResources().getColor(R.color.colorTextBlue));
         }
@@ -216,7 +222,8 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
 
         initView();
     }
-    private void initPieChart(Integer form){
+
+    private void initPieChart(Integer form) {
         PieChart chart;
 
         switch (form) {
@@ -229,11 +236,11 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
                 break;
         }
 
-        Legend legend=chart.getLegend();
+        Legend legend = chart.getLegend();
         chart.getDescription().
 
                 setEnabled(false);
-        chart.setExtraOffsets(30,30,30,30);
+        chart.setExtraOffsets(30, 30, 30, 30);
 //        chart.setExtraOffsets(10,10,10,10);
 
         chart.setDragDecelerationFrictionCoef(0.95f);
@@ -268,27 +275,28 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         legend.setYEntrySpace(0f);
         legend.setYOffset(0f);
     }
+
     private BigDecimal updatePieChart(Integer form) {
         PieChart chart;
         int colorId;
         switch (form) {
             case Bill.INCOME:
                 chart = binding.chartPieIncome;
-                colorId=getResources().getColor(R.color.colorTextBlue);
+                colorId = getResources().getColor(R.color.colorTextBlue);
                 break;
             case Bill.EXPAND:
             default:
                 chart = binding.chartPieExpand;
-                colorId=getResources().getColor(R.color.colorTextRed);
+                colorId = getResources().getColor(R.color.colorTextRed);
                 break;
         }
-        Legend legend=chart.getLegend();
+        Legend legend = chart.getLegend();
 
 
         ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, form);
         TreeMap<String, Float> localDataSetAudit = new TreeMap<>();
         for (Bill bill : localDataSet) {
-                localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
+            localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
         }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
@@ -367,10 +375,10 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         chart.highlightValues(null);
         chart.animateY(1400, Easing.EaseInOutQuad);
         chart.invalidate();
-        return new BigDecimal(data.getYValueSum()+"");
+        return new BigDecimal(data.getYValueSum() + "");
     }
 
-    private void initBarChart(Integer form){
+    private void initBarChart(Integer form) {
         BarChart chart;
 
         switch (form) {
@@ -383,14 +391,13 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
                 break;
         }
 
-        Legend legend=chart.getLegend();
+        Legend legend = chart.getLegend();
         chart.getDescription().
                 setEnabled(false);
 //        chart.setExtraOffsets(30,30,30,30);
 //        chart.setExtraOffsets(10,10,10,10);
 
         chart.setDragDecelerationFrictionCoef(0.95f);
-
 
 
         chart.setDrawBarShadow(false);
@@ -400,7 +407,7 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        chart.setMaxVisibleValueCount(60);
+        chart.setMaxVisibleValueCount(93);
 
         // scaling can now only be done on x- and y-axis separately
         chart.setPinchZoom(false);
@@ -410,19 +417,25 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
 //        chart.setBottom(0);
         // chart.setDrawYLabels(false);
 
-//        ValueFormatter xAxisFormatter = new DayAxisValueFormatter();
+        class XAxisValueFormatter extends ValueFormatter {
+            @Override
+            public String getFormattedValue(float value) {
+                return simpleDateFormatMonthDay.format(new Date((long) value * millisecondOfDay));
+            }
+        }
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(7);
-//        xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setValueFormatter(new XAxisValueFormatter());
+
 
 //        IAxisValueFormatter custom = new MyAxisValueFormatter();
 
-        YAxis leftAxis = chart.getAxisRight();
-        leftAxis.setEnabled(false);
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
 //
 //        leftAxis.setLabelCount(8, false);
 ////        leftAxis.setValueFormatter(custom);
@@ -435,66 +448,53 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         Legend l = chart.getLegend();
         l.setEnabled(false);
 
-        XYMarkerView mv = new XYMarkerView(this, null);
+        XYMarkerView mv = new XYMarkerView(this, new XAxisValueFormatter());
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
     }
+
     private BigDecimal updateBarChart(Integer form) {
         BarChart chart;
         int colorId;
         switch (form) {
             case Bill.INCOME:
                 chart = binding.chartBarIncome;
-                colorId=getResources().getColor(R.color.colorTextBlue);
+                colorId = getResources().getColor(R.color.colorTextBlue);
                 break;
             case Bill.EXPAND:
             default:
                 chart = binding.chartBarExpand;
-                colorId=getResources().getColor(R.color.colorTextRed);
+                colorId = getResources().getColor(R.color.colorTextRed);
                 break;
         }
-        Legend legend=chart.getLegend();
+        Legend legend = chart.getLegend();
 
 
         ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, form);
         TreeMap<Long, Float> localDataSetAudit = new TreeMap<>();
 
-        for (Long i=new Long(dateStart.get(Calendar.DATE));i<=dateEnd.get(Calendar.DATE);++i){
-            localDataSetAudit.put(i,0f);
+        Long st = dateStart.getTime().getTime() / millisecondOfDay;
+        Long ed = new Long((long) Math.ceil(dateEnd.getTime().getTime() * 1.0 / millisecondOfDay));
+
+        for (Long i = st; i <= ed; i++) {
+            localDataSetAudit.put(i, 0f);
         }
 
         for (Bill bill : localDataSet) {
-            Long time=new Long(bill.getDate().get(Calendar.DATE));
-            localDataSetAudit.put(time,localDataSetAudit.get(time) + bill.getAmount().floatValue());
+            Long time = new Long(bill.getDate().getTime().getTime()) / millisecondOfDay;
+            localDataSetAudit.put(time, localDataSetAudit.get(time) + bill.getAmount().floatValue());
         }
+
 
         ArrayList<BarEntry> entries = new ArrayList<>();
 
         for (Map.Entry<Long, Float> entry : localDataSetAudit.entrySet()) {
-            if (entry.getValue().equals(0f))
+            if (entry.getValue().compareTo(0.004f) < 0)
                 entry.setValue(0.004f);
 //                continue;
-            entries.add(new BarEntry(entry.getKey(),entry.getValue().floatValue()));
+            entries.add(new BarEntry(entry.getKey(), entry.getValue().floatValue()));
         }
-//        int start=1;
-//        int count=10;
-//        int range=20;
-//        for (int i = (int) start; i < start + count; i++) {
-//            float val = (float) (Math.random() * (range + 1));
-//
-//            if (Math.random() * 100 < 25) {
-//                entries.add(new BarEntry(i, val));
-//            } else {
-//                entries.add(new BarEntry(i, val));
-//            }
-//        }
 
-//        legend.setEnabled(true);
-//        // if entries is empty
-//        if (entries.size() == 0) {
-//            entries.add(new BarEntry((float) 0.001, ""));
-//            legend.setEnabled(false);
-//        }
 
         BarDataSet dataSet = new BarDataSet(entries, "");
 
@@ -504,36 +504,10 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         dataSet.setIconsOffset(new MPPointF(0, 40));
 
         // add a lot of colors
-
         ArrayList<Integer> colors = new ArrayList<>();
-
-//        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-//            colors.add(c);
-//        colors.remove(1);
-//
-//        for (int c : ColorTemplate.JOYFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.COLORFUL_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.LIBERTY_COLORS)
-//            colors.add(c);
-//
-//        for (int c : ColorTemplate.PASTEL_COLORS)
-//            colors.add(c);
-
-//        colors.add(ColorTemplate.getHoloBlue());
-//        dataSet.setValueLinePart1OffsetPercentage(90f);
-//        dataSet.setValueLinePart1Length(0.3f);
-//        colors.add(getResources().getColor(R.color.colorTextRed));
-//        dataSet.setValueLinePart2Length(0.4f);
         colors.add(colorId);
         dataSet.setColors(colors);
-//        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-//        dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-//        dataSet.setValueLineColor(colorId);
-//        dataSet.setSelectionShift(5f);
+
 
         BarData data = new BarData(dataSet);
         data.setValueFormatter(new ValueFormatter() {
@@ -543,8 +517,11 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
                 return decimalFormat.format(new BigDecimal(value));
             }
         });
+
+
         data.setValueTextSize(14f);
         data.setValueTextColor(colorId);
+
         data.setDrawValues(false);
 //        chart.setEntryLabelColor(Color.WHITE);
 //        chart.setEntryLabelColor(colorId);
@@ -560,6 +537,13 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         leftAxis.setSpaceBottom(0);
+        leftAxis.setTextColor(colorId);
+        leftAxis.setAxisLineColor(colorId);
+        leftAxis.setGridColor(colorId);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setTextColor(colorId);
+        xAxis.setAxisLineColor(colorId);
 
 
 
@@ -581,21 +565,26 @@ public class BillAuditActivity extends AppCompatActivity   implements OnChartVal
         if (e == null)
             return;
 
-        BarChart chart=binding.chartBarExpand;
+        BarChart chart = binding.chartBarExpand;
         RectF bounds = onValueSelectedRectF;
         chart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = chart.getPosition(e, YAxis.AxisDependency.LEFT);
-
-        Log.i("bounds", bounds.toString());
-        Log.i("position", position.toString());
-
-        Log.i("x-index",
-                "low: " + chart.getLowestVisibleX() + ", high: "
-                        + chart.getHighestVisibleX());
 
         MPPointF.recycleInstance(position);
     }
 
     @Override
-    public void onNothingSelected() { }
+    public void onNothingSelected() {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

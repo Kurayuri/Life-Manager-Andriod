@@ -42,7 +42,7 @@ public class NotificationThread extends Thread {
             for (Work work : workList) {
                 if (work.getDate().getTime().getTime() - date.getTime() < -10 && work.getForm().equals(Work.TODO) && workNotified.get(work.getUuid()) == null) {
                     workNotified.put(work.getUuid(), work);
-                    application.Notify(id,work.getUuid());
+                    application.notify(id,work.getUuid());
                     id++;
                 }
             }

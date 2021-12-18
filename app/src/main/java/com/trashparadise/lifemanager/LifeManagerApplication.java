@@ -11,17 +11,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.trashparadise.lifemanager.bean.Bill;
+import com.google.gson.Gson;
 import com.trashparadise.lifemanager.bean.Contact;
+import com.trashparadise.lifemanager.bean.DataBundleBean;
+import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.bean.Preference;
+import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.service.MessageGetThread;
 import com.trashparadise.lifemanager.service.NotificationThread;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
+import com.trashparadise.lifemanager.util.RequestUtils;
 
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -34,6 +39,7 @@ import java.util.TreeSet;
 
 public class LifeManagerApplication extends Application {
     private TreeSet<Bill> billList;
+    private User user;
     private TreeSet<Work> workList;
     private TreeSet<Work> workListTmp;
     private Preference preference;
@@ -43,8 +49,45 @@ public class LifeManagerApplication extends Application {
     NotificationCompat.Builder builder;
     private static final String CHANNEL_ID = "Life Manager";
     Bitmap icon;
-    @Override
 
+    public String onPush() {
+        Gson gson = new Gson();
+        DataBundleBean dataBundleBean = new DataBundleBean(billList, workList, contactList, preference);
+        String json = gson.toJson(dataBundleBean);
+        Log.e("Push", json);
+        return json;
+    }
+
+    public void onPull(String json) {
+        Log.e("Pull", json);
+        Gson gson = new Gson();
+        DataBundleBean dataBundleBean = gson.fromJson(json, DataBundleBean.class);
+        if (dataBundleBean.getBillList() != null)
+            billList = dataBundleBean.getBillList();
+        if (dataBundleBean.getPreference() != null)
+            preference = dataBundleBean.getPreference();
+        if (dataBundleBean.getWorkList() != null)
+            workList = dataBundleBean.getWorkList();
+        if (dataBundleBean.getContactList() != null)
+            contactList = dataBundleBean.getContactList();
+    }
+
+    public void workSend(String uuid, String tarUUid) {
+        Gson gson = new Gson();
+        Work work = this.getWork(uuid);
+        if (work != null) {
+            new Thread(new Runnable() {
+                @Override
+
+                public void run() {
+                    Log.e("Send", gson.toJson(work));
+                    RequestUtils.send(user.getUuid(), tarUUid, gson.toJson(work));
+                }
+            }).start();
+        }
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         readDate();
@@ -56,7 +99,7 @@ public class LifeManagerApplication extends Application {
             channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
         }
-        icon= BitmapFactory.decodeResource(getResources(),
+        icon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.icon_notification);
         notificationManager = NotificationManagerCompat.from(this);
         notificationManager.createNotificationChannel(channel);
@@ -71,28 +114,35 @@ public class LifeManagerApplication extends Application {
                 .setContentText(getString(R.string.need_todo))
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        workListTmp=new TreeSet<>();
-        NotificationThread notificationThread=new NotificationThread(this);
+        workListTmp = new TreeSet<>();
+        NotificationThread notificationThread = new NotificationThread(this);
         notificationThread.start();
-        MessageGetThread messageGETThread =new MessageGetThread(this);
-        messageGETThread.start();
+        MessageGetThread getMessageThread = new MessageGetThread(this);
+        getMessageThread.start();
     }
 
-    public void Msg(String text){
-//        workList.add()
+    public void workReceive(Work work) {
+        workListTmp.add(work);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        Intent intent=new Intent(this, WorkEditActivity.class);
+        Intent intent = new Intent(this, WorkEditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("tmpUuid",text);
+        intent.putExtra("tmpUuid", work.getUuid());
         startActivity(intent);
-
     }
 
-    public void Notify(int id,String uuid){
-        Work work=getWork(uuid);
+    public void notify(int id, String uuid) {
+        Work work = getWork(uuid);
         builder.setContentTitle(work.getTitle());
-        Notification notification=builder.build();
-        notificationManager.notify(id,notification);
+        Notification notification = builder.build();
+        notificationManager.notify(id, notification);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void readDate() {
@@ -113,6 +163,10 @@ public class LifeManagerApplication extends Application {
             preference = (Preference) in.readObject();
             in.close();
 
+            in = new ObjectInputStream(openFileInput("user.data"));
+            user = (User) in.readObject();
+            in.close();
+
             in = new ObjectInputStream(openFileInput("contactList.data"));
             contactList = (TreeSet<Contact>) in.readObject();
             in.close();
@@ -120,8 +174,9 @@ public class LifeManagerApplication extends Application {
         } catch (Exception e) {
             billList = new TreeSet<>();
             workList = new TreeSet<>();
-            preference=new Preference();
-            contactList=new TreeSet<>();
+            preference = new Preference();
+            contactList = new TreeSet<>();
+            user = new User();
             Log.e("Read Error", e.toString());
         }
     }
@@ -142,6 +197,10 @@ public class LifeManagerApplication extends Application {
 
             out = new ObjectOutputStream(openFileOutput("preference.data", MODE_PRIVATE));
             out.writeObject(preference);
+            out.close();
+
+            out = new ObjectOutputStream(openFileOutput("user.data", MODE_PRIVATE));
+            out.writeObject(user);
             out.close();
 
             out = new ObjectOutputStream(openFileOutput("contactList.data", MODE_PRIVATE));
@@ -189,6 +248,7 @@ public class LifeManagerApplication extends Application {
         }
         return billFiltered;
     }
+
     public ArrayList<Bill> getBillList(Calendar date, Integer form) {
         Calendar dateStart = Calendar.getInstance();
         Calendar dateEnd = Calendar.getInstance();
@@ -210,6 +270,7 @@ public class LifeManagerApplication extends Application {
         }
         return billFiltered;
     }
+
     public ArrayList<Bill> getBillList() {
         return new ArrayList<Bill>(billList);
     }
@@ -223,13 +284,13 @@ public class LifeManagerApplication extends Application {
 
     // auto unfold
     public void addWork(Work work) {
+        Gson gson = new Gson();
         Integer repeat = work.getRepeat();
         String classUuid = work.getClassUuid();
         Integer unfoldTime = 1;
         Integer addFeild = Calendar.SECOND;
         Calendar date = (Calendar) work.getDate().clone();
         Work workNew;
-        Log.e("uuid",work.getUuid());
         switch (repeat) {
             case Work.EVERY_DAY:
                 unfoldTime = 14;
@@ -274,16 +335,16 @@ public class LifeManagerApplication extends Application {
     }
 
     public Work getWorkTmp(String tmpUuid) {
-        Work w=null;
+        Work w = null;
         if (tmpUuid == null || tmpUuid.equals(""))
             return null;
         for (Work work : workListTmp) {
             if (work.getUuid().equals(tmpUuid)) {
-                w=work;
+                w = work;
                 return work;
             }
         }
-        if (w!=null)
+        if (w != null)
             workListTmp.remove(w);
         return null;
     }
@@ -322,10 +383,11 @@ public class LifeManagerApplication extends Application {
         delWork(uuid);
         workList.add(workNew);
     }
-    public void setWork(String uuid, int field,Object object) {
-        Work work=getWork(uuid);
-        if (work!=null){
-            work.set(field,object);
+
+    public void setWork(String uuid, int field, Object object) {
+        Work work = getWork(uuid);
+        if (work != null) {
+            work.set(field, object);
         }
     }
 

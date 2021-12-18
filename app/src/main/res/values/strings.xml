@@ -20,6 +20,7 @@
     <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
     <string name="date_format_month">yyyy年MM月</string>
     <string name="date_format_day">yyyy年MM月dd日</string>
+    <string name="date_format_month_day">MM月dd日</string>
     <string name="date_format_date">yyyy年MM月dd日 HH:mm:ss</string>
     <string name="date_format_time">MM月dd日 HH:mm</string>
     <string name="to">到</string>
@@ -35,6 +36,7 @@
 
     <string name="done">已完成</string>
     <string name="todo">未完成</string>
+    <string name="bill_audit">账单统计</string>
 
     <string name="title_home">首页</string>
     <string name="title_bills">账单</string>
@@ -53,6 +55,42 @@
     <string name="note_none_hint">备注：这里空空如也...</string>
     <string name="audit_month_bill">月账单统计</string>
     <string name="delete_confirm_text">确认删除？</string>
+    <string name="account_login">账号登陆</string>
+    <string name="account_register">账号注册</string>
+    <string name="data_sync">数据同步</string>
+    <string name="data_export">数据上传</string>
+    <string name="normal_issues">常见问题</string>
+    <string name="praise">好评鼓励</string>
+    <string name="about_us">关于我们</string>
+
+
+    <string name="appName">软件名</string>
+    <string name="account">用户名</string>
+    <string name="please_input_account">请输入用户名</string>
+    <string name="login">登录</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="password">密码</string>
+    <string name="please_input_password">请输入密码</string>
+    <string name="go_to_register">注册</string>
+    <string name="third_method_login">第三方登录</string>
+    <string name="if_login_is_meaning_to_agree">登录即代表您同意用户服务协议</string>
+    <string name="the_service">服务</string>
+    <string name="iv_third_method1">第三方1</string>
+    <string name="iv_third_method2">第三方2</string>
+    <string name="iv_third_method3">第三方3</string>
+    <string name="iv_project_icon">项目图标</string>
+    <string name="tv_register">注册</string>
+    <string name="tv_phone">手机号</string>
+    <string name="et_phone">请输入手机号</string>
+    <string name="bt_get_code">获取验证码</string>
+    <string name="tv_code">验证码</string>
+    <string name="et_code">请输入验证码</string>
+    <string name="tv_name">用户名</string>
+    <string name="et_name">请输入用户名</string>
+    <string name="tv_password">密码</string>
+    <string name="et_password">请输入密码</string>
+    <string name="et_password2">请重复密码</string>
+    <string name="bt_register">提交</string>
     <string name="delete_confirm_text_chain">选择删除方式</string>
     <string name="single_item">仅当前项</string>
     <string name="chain_item">所有相关项</string>
@@ -64,6 +102,7 @@
     <string name="new_friend">新建联系人信息</string>
     <string name="friend_name">备注</string>
     <string name="friend_uuid">链接</string>
+    <string name="receive_work">收到一条分享的事项</string>
 
     <string name="today">今天</string>
     <string name="this_week">本周</string>

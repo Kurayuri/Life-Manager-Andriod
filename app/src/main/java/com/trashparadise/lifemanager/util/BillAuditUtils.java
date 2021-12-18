@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BillAuditUtil {
+public class BillAuditUtils {
     public static Map<Integer, BigDecimal> getSum(ArrayList<Bill> billList){
         Map<Integer,BigDecimal> sum=new HashMap<>();
         sum.put(Bill.ALL,new BigDecimal(0));

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.trashparadise.lifemanager.bean.Bill;
@@ -23,7 +24,7 @@ import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
-import com.trashparadise.lifemanager.util.BillAuditUtil;
+import com.trashparadise.lifemanager.util.BillAuditUtils;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 import com.trashparadise.lifemanager.ui.works.WorkListFragment;
 
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
     private AppCompatActivity activity;
     private LifeManagerApplication application;
     private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
     private BillAuditPieFragment billAuditPieFragment;
     private BillListFragment billListFragment;
     private WorkListFragment workListAFragment;
@@ -63,33 +65,32 @@ public class HomeFragment extends Fragment {
         application = (LifeManagerApplication) activity.getApplication();
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setTitle(R.string.app_name);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        fragmentManager=getChildFragmentManager();
 
 
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragmentContainer_chart, billAuditPieFragment);
+        addFragment(R.id.fragmentContainer_chart,billAuditPieFragment,"pie");
 
         switch (application.getPreference().getHome()) {
             case Preference.HOME_BILL:
-                fragmentTransaction.add(R.id.fragmentContainer_list, billListFragment);
+                addFragment(R.id.fragmentContainer_list,billListFragment,"bill");
                 break;
             case Preference.HOME_WORK:
-                fragmentTransaction.add(R.id.fragmentContainer_list, workListAFragment);
+                addFragment(R.id.fragmentContainer_list,workListAFragment,"work");
                 break;
         }
 
-
-
-        fragmentTransaction.commit();
         init = 0;
+
 
         audit();
         initListener();
         return root;
     }
     private void audit(){
-        Map<Integer, BigDecimal> sum= BillAuditUtil.getSum(application.getBillList(Calendar.getInstance(), Bill.ALL));
+        Map<Integer, BigDecimal> sum= BillAuditUtils.getSum(application.getBillList(Calendar.getInstance(), Bill.ALL));
 
         binding.textViewDate.setText(simpleDateFormat.format(Calendar.getInstance().getTime()));
 
@@ -108,29 +109,6 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getContext(), BillAuditActivity.class);
                 intent.putExtra("uuid", "");
                 startActivity(intent);
-//                String CHANNEL_ID="213";
-//                    CharSequence name = getString(R.string.app_name);
-//                    String description = getString(R.string.app_name);
-//                    int importance = NotificationManager.IMPORTANCE_MAX;
-//                    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//                    channel.setDescription(description);
-//                Intent i = new Intent(getContext(), MainActivity.class);
-//                PendingIntent pi = PendingIntent.getActivity(getContext(), 0, i, 0);
-//                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
-//                notificationManager.createNotificationChannel(channel);
-//                Bitmap icon= BitmapFactory.decodeResource(getResources(),
-//                        R.drawable.icon_notification);
-//
-//                NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
-//                        .setSmallIcon(R.drawable.icon_notification)
-//                        .setContentIntent(pi)
-//                        .setAutoCancel(true)
-//                        .setLargeIcon(icon)
-//                        .setPriority(NotificationCompat.PRIORITY_HIGH);
-//                notificationManager.createNotificationChannel(channel);
-//                builder.setContentTitle("213").setContentTitle("333");
-//                notificationManager.notify(9999,builder.build());
-
             }
         });
 
@@ -205,4 +183,14 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+    private void addFragment(int containerViewId, Fragment fragment, String tag) {
+        if (!fragment.isAdded()&&null == fragmentManager.findFragmentByTag(tag)) {
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            fragmentManager.executePendingTransactions();
+            ft.add( containerViewId, fragment, tag );
+            ft.commitAllowingStateLoss();
+        }
+
+    }
+
 }

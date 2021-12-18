@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class RequestUtils {
     public static String address ="http://121.43.138.1:5000/";
 
-    
+
     private static String post(String s, String t) {
         try {
             URL url = new URL(s);

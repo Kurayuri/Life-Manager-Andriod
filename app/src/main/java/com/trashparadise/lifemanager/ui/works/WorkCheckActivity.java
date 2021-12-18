@@ -150,7 +150,7 @@ public class WorkCheckActivity extends AppCompatActivity {
                         if (result.getResultCode()== Activity.RESULT_OK){
                             Intent data=result.getData();
                             String contactUuid=data.getStringExtra("contactUuid");
-                            Log.e(uuid,contactUuid);
+                            application.workSend(uuid,contactUuid);
                         }
                     }
                 }

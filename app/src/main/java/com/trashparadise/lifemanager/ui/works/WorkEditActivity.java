@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
 
         work = application.getWork(uuid);
         if (work == null) {
-            String tmpUuid = intent.getStringExtra("extraUuid");
+            String tmpUuid = intent.getStringExtra("tmpUuid");
             work = application.getWork(tmpUuid);
             if (work == null)
                 work = application.getWorkTmp(tmpUuid);
@@ -82,6 +83,8 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                 title = new String("");
                 repeat = 0;
             } else {
+                // received work
+                Toast.makeText(this, getString(R.string.receive_work),Toast.LENGTH_SHORT).show();
                 date = (Calendar) work.getDate().clone();
                 form = work.getForm();
                 note = new String(work.getNote());

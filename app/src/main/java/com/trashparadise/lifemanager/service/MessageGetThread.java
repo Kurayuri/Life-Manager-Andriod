@@ -3,21 +3,48 @@ package com.trashparadise.lifemanager.service;
 import android.app.Application;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.trashparadise.lifemanager.LifeManagerApplication;
+import com.trashparadise.lifemanager.bean.Work;
+import com.trashparadise.lifemanager.bean.PackReceiveBean;
+import com.trashparadise.lifemanager.util.RequestUtils;
 
-public class MessageGetThread extends Thread{
+import java.lang.reflect.Type;
+import java.util.Map;
+
+public class MessageGetThread extends Thread {
     private LifeManagerApplication application;
-    public MessageGetThread(Application app){
+    private Gson gson;
+
+    public MessageGetThread(Application app) {
         super();
-        application=(LifeManagerApplication)app;
+        application = (LifeManagerApplication) app;
     }
-    public void run(){
-        while (true){
-//            application.Msg("6dec6a992e8649f080a894b743fb8a86");
+
+    public void run() {
+        gson = new Gson();
+        while (true) {
             try {
+                String a = RequestUtils.recv(application.getUser().getUuid());
+                Log.e("Get",a);
+
+                try {
+                    Type tom = new TypeToken<Map<String, PackReceiveBean>>() {
+                    }.getType();
+                    Map<String, PackReceiveBean> nmp = gson.fromJson(a, tom);
+                    for (Map.Entry<String, PackReceiveBean> entry : nmp.entrySet()) {
+                        String json=entry.getValue().getJson();
+                        Work work=gson.fromJson(json,Work.class);
+                        application.workReceive(work);
+                    }
+//                }
+                }catch (Exception e){
+                    Log.e("Get Error",e.toString());
+                }
                 Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+
             }
         }
     }

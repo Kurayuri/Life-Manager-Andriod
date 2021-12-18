@@ -21,7 +21,7 @@
     <drawable name="primary_color_pressed">@color/colorPrimaryPressed</drawable>
 
     <color name="colorFabBill">#c9a7f6</color>
-    <color name="colorFabWork">#ffa35c</color>
+    <color name="colorFabWork">#ffc570</color>
 
     <color name="colorTextTeal">#19a3a2</color>
     <color name="colorPrimary">#5eb9ff</color>

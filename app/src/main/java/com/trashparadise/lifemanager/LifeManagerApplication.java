@@ -2,12 +2,10 @@ package com.trashparadise.lifemanager;
 
 import android.app.AlertDialog;
 import android.app.Application;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +15,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.trashparadise.lifemanager.service.GetMessageThread;
+import com.trashparadise.lifemanager.service.MessageGETThread;
 import com.trashparadise.lifemanager.service.NotificationThread;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
@@ -72,8 +70,8 @@ public class LifeManagerApplication extends Application {
         workListTmp=new TreeSet<>();
         NotificationThread notificationThread=new NotificationThread(this);
         notificationThread.start();
-        GetMessageThread getMessageThread=new GetMessageThread(this);
-        getMessageThread.start();
+        MessageGETThread messageGETThread =new MessageGETThread(this);
+        messageGETThread.start();
     }
 
     public void Msg(String text){

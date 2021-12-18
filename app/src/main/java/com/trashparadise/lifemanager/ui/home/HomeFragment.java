@@ -13,17 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.trashparadise.lifemanager.Bill;
+import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
-import com.trashparadise.lifemanager.Preference;
+import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.databinding.FragmentHomeBinding;
 import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillAuditPieFragment;
 import com.trashparadise.lifemanager.ui.bills.BillEditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillListFragment;
-import com.trashparadise.lifemanager.ui.works.BillAudit;
+import com.trashparadise.lifemanager.util.BillAuditUtil;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 import com.trashparadise.lifemanager.ui.works.WorkListFragment;
 
@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
     private void audit(){
-        Map<Integer, BigDecimal> sum=BillAudit.getSum(application.getBillList(Calendar.getInstance(), Bill.ALL));
+        Map<Integer, BigDecimal> sum= BillAuditUtil.getSum(application.getBillList(Calendar.getInstance(), Bill.ALL));
 
         binding.textViewDate.setText(simpleDateFormat.format(Calendar.getInstance().getTime()));
 

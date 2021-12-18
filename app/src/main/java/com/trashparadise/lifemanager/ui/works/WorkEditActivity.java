@@ -1,10 +1,9 @@
 package com.trashparadise.lifemanager.ui.works;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
-import com.trashparadise.lifemanager.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.databinding.ActivityWorkEditBinding;
 
@@ -23,7 +22,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;

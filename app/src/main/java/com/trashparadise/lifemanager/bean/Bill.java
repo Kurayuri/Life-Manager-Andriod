@@ -1,14 +1,10 @@
-package com.trashparadise.lifemanager;
+package com.trashparadise.lifemanager.bean;
 
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 

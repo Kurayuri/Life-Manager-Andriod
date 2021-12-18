@@ -15,7 +15,11 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.trashparadise.lifemanager.service.MessageGETThread;
+import com.trashparadise.lifemanager.bean.Bill;
+import com.trashparadise.lifemanager.bean.Contact;
+import com.trashparadise.lifemanager.bean.Preference;
+import com.trashparadise.lifemanager.bean.Work;
+import com.trashparadise.lifemanager.service.MessageGetThread;
 import com.trashparadise.lifemanager.service.NotificationThread;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
@@ -70,7 +74,7 @@ public class LifeManagerApplication extends Application {
         workListTmp=new TreeSet<>();
         NotificationThread notificationThread=new NotificationThread(this);
         notificationThread.start();
-        MessageGETThread messageGETThread =new MessageGETThread(this);
+        MessageGetThread messageGETThread =new MessageGetThread(this);
         messageGETThread.start();
     }
 

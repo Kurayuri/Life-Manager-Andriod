@@ -1,33 +1,14 @@
 package com.trashparadise.lifemanager.service;
 
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.IBinder;
-import android.os.SystemClock;
 import android.util.ArrayMap;
-import android.util.Log;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.trashparadise.lifemanager.LifeManagerApplication;
-import com.trashparadise.lifemanager.MainActivity;
-import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TreeMap;
 
 public class NotificationThread extends Thread {
     private int id;

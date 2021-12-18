@@ -21,7 +21,6 @@ import com.trashparadise.lifemanager.databinding.FragmentBillsBinding;
 
 public class BillsFragment extends Fragment {
 
-    private BillsViewModel mViewModel;
     private FragmentBillsBinding binding;
     private AppCompatActivity activity;
     private RadioGroup radioGroupForm;
@@ -37,7 +36,6 @@ public class BillsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(BillsViewModel.class);
         form = -1;
         formNew = -1;
 

@@ -24,7 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.databinding.ActivityWorkCheckBinding;

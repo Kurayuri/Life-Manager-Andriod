@@ -20,15 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 
 
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.ui.works.WorkCheckActivity;
-import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
-import com.trashparadise.lifemanager.util.SoundPoolUtil;
+import com.trashparadise.lifemanager.util.SoundPoolUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private Boolean openOn;
 
     private Vibrator vibrator;
-    private SoundPoolUtil soundPoolUtil;
+    private SoundPoolUtils soundPoolUtil;
     private int itemWorkLayout;
 
     private WorkListAdapter.OnItemClickListener listener;
@@ -115,7 +114,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
         itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
         vibrator = (Vibrator) application.getSystemService(Context.VIBRATOR_SERVICE);
-        soundPoolUtil=SoundPoolUtil.getInstance(context);
+        soundPoolUtil= SoundPoolUtils.getInstance(context);
 
     }
 

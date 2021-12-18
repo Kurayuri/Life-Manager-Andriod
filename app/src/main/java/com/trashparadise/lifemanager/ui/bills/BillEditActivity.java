@@ -2,7 +2,7 @@ package com.trashparadise.lifemanager.ui.bills;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.trashparadise.lifemanager.adapter.BillTypeAdapter;
-import com.trashparadise.lifemanager.Bill;
+import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 

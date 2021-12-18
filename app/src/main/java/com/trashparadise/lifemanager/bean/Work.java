@@ -1,11 +1,9 @@
-package com.trashparadise.lifemanager;
+package com.trashparadise.lifemanager.bean;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.UUID;
 
 
 public class Work implements Comparable<Work>, Serializable {

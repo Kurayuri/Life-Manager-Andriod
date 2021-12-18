@@ -19,7 +19,6 @@ import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
 
 public class MeFragment extends Fragment {
 
-    private MeViewModel mViewModel;
     private AppCompatActivity activity;
     private FragmentMeBinding binding;
 

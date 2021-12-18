@@ -1,9 +1,8 @@
 package com.trashparadise.lifemanager.constants;
 
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 
-import java.util.Calendar;
 import java.util.TreeMap;
 
 public class RepeatRes {

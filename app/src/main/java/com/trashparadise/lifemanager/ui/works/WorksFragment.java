@@ -17,12 +17,11 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.Work;
+import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.databinding.FragmentWorksBinding;
 
 public class WorksFragment extends Fragment {
 
-    private WorksViewModel mViewModel;
     private FragmentWorksBinding binding;
     private AppCompatActivity activity;
     private RadioGroup radioGroupForm;
@@ -38,7 +37,6 @@ public class WorksFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mViewModel = new ViewModelProvider(this).get(WorksViewModel.class);
         form = Work.TODO;
         formNew = Work.TODO;
 

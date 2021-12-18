@@ -1,4 +1,4 @@
-package com.trashparadise.lifemanager;
+package com.trashparadise.lifemanager.bean;
 
 import java.io.Serializable;
 

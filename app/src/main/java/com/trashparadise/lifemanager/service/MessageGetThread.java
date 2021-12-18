@@ -5,9 +5,9 @@ import android.util.Log;
 
 import com.trashparadise.lifemanager.LifeManagerApplication;
 
-public class MessageGETThread extends Thread{
+public class MessageGetThread extends Thread{
     private LifeManagerApplication application;
-    public MessageGETThread(Application app){
+    public MessageGetThread(Application app){
         super();
         application=(LifeManagerApplication)app;
     }

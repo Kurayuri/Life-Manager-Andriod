@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.trashparadise.lifemanager.bean.Contact;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
@@ -41,7 +42,7 @@ public class ContactSelectActivity extends AppCompatActivity implements View.OnC
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.select_to_share);
 
-       getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer_contactList, contactListFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer_contactList, contactListFragment).commit();
 
     }
 
@@ -58,9 +59,9 @@ public class ContactSelectActivity extends AppCompatActivity implements View.OnC
     private void onAdd() {
         String name = binding.editTextName.getText().toString();
         String uuid = binding.editTextUuid.getText().toString();
-
-        application.addContact(new Contact(name, uuid));
-
+        if (uuid.length() != 0) {
+            application.addContact(new Contact(name, uuid));
+        }
         binding.editTextName.setText("");
         binding.editTextUuid.setText("");
         contactListFragment.updateData();

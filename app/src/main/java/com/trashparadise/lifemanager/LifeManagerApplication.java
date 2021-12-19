@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -32,9 +31,12 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class LifeManagerApplication extends Application {
@@ -46,9 +48,9 @@ public class LifeManagerApplication extends Application {
     private TreeSet<Contact> contactList;
     private NotificationChannel channel;
     private NotificationManagerCompat notificationManager;
-    NotificationCompat.Builder builder;
+    private NotificationCompat.Builder builder;
     private static final String CHANNEL_ID = "Life Manager";
-    Bitmap icon;
+    private Bitmap icon;
 
     public String onPush() {
         Gson gson = new Gson();
@@ -91,7 +93,9 @@ public class LifeManagerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         readDate();
+        renewWork();
 
+        // Create notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.app_name);
             String description = getString(R.string.app_name);
@@ -148,36 +152,54 @@ public class LifeManagerApplication extends Application {
     public void readDate() {
         ObjectInput in;
         Log.e("User Date Operation", "Read");
+        Exception exception = null;
         try {
             in = new ObjectInputStream(openFileInput("billList.data"));
             billList = (TreeSet<Bill>) in.readObject();
             in.close();
             Log.e("billList.data", billList.size() + "");
-
+        } catch (Exception e) {
+            billList = new TreeSet<>();
+            exception = e;
+        }
+        try {
             in = new ObjectInputStream(openFileInput("workList.data"));
             workList = (TreeSet<Work>) in.readObject();
             in.close();
             Log.e("workList.data", workList.size() + "");
+        } catch (Exception e) {
+            workList = new TreeSet<>();
+            exception = e;
+        }
+        try {
 
             in = new ObjectInputStream(openFileInput("preference.data"));
             preference = (Preference) in.readObject();
             in.close();
-
+        } catch (Exception e) {
+            preference = new Preference();
+            exception = e;
+        }
+        try {
             in = new ObjectInputStream(openFileInput("user.data"));
             user = (User) in.readObject();
             in.close();
-
+        } catch (Exception e) {
+            user = new User();
+            exception = e;
+        }
+        try {
             in = new ObjectInputStream(openFileInput("contactList.data"));
             contactList = (TreeSet<Contact>) in.readObject();
             in.close();
             Log.e("contactList.data", contactList.size() + "");
         } catch (Exception e) {
-            billList = new TreeSet<>();
-            workList = new TreeSet<>();
-            preference = new Preference();
             contactList = new TreeSet<>();
-            user = new User();
-            Log.e("Read Error", e.toString());
+            exception = e;
+
+        }
+        if (exception != null) {
+            Log.e("Read Error", exception.toString());
         }
     }
 
@@ -284,36 +306,30 @@ public class LifeManagerApplication extends Application {
 
     // auto unfold
     public void addWork(Work work) {
-        Gson gson = new Gson();
         Integer repeat = work.getRepeat();
-        String classUuid = work.getClassUuid();
-        Integer unfoldTime = 1;
-        Integer addFeild = Calendar.SECOND;
+        Integer addField = Calendar.SECOND;
         Calendar date = (Calendar) work.getDate().clone();
         Work workNew;
+        int unfoldTime = preference.getUnfoldTimes().get(repeat);
         switch (repeat) {
             case Work.EVERY_DAY:
-                unfoldTime = 14;
-                addFeild = Calendar.DATE;
+                addField = Calendar.DATE;
                 break;
             case Work.EVERY_WEEK:
-                unfoldTime = 8;
-                addFeild = Calendar.WEEK_OF_MONTH;
+                addField = Calendar.WEEK_OF_MONTH;
                 break;
             case Work.EVERY_MONTH:
-                unfoldTime = 6;
-                addFeild = Calendar.MONTH;
+                addField = Calendar.MONTH;
                 break;
             case Work.EVERY_YEAR:
-                unfoldTime = 2;
-                addFeild = Calendar.YEAR;
+                addField = Calendar.YEAR;
                 break;
         }
         workList.add(work);
 
         for (int i = 2; i <= unfoldTime; ++i) {
             workNew = work.clone();
-            date.add(addFeild, 1);
+            date.add(addField, 1);
             workNew.setDate((Calendar) date.clone());
             workList.add(workNew);
         }
@@ -377,6 +393,52 @@ public class LifeManagerApplication extends Application {
         }
     }
 
+    public void renewWork() {
+        TreeMap<String, Work> head = new TreeMap<>();
+        Calendar calendar = Calendar.getInstance();
+        TreeMap<Integer, Integer> unfoldTimes = preference.getUnfoldTimes();
+        for (Work work : workList) {
+            if (head.get(work.getClassUuid()) != null) {
+                if (head.get(work.getClassUuid()).getDate().compareTo(work.getDate()) < 0) {
+                    head.put(work.getClassUuid(), work);
+                }
+            } else {
+                head.put(work.getClassUuid(), work);
+            }
+        }
+        for (Map.Entry<String, Work> entry : head.entrySet()) {
+            Work work = entry.getValue();
+            Work workNew;
+            Calendar date = (Calendar) work.getDate().clone();
+            long dateDiff = 1;
+            Integer addField = Calendar.SECOND;
+
+            switch (work.getRepeat()) {
+                case Work.EVERY_DAY:
+                    dateDiff = ChronoUnit.DAYS.between(calendar.toInstant(), work.getDate().toInstant());
+                    addField = Calendar.DATE;
+                    break;
+                case Work.EVERY_WEEK:
+                    dateDiff = ChronoUnit.WEEKS.between(calendar.toInstant(), work.getDate().toInstant());
+                    addField = Calendar.WEEK_OF_MONTH;
+                    break;
+                case Work.EVERY_MONTH:
+                    dateDiff = ChronoUnit.MONTHS.between(calendar.toInstant(), work.getDate().toInstant());
+                    addField = Calendar.MONTH;
+                    break;
+                case Work.EVERY_YEAR:
+                    dateDiff = ChronoUnit.YEARS.between(calendar.toInstant(), work.getDate().toInstant());
+                    addField = Calendar.YEAR;
+                    break;
+            }
+            for (int i = 1; i < unfoldTimes.get(work.getRepeat()) - dateDiff; ++i) {
+                workNew = work.clone();
+                date.add(addField, 1);
+                workNew.setDate((Calendar) date.clone());
+                workList.add(workNew);
+            }
+        }
+    }
 
     public void setWork(String uuid, Work workNew) {
         workNew.setClassUuid(getWork(uuid).getClassUuid());
@@ -440,6 +502,5 @@ public class LifeManagerApplication extends Application {
     public ArrayList<Contact> getContactList() {
         return new ArrayList<Contact>(contactList);
     }
-
 
 }

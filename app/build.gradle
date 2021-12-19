@@ -7,25 +7,24 @@ android {
 
     defaultConfig {
         applicationId "com.trashparadis.lifemanager"
-        minSdk 21
+        minSdk 26
         targetSdk 31
         versionCode 1
-        versionName "0.4.0"
+        versionName "0.7.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            def fileName
-            def date = new Date()
-            def formattedDate = System.currentTimeMillis();
+            def fileName="${applicationId}"
+            def formattedDate = System.currentTimeMillis()
             if (variant.buildType.name.equals('release')) {
                 fileName = "${applicationId}@${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
             } else if (variant.buildType.name.equals('debug')) {
                 fileName = "${applicationId}@${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
             }
-            outputFileName = fileName;
+            outputFileName = fileName
         }
     }
 

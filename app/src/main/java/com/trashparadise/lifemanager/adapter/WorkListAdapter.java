@@ -46,7 +46,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private Boolean openOn;
 
     private Vibrator vibrator;
-    private SoundPoolUtils soundPoolUtil;
+    private SoundPoolUtils soundPoolUtils;
     private int itemWorkLayout;
 
     private WorkListAdapter.OnItemClickListener listener;
@@ -114,7 +114,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
         itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
         vibrator = (Vibrator) application.getSystemService(Context.VIBRATOR_SERVICE);
-        soundPoolUtil= SoundPoolUtils.getInstance(context);
+        soundPoolUtils = SoundPoolUtils.getInstance(context);
 
     }
 
@@ -184,11 +184,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                         @Override
                         public void onClick(View v) {
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-                            } else {
-                                vibrator.vibrate(200);
-                            }
+
+                            vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
 
 
                             int currForm = localDataSet.get(viewHolder.getBindingAdapterPosition()).getForm();
@@ -200,11 +197,11 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
                             switch (currForm) {
                                 case Work.DONE:
-                                    soundPoolUtil.play(2);
+                                    soundPoolUtils.play(2);
                                     viewHolder.imageViewForm.startAnimation(animationRotateShake);
                                     break;
                                 case Work.TODO:
-                                    soundPoolUtil.play(1);
+                                    soundPoolUtils.play(1);
                                     switch (form) {
                                         case Work.TODO:
                                             viewHolder.imageViewForm.startAnimation(animationScaleRotateOut);
@@ -216,8 +213,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
                                                 @Override
                                                 public void onAnimationEnd(Animation animation) {
-                                                    viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
-                                                    viewHolder.textViewDate.setTextColor(application.getResources().getColor(R.color.iconDone));
+                                                    viewHolder.imageViewForm.setColorFilter(application.getColor(R.color.iconDone));
+                                                    viewHolder.textViewDate.setTextColor(application.getColor(R.color.iconDone));
                                                     viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
                                                     viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
                                                 }
@@ -270,8 +267,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
                                                 @Override
                                                 public void onAnimationEnd(Animation animation) {
-                                                    viewHolder.imageViewForm.setColorFilter(application.getResources().getColor(R.color.iconDone));
-                                                    viewHolder.textViewDate.setTextColor(application.getResources().getColor(R.color.iconDone));
+                                                    viewHolder.imageViewForm.setColorFilter(application.getColor(R.color.iconDone));
+                                                    viewHolder.textViewDate.setTextColor(application.getColor(R.color.iconDone));
                                                     viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
                                                     viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
                                                 }
@@ -371,7 +368,6 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Work work = localDataSet.get(position);
-//        Log.e("get",RepeatRes.getStringId(work.getRepeat())+"sad"+work.getRepeat());
         if (isAudit(position)) {
             viewHolder.getTextViewDate().setText(dateFormatMonth.format(work.getDate().getTime()));
         } else {
@@ -379,11 +375,11 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             viewHolder.getTextViewDate().setText(dateFormatTime.format(work.getDate().getTime()));
             viewHolder.getTextViewTitle().setText(work.getTitle());
             viewHolder.getTextViewNote().setText(work.getNote());
-            viewHolder.getImageViewForm().setColorFilter(application.getResources().getColor(form == 0 ? R.color.iconTodo : R.color.iconDone));
+            viewHolder.getImageViewForm().setColorFilter(application.getColor(form == 0 ? R.color.iconTodo : R.color.iconDone));
             viewHolder.getImageViewForm().setImageResource((form == 0 ? R.drawable.ic_todo : R.drawable.ic_done));
 
             viewHolder.getTextViewRepeat().setText(application.getResources().getString(RepeatRes.getStringId(work.getRepeat())));
-            viewHolder.getTextViewDate().setTextColor(application.getResources().getColor(form == 0 ? R.color.colorTextRed : R.color.colorPrimary));
+            viewHolder.getTextViewDate().setTextColor(application.getColor(form == 0 ? R.color.colorTextRed : R.color.colorPrimary));
         }
     }
 

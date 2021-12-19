@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Intent serviceIntent=new Intent(this, NotificationService.class);
-//        startService(serviceIntent);
-
 
         application=(LifeManagerApplication)getApplication();
         binding = ActivityMainBinding.inflate(getLayoutInflater());

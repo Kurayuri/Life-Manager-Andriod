@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.google.gson.Gson;
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.bean.PackLoginBean;
@@ -27,8 +28,8 @@ import com.trashparadise.lifemanager.util.ValidUtils;
 
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener {
-    private LifeManagerApplication application;
     private ActivityLoginBinding binding;
+    private DataManager dataManager;
 
 
 
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        application = (LifeManagerApplication) this.getApplication();
+        dataManager=DataManager.getInstance();
         Intent intent = getIntent();
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -126,17 +127,16 @@ public class LoginActivity extends AppCompatActivity
 
                     Gson gson=new Gson();
                     PackLoginBean packLoginBean=gson.fromJson(a, PackLoginBean.class);
-                    application.getUser().setUuid(packLoginBean.getUuid());
-                    application.getUser().setUsername(packLoginBean.getUsername());
-                    application.getUser().setValidation(true);
+                    dataManager.getUser().setUuid(packLoginBean.getUuid());
+                    dataManager.getUser().setUsername(packLoginBean.getUsername());
+                    dataManager.getUser().setValidation(true);
                 } catch (Exception e) {
                 }
                 finish();
             }
         });
-        t.start();
         try {
-            t.join();
+            t.start();
         } catch (Exception ignored) {
         }
     }

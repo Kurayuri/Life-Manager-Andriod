@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
-import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.bean.Work;
@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private AppCompatActivity activity;
-    private LifeManagerApplication application;
+    private DataManager dataManager;
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
     private BillAuditPieFragment billAuditPieFragment;
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         activity = (AppCompatActivity) getActivity();
-        application = (LifeManagerApplication) activity.getApplication();
+        dataManager=DataManager.getInstance();
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setTitle(R.string.app_name);
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
 
         addFragment(R.id.fragmentContainer_chart,billAuditPieFragment,"pie");
 
-        switch (application.getPreference().getHome()) {
+        switch (dataManager.getPreference().getHome()) {
             case Preference.HOME_BILL:
                 addFragment(R.id.fragmentContainer_list,billListFragment,"bill");
                 break;
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
     private void audit(){
-        Map<Integer, BigDecimal> sum= BillAuditUtils.getSum(application.getBillList(Calendar.getInstance(), Bill.ALL));
+        Map<Integer, BigDecimal> sum= BillAuditUtils.getSum(dataManager.getBillList(Calendar.getInstance(), Bill.ALL));
 
         binding.textViewDate.setText(simpleDateFormat.format(Calendar.getInstance().getTime()));
 
@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
                 fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragmentContainer_list, billListFragment);
                 fragmentTransaction.commit();
-                application.getPreference().setHome(Preference.HOME_BILL);
+                dataManager.getPreference().setHome(Preference.HOME_BILL);
                 billAuditPieFragment.callUpdateData();
                 return true;
             }
@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment {
                 fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragmentContainer_list, workListAFragment);
                 fragmentTransaction.commit();
-                application.getPreference().setHome(Preference.HOME_WORK);
+                dataManager.getPreference().setHome(Preference.HOME_WORK);
                 billAuditPieFragment.callUpdateData();
                 return true;
             }

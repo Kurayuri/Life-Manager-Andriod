@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
@@ -26,7 +27,7 @@ import java.util.Calendar;
 
 public class BillCheckActivity extends AppCompatActivity {
     private ActivityBillCheckBinding binding;
-    private LifeManagerApplication application;
+    private DataManager dataManager;
 
     private Bill bill;
     private DecimalFormat decimalFormat;
@@ -50,12 +51,12 @@ public class BillCheckActivity extends AppCompatActivity {
         binding = ActivityBillCheckBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        application = (LifeManagerApplication) getApplication();
+        dataManager=DataManager.getInstance();
 
         Intent intent = getIntent();
         uuid = intent.getStringExtra("uuid");
 
-        bill = application.getBill(uuid);
+        bill = dataManager.getBill(uuid);
         amount = bill.getAmount();
         date = bill.getDate();
         type = bill.getType();
@@ -99,7 +100,7 @@ public class BillCheckActivity extends AppCompatActivity {
                 builder.setMessage(R.string.delete_confirm_text)
                         .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                application.delBill(uuid);
+                                dataManager.delBill(uuid);
                                 BillCheckActivity.this.finish();
                             }
                         })

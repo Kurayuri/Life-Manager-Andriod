@@ -18,8 +18,8 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
-import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.databinding.FragmentBillAuditPieBinding;
 
@@ -35,7 +35,7 @@ import java.util.TreeMap;
 public class BillAuditPieFragment extends Fragment {
     private PieChart chart;
     private FragmentBillAuditPieBinding binding;
-    private LifeManagerApplication application;
+    private DataManager dataManager;
     private Calendar date;
     private Integer form;
     private SimpleDateFormat dateFormat;
@@ -62,7 +62,7 @@ public class BillAuditPieFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentBillAuditPieBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        application = (LifeManagerApplication) getActivity().getApplication();
+        dataManager=DataManager.getInstance();
         dateFormat = new SimpleDateFormat(getString(R.string.date_format_month));
         decimalFormat = new DecimalFormat(getString(R.string.amount_decimal_format_unit));
 
@@ -132,7 +132,7 @@ public class BillAuditPieFragment extends Fragment {
 
 
 
-        ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, form);
+        ArrayList<Bill> localDataSet = dataManager.getBillList(dateStart, dateEnd, form);
         TreeMap<String, Float> localDataSetAudit = new TreeMap<>();
         for (Bill bill : localDataSet) {
                 localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());

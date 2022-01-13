@@ -1,6 +1,7 @@
 package com.trashparadise.lifemanager.ui.bills;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.adapter.BillTypeAdapter;
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
@@ -35,7 +36,7 @@ import java.util.Locale;
 
 public class BillEditActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, BillTypeAdapter.OnItemClickListener {
     private ActivityBillEditBinding binding;
-    private LifeManagerApplication application;
+    private DataManager dataManager;
     private RadioGroup radioGroup;
     private BillTypeAdapter billTypeAdapter;
 
@@ -64,7 +65,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding = ActivityBillEditBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        application = (LifeManagerApplication) this.getApplication();
+        dataManager=DataManager.getInstance();
         Intent intent = getIntent();
         decimalFormat = new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
         dateFormatDate = new SimpleDateFormat(getResources().getString(R.string.date_format_date));
@@ -72,7 +73,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
         // get object
         uuid = intent.getStringExtra("uuid");
-        bill = application.getBill(uuid);
+        bill = dataManager.getBill(uuid);
         if (bill == null) {
             amount = new BigDecimal("0");
             note = new String("");
@@ -157,9 +158,9 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         type = typeList.get(typeId).getName();
 
         if (uuid.equals("")) {
-            application.addBill(new Bill(amount, date, type, form, note));
+            dataManager.addBill(new Bill(amount, date, type, form, note));
         } else {
-            application.setBill(uuid, new Bill(amount, date, type, form, note));
+            dataManager.setBill(uuid, new Bill(amount, date, type, form, note));
         }
         finish();
     }

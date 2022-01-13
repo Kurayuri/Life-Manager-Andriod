@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.adapter.ContactListAdapter;
@@ -23,9 +24,9 @@ import com.trashparadise.lifemanager.databinding.FragmentContactListBinding;
 
 
 public class ContactListFragment extends Fragment implements ContactListAdapter.OnItemClickListener {
-    private LifeManagerApplication application;
     private Context context;
     private RecyclerView recyclerView;
+    private DataManager dataManager;
     private View view;
     private FragmentContactListBinding binding;
     private ContactListAdapter contactListAdapter;
@@ -37,7 +38,7 @@ public class ContactListFragment extends Fragment implements ContactListAdapter.
         binding=FragmentContactListBinding.inflate(inflater,container,false);
 
         context=getContext();
-        application=(LifeManagerApplication)getActivity().getApplication();
+        dataManager=DataManager.getInstance();
         recyclerView=binding.recyclerView;
         contactListAdapter=new ContactListAdapter(context, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -63,7 +64,7 @@ public class ContactListFragment extends Fragment implements ContactListAdapter.
                 builder.setMessage(R.string.delete_confirm_text)
                         .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                application.delContact(uuid);
+                                dataManager.delContact(uuid);
                                 contactListAdapter.updateData();
                             }
                         })

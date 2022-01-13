@@ -6,9 +6,10 @@ public class User implements Serializable {
     private String username;
     private String uuid;
     private boolean validation;
-    public User(){
+
+    public User() {
         this.username = "";
-        this.validation=false;
+        this.validation = false;
         this.uuid = "";
     }
 
@@ -23,7 +24,7 @@ public class User implements Serializable {
     public User(String uuid,
                 String userName) {
         this.username = userName;
-        this.validation=true;
+        this.validation = true;
         this.uuid = uuid;
     }
 
@@ -32,7 +33,7 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username =username;
+        this.username = username;
     }
 
     public String getUuid() {

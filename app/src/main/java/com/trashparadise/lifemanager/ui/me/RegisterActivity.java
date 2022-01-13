@@ -110,9 +110,8 @@ public class RegisterActivity extends AppCompatActivity
                     finish();
                 }
             });
-            t.start();
             try {
-                t.join();
+                t.start();
             } catch (Exception ignored) {
             }
         }

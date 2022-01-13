@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.R;
 
 
@@ -36,6 +37,7 @@ import java.util.Calendar;
 public class WorkCheckActivity extends AppCompatActivity {
     private ActivityWorkCheckBinding binding;
     private LifeManagerApplication application;
+    private DataManager dataManager;
 
     private Work work;
     private SimpleDateFormat dateFormatDate;
@@ -59,12 +61,12 @@ public class WorkCheckActivity extends AppCompatActivity {
         binding = ActivityWorkCheckBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        application = (LifeManagerApplication) getApplication();
+        dataManager=DataManager.getInstance();
 
         Intent intent = getIntent();
         uuid = intent.getStringExtra("uuid");
 
-        work = application.getWork(uuid);
+        work = dataManager.getWork(uuid);
         title = work.getTitle();
         date = work.getDate();
         repeat = work.getRepeat();
@@ -123,13 +125,13 @@ public class WorkCheckActivity extends AppCompatActivity {
                 builder.setMessage(R.string.delete_confirm_text_chain)
                         .setPositiveButton(R.string.single_item, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                application.delWork(uuid);
+                                dataManager.delWork(uuid);
                                 com.trashparadise.lifemanager.ui.works.WorkCheckActivity.this.finish();
                             }
                         })
                         .setNegativeButton(R.string.chain_item, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                application.delWorkChain(uuid);
+                                dataManager.delWorkChain(uuid);
                                 com.trashparadise.lifemanager.ui.works.WorkCheckActivity.this.finish();
                             }
                         })

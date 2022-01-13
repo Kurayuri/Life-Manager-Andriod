@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
@@ -38,6 +39,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private ArrayList<Work> localDataSet;
     private Context context;
     private LifeManagerApplication application;
+    private DataManager dataManager;
     private SimpleDateFormat dateFormatMonth;
     private SimpleDateFormat dateFormatTime;
     private Integer form;
@@ -109,6 +111,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         this.openOn = openOn;
         this.listener = listener;
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
+        dataManager=DataManager.getInstance();
         updateDataSet();
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
@@ -125,7 +128,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     }
 
     private void updateDataSet() {
-        ArrayList<Work> allDataSet = application.getWorkList();
+        ArrayList<Work> allDataSet = dataManager.getWorkList();
         localDataSet = new ArrayList<>();
         if (form != Work.ALL) {
             for (int i = 0; i < allDataSet.size(); ++i) {
@@ -193,7 +196,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                             Animation animationScaleRotateIn = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_in);
                             Animation animationTranslateLeft = AnimationUtils.loadAnimation(context, R.anim.anim_traslate_left);
                             Animation animationRotateShake = AnimationUtils.loadAnimation(context, R.anim.anim_rotate_shake);
-                            application.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
+                            dataManager.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
 
                             switch (currForm) {
                                 case Work.DONE:
@@ -320,7 +323,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                                 builder.setMessage(R.string.delete_confirm_text)
                                         .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-                                                application.delWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                                                dataManager.delWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                                                 updateDataSet();
                                             }
                                         })

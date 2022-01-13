@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Contact;
-import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 
     private ArrayList<Contact> localDataSet;
     private Context context;
-    private LifeManagerApplication application;
+    private DataManager dataManager;
 
     private ContactListAdapter.OnItemClickListener listener;
 
@@ -62,7 +62,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         this.context = context;
         this.listener = listener;
 
-        application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
+        dataManager=DataManager.getInstance();
 
         updateDataSet();
     }
@@ -72,7 +72,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     }
 
     private void updateDataSet() {
-        localDataSet = application.getContactList();
+        localDataSet = dataManager.getContactList();
 
         ContactListAdapter.this.notifyDataSetChanged();
     }

@@ -1,4 +1,4 @@
-package com.trashparadise.lifemanager;
+package com.trashparadise.lifemanager.ui;
 
 import android.os.Bundle;
 
@@ -10,6 +10,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.trashparadise.lifemanager.LifeManagerApplication;
+import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {

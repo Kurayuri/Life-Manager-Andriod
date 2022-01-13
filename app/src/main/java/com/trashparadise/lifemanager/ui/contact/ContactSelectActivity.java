@@ -8,14 +8,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Contact;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.databinding.ActivityContactSelectBinding;
 
 public class ContactSelectActivity extends AppCompatActivity implements View.OnClickListener {
-    private LifeManagerApplication application;
     private ActivityContactSelectBinding binding;
+    private DataManager dataManager;
     //    private Integer form;
     private ContactListFragment contactListFragment;
 
@@ -25,7 +26,7 @@ public class ContactSelectActivity extends AppCompatActivity implements View.OnC
         binding = ActivityContactSelectBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        application = (LifeManagerApplication) getApplication();
+        dataManager=DataManager.getInstance();
 
         contactListFragment = new ContactListFragment();
 
@@ -60,7 +61,7 @@ public class ContactSelectActivity extends AppCompatActivity implements View.OnC
         String name = binding.editTextName.getText().toString();
         String uuid = binding.editTextUuid.getText().toString();
         if (uuid.length() != 0) {
-            application.addContact(new Contact(name, uuid));
+            dataManager.addContact(new Contact(name, uuid));
         }
         binding.editTextName.setText("");
         binding.editTextUuid.setText("");

@@ -14,13 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.bean.User;
@@ -33,12 +32,13 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
     private AppCompatActivity activity;
     private FragmentMeBinding binding;
     private LifeManagerApplication application;
+    private DataManager dataManager;
 
     public static MeFragment newInstance() {
         return new MeFragment();
     }
 
-    private TextView account, sync, export, issue, praise, about;
+    private View account, sync, upload, issue, praise, about;
     private Toast toast;
 
     @Override
@@ -49,19 +49,20 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
         binding = FragmentMeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         application = (LifeManagerApplication) this.getActivity().getApplication();
-        account = binding.textViewAccount;
-        sync = binding.textViewSync;
-        export = binding.textViewExport;
-        praise = binding.textViewPraise;
-        about = binding.textViewAboutUs;
-        issue = binding.textViewIssue;
-        export.setOnClickListener(this);
+        dataManager=DataManager.getInstance();
+        account = binding.layoutLogin;
+        sync = binding.layoutSync;
+        upload = binding.layoutUpload;
+//        praise = binding.textViewPraise;
+//        about = binding.textViewAboutUs;
+//        issue = binding.textViewIssue;
+        upload.setOnClickListener(this);
         sync.setOnClickListener(this);
         account.setOnClickListener(this);
-        issue.setOnClickListener(this);
-        praise.setOnClickListener(this);
-        about.setOnClickListener(this);
-        binding.textView2.setOnLongClickListener(this);
+//        issue.setOnClickListener(this);
+//        praise.setOnClickListener(this);
+//        about.setOnClickListener(this);
+        binding.textViewUserUuid.setOnLongClickListener(this);
 
         initView();
 
@@ -73,18 +74,18 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
         toast = null;
         Integer id = v.getId();
         switch (id) {
-            case R.id.textView_account:
+            case R.id.layout_login:
                 Intent login = new Intent(getContext(), LoginActivity.class);
                 startActivity(login);
                 break;
-            case R.id.textView_sync:
-                if (application.getUser().isValidation()) {
+            case R.id.layout_sync:
+                if (dataManager.getUser().isValidation()) {
 
                     Toast.makeText(application, "正在同步您的数据及设置",
                             Toast.LENGTH_SHORT).show();
                     Thread t = new Thread(() -> {
                         Looper.prepare();
-                        String a = RequestUtils.download(application.getUser().getUuid());
+                        String a = RequestUtils.download(dataManager.getUser().getUuid());
                         if (a.equals("0000000000000000000000000000000000000000")) {
                             Toast.makeText(getActivity(), "错误", Toast.LENGTH_SHORT).show();
                         } else {
@@ -95,7 +96,7 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
                     });
                     t.start();
                     try {
-                        t.join();
+                        t.start();
                     } catch (Exception ignored) {
                     }
 
@@ -105,13 +106,13 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
                 }
 
                 break;
-            case R.id.textView_export:
-                if (application.getUser().isValidation()) {
+            case R.id.layout_upload:
+                if (dataManager.getUser().isValidation()) {
                     Toast.makeText(application, "正在上传您的数据及设置",
                             Toast.LENGTH_SHORT).show();
                     Thread t = new Thread(() -> {
                         Looper.prepare();
-                        String a = RequestUtils.upload(application.getUser().getUuid(), application.onPush());
+                        String a = RequestUtils.upload(dataManager.getUser().getUuid(), application.onPush());
                         if (a.equals("0000000000000000000000000000000000000000")) {
                             Toast.makeText(getActivity(), "错误", Toast.LENGTH_SHORT).show();
                         } else {
@@ -121,7 +122,7 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
                     });
                     t.start();
                     try {
-                        t.join();
+                        t.start();
                     } catch (Exception ignored) {
                     }
                 } else {
@@ -130,29 +131,29 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
                 }
 
                 break;
-            case R.id.textView_issue:
-                Toast.makeText(application, "这个软件完美无暇，如有问题请自我反思",
-                        Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.textView_praise:
-                Toast.makeText(application, "请对给你分享这个软件的人一个好评",
-                        Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.textView_aboutUs:
-                Toast.makeText(application, "这是一个软件工程大作业",
-                        Toast.LENGTH_SHORT).show();
-                break;
+//            case R.id.textView_issue:
+//                Toast.makeText(application, "这个软件完美无暇，如有问题请自我反思",
+//                        Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.textView_praise:
+//                Toast.makeText(application, "请对给你分享这个软件的人一个好评",
+//                        Toast.LENGTH_SHORT).show();
+//                break;
+//            case R.id.textView_aboutUs:
+//                Toast.makeText(application, "这是一个软件工程大作业",
+//                        Toast.LENGTH_SHORT).show();
+//                break;
         }
     }
 
     private void initView() {
-        User user = application.getUser();
+        User user = dataManager.getUser();
         if (user.isValidation()) {
             binding.tvUserName.setText(user.getUsername());
-            binding.textView2.setText(user.getUuid());
+            binding.textViewUserUuid.setText(user.getUuid());
         } else {
             binding.tvUserName.setText("未登录");
-            binding.textView2.setText("");
+            binding.textViewUserUuid.setText("");
         }
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
@@ -168,9 +169,9 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()) {
-            case R.id.textView2:
+            case R.id.textView_userUuid:
                 ClipboardManager clipboard = (ClipboardManager) application.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("uuid", application.getUser().getUuid());
+                ClipData clip = ClipData.newPlainText("uuid", dataManager.getUser().getUuid());
                 clipboard.setPrimaryClip(clip);
 
                 Toast.makeText(application, "已复制用户链接",

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.bean.PackReceiveBean;
@@ -15,18 +16,20 @@ import java.util.Map;
 
 public class MessageGetThread extends Thread {
     private LifeManagerApplication application;
+    private DataManager dataManager;
     private Gson gson;
 
-    public MessageGetThread(Application app) {
+    public MessageGetThread(Application application) {
         super();
-        application = (LifeManagerApplication) app;
+        this.application = (LifeManagerApplication) application;
+        dataManager=DataManager.getInstance();
     }
 
     public void run() {
         gson = new Gson();
         while (true) {
             try {
-                String a = RequestUtils.recv(application.getUser().getUuid());
+                String a = RequestUtils.recv(dataManager.getUser().getUuid());
                 Log.e("Get",a);
 
                 try {

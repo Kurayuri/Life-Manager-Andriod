@@ -34,8 +34,8 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
-import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.databinding.ActivityBillAuditBinding;
 
@@ -51,7 +51,7 @@ import java.util.TreeMap;
 
 public class BillAuditActivity extends AppCompatActivity implements OnChartValueSelectedListener {
     private ActivityBillAuditBinding binding;
-    private LifeManagerApplication application;
+    private DataManager dataManager;
     private SimpleDateFormat simpleDateFormat;
     private SimpleDateFormat simpleDateFormatMonthDay;
     private DecimalFormat decimalFormat;
@@ -68,7 +68,7 @@ public class BillAuditActivity extends AppCompatActivity implements OnChartValue
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        application = (LifeManagerApplication) getApplication();
+        dataManager= DataManager.getInstance();
         binding = ActivityBillAuditBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
 
@@ -293,7 +293,7 @@ public class BillAuditActivity extends AppCompatActivity implements OnChartValue
         Legend legend = chart.getLegend();
 
 
-        ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, form);
+        ArrayList<Bill> localDataSet = dataManager.getBillList(dateStart, dateEnd, form);
         TreeMap<String, Float> localDataSetAudit = new TreeMap<>();
         for (Bill bill : localDataSet) {
             localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
@@ -470,7 +470,7 @@ public class BillAuditActivity extends AppCompatActivity implements OnChartValue
         Legend legend = chart.getLegend();
 
 
-        ArrayList<Bill> localDataSet = application.getBillList(dateStart, dateEnd, form);
+        ArrayList<Bill> localDataSet = dataManager.getBillList(dateStart, dateEnd, form);
         TreeMap<Long, Float> localDataSetAudit = new TreeMap<>();
 
         Long st = dateStart.getTime().getTime() / millisecondOfDay;

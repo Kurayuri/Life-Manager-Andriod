@@ -1,6 +1,7 @@
 package com.trashparadise.lifemanager.ui.works;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.bean.Work;
@@ -37,6 +38,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
     private ActivityWorkEditBinding binding;
     private RadioGroup radioGroup;
     private LifeManagerApplication application;
+    private DataManager dataManager;
 
 
     private Calendar date;
@@ -60,7 +62,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         binding = ActivityWorkEditBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        application = (LifeManagerApplication) this.getApplication();
+        dataManager=DataManager.getInstance();
         Intent intent = getIntent();
         dateFormatDate = new SimpleDateFormat(getString(R.string.date_format_date));
         mergeList = new ArrayList<>();
@@ -69,12 +71,12 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         // get object
         uuid = intent.getStringExtra("uuid");
 
-        work = application.getWork(uuid);
+        work = dataManager.getWork(uuid);
         if (work == null) {
             String tmpUuid = intent.getStringExtra("tmpUuid");
-            work = application.getWork(tmpUuid);
+            work = dataManager.getWork(tmpUuid);
             if (work == null)
-                work = application.getWorkTmp(tmpUuid);
+                work = dataManager.getWorkTmp(tmpUuid);
             if (work == null) {
                 date = Calendar.getInstance();
                 date.add(Calendar.HOUR, 1);
@@ -175,7 +177,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
                             String mergeUuid = data.getStringExtra("uuid");
-                            Work mergeWork = application.getWork(mergeUuid);
+                            Work mergeWork = dataManager.getWork(mergeUuid);
                             if (!uuid.equals(mergeUuid)) {
                                 mergeList.add(mergeUuid);
                                 binding.editTextTitle.setText(binding.editTextTitle.getText() + "\n" + mergeWork.getTitle());
@@ -255,7 +257,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
             Work workNew = new Work(title, dateNew, repeat, form, note);
             if (uuid.equals("")) {
                 //New
-                application.addWork(workNew);
+                dataManager.addWork(workNew);
                 finish();
             } else {
                 //Edit
@@ -268,18 +270,18 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
                     builder.setMessage(R.string.edit_confirm_text_chain)
                             .setPositiveButton(R.string.single_item, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    application.setWork(uuid, workNew);
+                                    dataManager.setWork(uuid, workNew);
                                     for (String mergeUUid : mergeList) {
-                                        application.delWork(mergeUUid);
+                                        dataManager.delWork(mergeUUid);
                                     }
                                     finish();
                                 }
                             })
                             .setNegativeButton(R.string.chain_item, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    application.setWorkChain(uuid, workNew);
+                                    dataManager.setWorkChain(uuid, workNew);
                                     for (String mergeUUid : mergeList) {
-                                        application.delWorkChain(mergeUUid);
+                                        dataManager.delWorkChain(mergeUUid);
                                     }
                                     finish();
                                 }

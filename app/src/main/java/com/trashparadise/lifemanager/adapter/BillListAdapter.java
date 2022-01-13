@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
@@ -32,6 +33,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private ArrayList<Bill> localDataSet;
     private Context context;
     private LifeManagerApplication application;
+    private DataManager dataManager;
     private DecimalFormat decimalFormat;
     private SimpleDateFormat dateFormatMonth;
     private SimpleDateFormat dateFormatTime;
@@ -87,6 +89,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         itemBillLayout = slimOn ? R.layout.item_bill_slim : R.layout.item_bill;
 
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
+        dataManager=DataManager.getInstance();
         updateDataSet();
         decimalFormat = new DecimalFormat(context.getString(R.string.amount_decimal_format));
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
@@ -100,7 +103,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     }
 
     private void updateDataSet() {
-        ArrayList<Bill> allDataSet = application.getBillList();
+        ArrayList<Bill> allDataSet = dataManager.getBillList();
         localDataSet = new ArrayList<>();
         if (form != -1) {
             for (int i = 0; i < allDataSet.size(); ++i) {
@@ -168,7 +171,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                             builder.setMessage(R.string.delete_confirm_text)
                                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            application.delBill(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                                            dataManager.delBill(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
                                             updateDataSet();
                                         }
                                     })

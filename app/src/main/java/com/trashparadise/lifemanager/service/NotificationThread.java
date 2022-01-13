@@ -4,6 +4,7 @@ package com.trashparadise.lifemanager.service;
 import android.app.Application;
 import android.util.ArrayMap;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.bean.Work;
 
@@ -16,10 +17,13 @@ public class NotificationThread extends Thread {
     private ArrayList<Work> workListNew;
     private ArrayMap<String,Work> workNotified;
     private LifeManagerApplication application;
+    private DataManager dataManager;
 
 
-    public NotificationThread(Application app){
-        application=(LifeManagerApplication)app;
+    public NotificationThread(Application application){
+        this.application=(LifeManagerApplication)application;
+        dataManager=DataManager.getInstance();
+
         workNotified=new ArrayMap<>();
         id=0;
     }
@@ -30,7 +34,7 @@ public class NotificationThread extends Thread {
         while (true) {
 
             try {
-                workListNew = application.getWorkList();
+                workListNew = dataManager.getWorkList();
             } catch (Exception e) {
                 workListNew = null;
             }

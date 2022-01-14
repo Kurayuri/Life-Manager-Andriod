@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,16 @@ import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.bean.User;
+import com.trashparadise.lifemanager.bean.network.DownloadRequest;
+import com.trashparadise.lifemanager.bean.network.DownloadResponse;
+import com.trashparadise.lifemanager.bean.network.UploadRequest;
+import com.trashparadise.lifemanager.bean.network.UploadResponse;
 import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
-import com.trashparadise.lifemanager.util.RequestUtils;
+import com.trashparadise.lifemanager.service.RequestService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MeFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
@@ -33,6 +40,7 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
     private FragmentMeBinding binding;
     private LifeManagerApplication application;
     private DataManager dataManager;
+    private User user;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -49,7 +57,9 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
         binding = FragmentMeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         application = (LifeManagerApplication) this.getActivity().getApplication();
-        dataManager=DataManager.getInstance();
+        dataManager = DataManager.getInstance();
+
+        user = dataManager.getUser();
         account = binding.layoutLogin;
         sync = binding.layoutSync;
         upload = binding.layoutUpload;
@@ -79,57 +89,10 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
                 startActivity(login);
                 break;
             case R.id.layout_sync:
-                if (dataManager.getUser().isValidation()) {
-
-                    Toast.makeText(application, "正在同步您的数据及设置",
-                            Toast.LENGTH_SHORT).show();
-                    Thread t = new Thread(() -> {
-                        Looper.prepare();
-                        String a = RequestUtils.download(dataManager.getUser().getUuid());
-                        if (a.equals("0000000000000000000000000000000000000000")) {
-                            Toast.makeText(getActivity(), "错误", Toast.LENGTH_SHORT).show();
-                        } else {
-                            application.onPull(a);
-                            Toast.makeText(application, "已从云端下载用户数据及设置",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    t.start();
-                    try {
-                        t.start();
-                    } catch (Exception ignored) {
-                    }
-
-                } else {
-                    Toast.makeText(application, "用户未登陆",
-                            Toast.LENGTH_SHORT).show();
-                }
-
+                onDownload();
                 break;
             case R.id.layout_upload:
-                if (dataManager.getUser().isValidation()) {
-                    Toast.makeText(application, "正在上传您的数据及设置",
-                            Toast.LENGTH_SHORT).show();
-                    Thread t = new Thread(() -> {
-                        Looper.prepare();
-                        String a = RequestUtils.upload(dataManager.getUser().getUuid(), application.onPush());
-                        if (a.equals("0000000000000000000000000000000000000000")) {
-                            Toast.makeText(getActivity(), "错误", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(application, "已保存用户数据及设置到云端",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    t.start();
-                    try {
-                        t.start();
-                    } catch (Exception ignored) {
-                    }
-                } else {
-                    Toast.makeText(application, "用户未登陆",
-                            Toast.LENGTH_SHORT).show();
-                }
-
+                onUpload();
                 break;
 //            case R.id.textView_issue:
 //                Toast.makeText(application, "这个软件完美无暇，如有问题请自我反思",
@@ -147,7 +110,6 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
     }
 
     private void initView() {
-        User user = dataManager.getUser();
         if (user.isValidation()) {
             binding.tvUserName.setText(user.getUsername());
             binding.textViewUserUuid.setText(user.getUuid());
@@ -171,7 +133,7 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
         switch (v.getId()) {
             case R.id.textView_userUuid:
                 ClipboardManager clipboard = (ClipboardManager) application.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("uuid", dataManager.getUser().getUuid());
+                ClipData clip = ClipData.newPlainText("uuid", user.getUuid());
                 clipboard.setPrimaryClip(clip);
 
                 Toast.makeText(application, "已复制用户链接",
@@ -179,5 +141,56 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
                 break;
         }
         return true;
+    }
+
+    private void onUpload() {
+        if (user.isValidation()) {
+            Toast.makeText(application, "正在上传您的数据及设置",
+                    Toast.LENGTH_SHORT).show();
+
+            Call<UploadResponse> call = RequestService.API.upload(new UploadRequest(user.getUuid(), user.getSession(), application.onPush()));
+            call.enqueue(new Callback<UploadResponse>() {
+                @Override
+                public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+                    UploadResponse body = response.body();
+                    Toast.makeText(getContext(), body.description, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<UploadResponse> call, Throwable t) {
+                    Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else {
+            Toast.makeText(application, "用户未登陆",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onDownload() {
+        if (user.isValidation()) {
+            Toast.makeText(application, "正在下载您的数据及设置",
+                    Toast.LENGTH_SHORT).show();
+            Call<DownloadResponse> call = RequestService.API.download(new DownloadRequest(user.getUuid(), user.getSession()));
+            call.enqueue(new Callback<DownloadResponse>() {
+                @Override
+                public void onResponse(Call<DownloadResponse> call, Response<DownloadResponse> response) {
+                    DownloadResponse body = response.body();
+                    Toast.makeText(getContext(), body.description, Toast.LENGTH_SHORT).show();
+                    if (body.state == DownloadResponse.OK) {
+                        application.onPull(body.getData());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DownloadResponse> call, Throwable t) {
+
+                }
+            });
+        } else {
+            Toast.makeText(application, "用户未登陆",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

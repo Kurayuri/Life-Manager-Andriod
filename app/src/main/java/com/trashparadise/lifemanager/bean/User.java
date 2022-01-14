@@ -5,12 +5,22 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String username;
     private String uuid;
+    private String session;
     private boolean validation;
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
 
     public User() {
         this.username = "";
-        this.validation = false;
         this.uuid = "";
+        this.session="";
+        this.validation = false;
     }
 
     public boolean isValidation() {
@@ -19,13 +29,6 @@ public class User implements Serializable {
 
     public void setValidation(boolean validation) {
         this.validation = validation;
-    }
-
-    public User(String uuid,
-                String userName) {
-        this.username = userName;
-        this.validation = true;
-        this.uuid = uuid;
     }
 
     public String getUsername() {

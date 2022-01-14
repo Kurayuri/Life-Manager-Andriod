@@ -3,7 +3,6 @@ package com.trashparadise.lifemanager.ui.me;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -15,9 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.bean.network.RegisterRequest;
+import com.trashparadise.lifemanager.bean.network.RegisterResponse;
 import com.trashparadise.lifemanager.databinding.ActivityRegisterBinding;
 import com.trashparadise.lifemanager.util.ValidUtils;
-import com.trashparadise.lifemanager.util.RequestUtils;
+import com.trashparadise.lifemanager.service.RequestService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity
         implements View.OnClickListener {
@@ -63,11 +68,6 @@ public class RegisterActivity extends AppCompatActivity
                         // 失去焦点
                         if (!hasFocus) {
                             switch (inputType) {
-                                case "phone":
-                                    if (!ValidUtils.isPhoneValid(inputStr)) {
-                                        editText.setError(errMsg);
-                                    }
-                                    break;
 
                                 case "password":
                                     if (!ValidUtils.isPasswordValid(inputStr)) {
@@ -75,11 +75,6 @@ public class RegisterActivity extends AppCompatActivity
                                     }
                                     break;
 
-                                case "gender":
-                                    if (!ValidUtils.isGenderValid(inputStr)) {
-                                        editText.setError(errMsg);
-                                    }
-                                    break;
                                 default:
                                     break;
                             }
@@ -98,23 +93,25 @@ public class RegisterActivity extends AppCompatActivity
         if (!(password1.equals(password2))) {
             Toast.makeText(this, "两次输入的密码不一致",
                     Toast.LENGTH_SHORT).show();
-
-        } else {
-            Thread t = new Thread(() -> {
-                Looper.prepare();
-                String a = RequestUtils.register(username, password1);
-                if (a.equals("0000000000000000000000000000000000000000")) {
-                    Toast.makeText(this.getApplication(), "用户名已存在", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this.getApplication(), "注册成功", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            });
-            try {
-                t.start();
-            } catch (Exception ignored) {
-            }
+            return;
         }
+        Call<RegisterResponse> call = RequestService.API.register(new RegisterRequest(username, password1));
+        call.enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                RegisterResponse body = response.body();
+                Toast.makeText(RegisterActivity.this, body.description, Toast.LENGTH_SHORT).show();
+                if (body.state == RegisterResponse.OK) {
+                    RegisterActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

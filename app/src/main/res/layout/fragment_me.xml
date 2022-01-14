@@ -56,11 +56,11 @@
             app:layout_constraintStart_toStartOf="@id/tv_user_name"
             app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
 
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:background="?android:attr/listDivider"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent" />-->
+        <!--        <View-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="1dp"-->
+        <!--            android:background="?android:attr/listDivider"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -75,14 +75,15 @@
 
         <ImageView
             android:id="@+id/imageView_account"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
-            android:src="@drawable/me_setting"
+            android:src="@drawable/ic_login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/textView_account"
@@ -108,13 +109,56 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_sync"
+        android:id="@+id/layout_upload"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="6dp"
         android:background="@drawable/shape_round_corner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_login">
+
+        <ImageView
+            android:id="@+id/imageView_export"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            app:tint="@color/colorPrimary"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_upload"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_export"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toRightOf="@id/imageView_export"
+            android:text="@string/data_export"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView_export"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--        <View-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="1dp"-->
+        <!--            android:background="?android:attr/listDivider"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_sync"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:background="@drawable/shape_round_corner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_upload">
 
         <!--        <View-->
         <!--            android:layout_width="match_parent"-->
@@ -125,12 +169,12 @@
 
         <ImageView
             android:id="@+id/imageView_sync"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerVertical="true"
-
+            app:tint="@color/colorPrimary"
             android:layout_marginStart="16dp"
-            android:src="@drawable/me_sync"
+            android:src="@drawable/ic_download"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -156,45 +200,5 @@
         <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_upload"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/shape_round_corner"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_sync">
-
-        <ImageView
-            android:id="@+id/imageView_export"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_centerVertical="true"
-
-            android:layout_marginStart="16dp"
-            android:src="@drawable/me_export"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView_export"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toRightOf="@id/imageView_export"
-            android:text="@string/data_export"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView_export"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!--        <View-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="1dp"-->
-        <!--            android:background="?android:attr/listDivider"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,19 +20,27 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.LifeManagerApplication;
+import com.trashparadise.lifemanager.bean.network.SendRequest;
+import com.trashparadise.lifemanager.bean.network.SendResponse;
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.databinding.ActivityWorkCheckBinding;
 import com.trashparadise.lifemanager.ui.contact.ContactSelectActivity;
+import com.trashparadise.lifemanager.service.RequestService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WorkCheckActivity extends AppCompatActivity {
     private ActivityWorkCheckBinding binding;
@@ -62,6 +70,7 @@ public class WorkCheckActivity extends AppCompatActivity {
         View root = binding.getRoot();
         setContentView(root);
         dataManager=DataManager.getInstance();
+        application=(LifeManagerApplication)getApplication();
 
         Intent intent = getIntent();
         uuid = intent.getStringExtra("uuid");
@@ -152,7 +161,7 @@ public class WorkCheckActivity extends AppCompatActivity {
                         if (result.getResultCode()== Activity.RESULT_OK){
                             Intent data=result.getData();
                             String contactUuid=data.getStringExtra("contactUuid");
-                            application.workSend(uuid,contactUuid);
+                            onSend(uuid,contactUuid);
                         }
                     }
                 }
@@ -175,6 +184,31 @@ public class WorkCheckActivity extends AppCompatActivity {
                 return false;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    private void onSend(String uuid, String dstUuid){
+        User user=dataManager.getUser();
+        if (user.isValidation()) {
+            Toast.makeText(this, "正在发送",
+                    Toast.LENGTH_SHORT).show();
+            String data= application.workSend(uuid);
+            Call<SendResponse> call = RequestService.API.send(new SendRequest(user.getUuid(),user.getSession(),dstUuid,data));
+            call.enqueue(new Callback<SendResponse>() {
+                @Override
+                public void onResponse(Call<SendResponse> call, Response<SendResponse> response) {
+                    SendResponse body = response.body();
+                    Toast.makeText(WorkCheckActivity.this, body.description, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<SendResponse> call, Throwable t) {
+                    Toast.makeText(WorkCheckActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else {
+            Toast.makeText(application, "用户未登陆",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

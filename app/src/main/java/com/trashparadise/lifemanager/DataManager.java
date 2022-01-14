@@ -40,7 +40,7 @@ public class DataManager {
     }
 
     private DataManager() {
-        workListTmp=new TreeSet<>();
+        workListTmp = new TreeSet<>();
     }
 
     public static DataManager getInstance() {
@@ -181,7 +181,6 @@ public class DataManager {
     public void addWorkTmp(Work work) {
         workListTmp.add(work);
     }
-
 
     public void setWorkChain(String uuid, Work workNew) {
         delWorkChain(uuid);
@@ -327,5 +326,18 @@ public class DataManager {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+
+    public TreeSet<Bill> getBills() {
+        return billList;
+    }
+
+    public TreeSet<Work> getWorks() {
+        return workList;
+    }
+
+    public TreeSet<Contact> getContacts() {
+        return contactList;
     }
 }

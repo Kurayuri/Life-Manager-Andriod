@@ -22,11 +22,10 @@ import com.trashparadise.lifemanager.bean.DataBundleBean;
 import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
-import com.trashparadise.lifemanager.service.MessageGetThread;
+import com.trashparadise.lifemanager.service.MessageReceiveThread;
 import com.trashparadise.lifemanager.service.NotificationThread;
 import com.trashparadise.lifemanager.ui.MainActivity;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
-import com.trashparadise.lifemanager.util.RequestUtils;
 
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -41,44 +40,6 @@ public class LifeManagerApplication extends Application {
     private NotificationCompat.Builder builder;
     private static final String CHANNEL_ID = "Life Manager";
     private Bitmap icon;
-
-    public String onPush() {
-        Gson gson = new Gson();
-        DataBundleBean dataBundleBean = new DataBundleBean(new TreeSet<>(dataManager.getBillList()), new TreeSet<>(dataManager.getWorkList()),
-                new TreeSet<>(dataManager.getContactList()), dataManager.getPreference());
-        String json = gson.toJson(dataBundleBean);
-        Log.e("Push", json);
-        return json;
-    }
-
-    public void onPull(String json) {
-        Log.e("Pull", json);
-        Gson gson = new Gson();
-        DataBundleBean dataBundleBean = gson.fromJson(json, DataBundleBean.class);
-        if (dataBundleBean.getBillList() != null)
-            dataManager.setBillList(dataBundleBean.getBillList());
-        if (dataBundleBean.getPreference() != null)
-            dataManager.setPreference(dataBundleBean.getPreference());
-        if (dataBundleBean.getWorkList() != null)
-            dataManager.setWorkList(dataBundleBean.getWorkList());
-        if (dataBundleBean.getContactList() != null)
-            dataManager.setContactList(dataBundleBean.getContactList());
-    }
-
-    public void workSend(String uuid, String tarUUid) {
-        Gson gson = new Gson();
-        Work work = dataManager.getWork(uuid);
-        if (work != null) {
-            new Thread(new Runnable() {
-                @Override
-
-                public void run() {
-                    Log.e("Send", gson.toJson(work));
-                    RequestUtils.send(dataManager.getUser().getUuid(), tarUUid, gson.toJson(work));
-                }
-            }).start();
-        }
-    }
 
     @Override
     public void onCreate() {
@@ -112,9 +73,47 @@ public class LifeManagerApplication extends Application {
 
         NotificationThread notificationThread = new NotificationThread(this);
         notificationThread.start();
-        MessageGetThread getMessageThread = new MessageGetThread(this);
+        MessageReceiveThread getMessageThread = new MessageReceiveThread(this);
         getMessageThread.start();
     }
+
+
+    public String onPush() {
+        Gson gson = new Gson();
+        DataBundleBean dataBundleBean = new DataBundleBean(new TreeSet<>(dataManager.getBillList()), new TreeSet<>(dataManager.getWorkList()),
+                new TreeSet<>(dataManager.getContactList()), dataManager.getPreference());
+        String json = gson.toJson(dataBundleBean);
+        Log.e("Push", json);
+        return json;
+    }
+
+    public void onPull(String json) {
+        Log.e("Pull", json);
+        Gson gson = new Gson();
+        try {
+            DataBundleBean dataBundleBean = gson.fromJson(json, DataBundleBean.class);
+            if (dataBundleBean.getBillList() != null)
+                dataManager.setBillList(dataBundleBean.getBillList());
+            if (dataBundleBean.getPreference() != null)
+                dataManager.setPreference(dataBundleBean.getPreference());
+            if (dataBundleBean.getWorkList() != null)
+                dataManager.setWorkList(dataBundleBean.getWorkList());
+            if (dataBundleBean.getContactList() != null)
+                dataManager.setContactList(dataBundleBean.getContactList());
+        }catch (Exception e){
+            Log.e("Pull Error",e.toString());
+        }
+    }
+
+    public String workSend(String uuid) {
+        Gson gson = new Gson();
+        Work work = dataManager.getWork(uuid);
+        String data = gson.toJson(work);
+
+        Log.e("Send", data);
+        return data;
+    }
+
 
     public void workReceive(Work work) {
         dataManager.addWorkTmp(work);
@@ -188,16 +187,16 @@ public class LifeManagerApplication extends Application {
 
     public void saveData() {
         ObjectOutput out;
-        Log.e("User Date Operation", "Write");
+        Log.e("Date Operation", "Write");
         try {
             out = new ObjectOutputStream(openFileOutput("billList.data", MODE_PRIVATE));
-            out.writeObject(dataManager.getBillList());
-            Log.e("billList.data", dataManager.getBillList().size() + "");
+            out.writeObject(dataManager.getBills());
+            Log.e("billList.data", dataManager.getBills().size() + "");
             out.close();
 
             out = new ObjectOutputStream(openFileOutput("workList.data", MODE_PRIVATE));
-            out.writeObject(dataManager.getWorkList());
-            Log.e("workList.data", dataManager.getWorkList().size() + "");
+            out.writeObject(dataManager.getWorks());
+            Log.e("workList.data", dataManager.getWorks().size() + "");
             out.close();
 
             out = new ObjectOutputStream(openFileOutput("preference.data", MODE_PRIVATE));
@@ -209,8 +208,8 @@ public class LifeManagerApplication extends Application {
             out.close();
 
             out = new ObjectOutputStream(openFileOutput("contactList.data", MODE_PRIVATE));
-            out.writeObject(dataManager.getContactList());
-            Log.e("contactList.data", dataManager.getContactList().size() + "");
+            out.writeObject(dataManager.getContacts());
+            Log.e("contactList.data", dataManager.getContacts().size() + "");
             out.close();
         } catch (Exception e) {
             Log.e("Write Error", e.toString());

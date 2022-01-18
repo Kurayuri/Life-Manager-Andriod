@@ -185,7 +185,7 @@ public class MeFragment extends Fragment implements View.OnClickListener, View.O
 
                 @Override
                 public void onFailure(Call<DownloadResponse> call, Throwable t) {
-
+                    Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
     private Vibrator vibrator;
     private SoundPoolUtils soundPoolUtils;
-    private int itemWorkLayout;
+    private int itemWorkLayoutStyle;
+
+    private int animationCount;
+
 
     private WorkListAdapter.OnItemClickListener listener;
 
@@ -110,14 +114,16 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         this.openOn = openOn;
         this.listener = listener;
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
-        dataManager=DataManager.getInstance();
+        dataManager = DataManager.getInstance();
         updateDataSet();
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
-        itemWorkLayout = slimOn ? R.layout.item_work_slim : R.layout.item_work;
+        itemWorkLayoutStyle = slimOn ? R.layout.item_work_slim : R.layout.item_work;
         vibrator = (Vibrator) application.getSystemService(Context.VIBRATOR_SERVICE);
         soundPoolUtils = SoundPoolUtils.getInstance(context);
 
+
+        animationCount = 0;
     }
 
 
@@ -168,7 +174,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         View view = null;
         switch (viewType) {
             case 0:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemWorkLayout, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemWorkLayoutStyle, viewGroup, false);
                 break;
             case 1:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_work_month, viewGroup, false);
@@ -235,6 +241,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                                                 @Override
                                                 public void onAnimationEnd(Animation animation) {
                                                     viewHolder.layout.startAnimation(animationTranslateLeft);
+                                                    ++animationCount;
                                                 }
 
                                                 @Override
@@ -250,7 +257,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
                                                 @Override
                                                 public void onAnimationEnd(Animation animation) {
-                                                    updateDataSet();
+                                                    --animationCount;
+                                                    if (animationCount <= 0) {
+                                                        updateDataSet();
+                                                    }
                                                 }
 
                                                 @Override

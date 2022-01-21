@@ -89,7 +89,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         itemBillLayout = slimOn ? R.layout.item_bill_slim : R.layout.item_bill;
 
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
-        dataManager=DataManager.getInstance();
+        dataManager = DataManager.getInstance();
         updateDataSet();
         decimalFormat = new DecimalFormat(context.getString(R.string.amount_decimal_format));
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
@@ -105,6 +105,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private void updateDataSet() {
         ArrayList<Bill> allDataSet = dataManager.getBillList();
         localDataSet = new ArrayList<>();
+
         if (form != -1) {
             for (int i = 0; i < allDataSet.size(); ++i) {
                 if (allDataSet.get(i).getForm().equals(form)) {

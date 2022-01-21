@@ -9,6 +9,7 @@ import com.trashparadise.lifemanager.R;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
@@ -18,10 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.trashparadise.lifemanager.bean.TypeBean;
 import com.trashparadise.lifemanager.constants.BillTypeRes;
 import com.trashparadise.lifemanager.databinding.ActivityBillEditBinding;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -64,7 +69,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding = ActivityBillEditBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         setContentView(root);
-        dataManager=DataManager.getInstance();
+        dataManager = DataManager.getInstance();
         Intent intent = getIntent();
         decimalFormat = new DecimalFormat(getResources().getString(R.string.amount_decimal_format));
         dateFormatDate = new SimpleDateFormat(getResources().getString(R.string.date_format_date));
@@ -138,11 +143,12 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         radioGroup.check(formToId(form));
 
         binding.typeRecycleView.setLayoutManager(new LinearLayoutManager(this));
+//        binding.typeRecycleView.setLayoutManager(new GridLayoutManager(this,2));
         billTypeAdapter = new BillTypeAdapter(typeList, this);
         binding.typeRecycleView.setAdapter(billTypeAdapter);
     }
 
-    private void initListener(){
+    private void initListener() {
         for (Integer id : buttonsAmount) {
             Button x = findViewById(id);
             x.setOnClickListener(this);
@@ -150,6 +156,17 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.buttonConfirm.setOnClickListener(this);
         binding.textViewDate.setOnClickListener(this);
         radioGroup.setOnCheckedChangeListener(this);
+        KeyboardVisibilityEvent.setEventListener(this, new KeyboardVisibilityEventListener() {
+
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+
+                if (isOpen)
+                    binding.constraintLayoutKeyboardBorder.setVisibility(View.GONE);
+                else
+                    binding.constraintLayoutKeyboardBorder.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void onConfirm() {
@@ -183,6 +200,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
                 date.setTime(newDate);
                 binding.textViewDate.setText(dateFormatDate.format(date.getTime()));
             }
+
             @Override
             public void onNegativeButtonClick(Date newDate) {
             }
@@ -243,7 +261,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        form= form==1?0:1;
+        form = form == 1 ? 0 : 1;
         initTypeDate();
         billTypeAdapter.notifyDataSetChanged();
         onItemClick(0);

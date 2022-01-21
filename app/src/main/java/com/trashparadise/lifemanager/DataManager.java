@@ -1,6 +1,5 @@
 package com.trashparadise.lifemanager;
 
-import android.app.Application;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -10,9 +9,6 @@ import com.trashparadise.lifemanager.bean.DataBundleBean;
 import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
-import com.trashparadise.lifemanager.bean.network.DownloadResponse;
-import com.trashparadise.lifemanager.bean.network.UploadRequest;
-import com.trashparadise.lifemanager.service.RequestService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,10 +22,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class DataManager {
     private static DataManager dataManager = new DataManager();
     private User user;
@@ -40,11 +32,9 @@ public class DataManager {
     private TreeSet<Work> workListTmp;
     private TreeSet<String> deletedList;
 
-    private LifeManagerApplication application;
 
     private DataManager() {
         workListTmp = new TreeSet<>();
-        application = null;
     }
 
     public static DataManager getInstance() {
@@ -417,12 +407,6 @@ public class DataManager {
     }
 
 
-    public void setApplication(LifeManagerApplication application) {
-        this.application = application;
-    }
-
-
-
     public String onUpload() {
         Gson gson = new Gson();
         DataBundleBean dataBundleBean = new DataBundleBean(dataManager.getBills(), dataManager.getWorks(),
@@ -456,6 +440,4 @@ public class DataManager {
             Log.e("Download Error", e.toString());
         }
     }
-
-
 }

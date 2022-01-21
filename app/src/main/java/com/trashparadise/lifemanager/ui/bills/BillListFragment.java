@@ -37,6 +37,7 @@ public class BillListFragment extends Fragment {
         slimOn=true;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,8 @@ import com.trashparadise.lifemanager.constants.NetworkDescriptionRes;
 import com.trashparadise.lifemanager.databinding.FragmentMeBinding;
 import com.trashparadise.lifemanager.service.RequestService;
 
+import java.text.SimpleDateFormat;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +47,8 @@ public class MeFragment extends Fragment {
     private LifeManagerApplication application;
     private DataManager dataManager;
     private User user;
+
+    private SimpleDateFormat dateFormatDate;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -62,20 +65,9 @@ public class MeFragment extends Fragment {
         View root = binding.getRoot();
         application = (LifeManagerApplication) this.getActivity().getApplication();
         dataManager = DataManager.getInstance();
+        dateFormatDate = new SimpleDateFormat(getString(R.string.date_format_date));
 
         user = dataManager.getUser();
-//        account = binding.layoutLogin;
-//        sync = binding.layoutSync;
-//        upload = binding.layoutUpload;
-//        praise = binding.textViewPraise;
-//        about = binding.textViewAboutUs;
-//        issue = binding.textViewIssue;
-//        upload.setOnClickListener(this);
-//        sync.setOnClickListener(this);
-//        account.setOnClickListener(this);
-//        issue.setOnClickListener(this);
-//        praise.setOnClickListener(this);
-//        about.setOnClickListener(this);
 
         initView();
         initListener();
@@ -99,7 +91,7 @@ public class MeFragment extends Fragment {
         binding.layoutLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent login = new Intent(getContext(), LoginActivity.class);
+                Intent login = new Intent(application, LoginActivity.class);
                 startActivity(login);
             }
         });
@@ -149,6 +141,9 @@ public class MeFragment extends Fragment {
         }
         if (dataManager.getPreference().isAutoSync()) {
             binding.layoutManualSync.setVisibility(View.GONE);
+            binding.layoutSyncTime.setVisibility(View.VISIBLE);
+            binding.textViewSyncTime.setText(dateFormatDate.format(application.autoSyncTime.getTime()));
+            binding.textViewSyncDescription.setText(application.autoSyncDescription);
         }
 
         ActionBar actionBar = activity.getSupportActionBar();
@@ -165,10 +160,12 @@ public class MeFragment extends Fragment {
     public void onSyncSwitch() {
         dataManager.getPreference().set(Preference.AUTOSYNC, !(dataManager.getPreference().isAutoSync()));
         binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
+        Animation animationUp = AnimationUtils.loadAnimation(application, R.anim.anim_translate_up);
+        Animation animationDown = AnimationUtils.loadAnimation(application, R.anim.anim_translate_down);
         if (dataManager.getPreference().isAutoSync()) {
-            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_translate_up);
-            binding.layoutManualSyncContainer.startAnimation(animation);
-            animation.setAnimationListener(new Animation.AnimationListener() {
+            application.onAutoSync();
+            binding.layoutManualSyncContainer.startAnimation(animationUp);
+            animationUp.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -177,6 +174,8 @@ public class MeFragment extends Fragment {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     binding.layoutManualSync.setVisibility(View.GONE);
+                    binding.layoutSyncTime.setVisibility(View.VISIBLE);
+                    binding.layoutSyncTime.startAnimation(animationDown);
                 }
 
                 @Override
@@ -186,9 +185,25 @@ public class MeFragment extends Fragment {
             });
 
         } else {
-            binding.layoutManualSync.setVisibility(View.VISIBLE);
-            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_translate_down);
-            binding.layoutManualSyncContainer.startAnimation(animation);
+            binding.layoutSyncTime.startAnimation(animationUp);
+            animationUp.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    binding.layoutManualSync.setVisibility(View.VISIBLE);
+                    binding.layoutSyncTime.setVisibility(View.GONE);
+                    binding.layoutManualSync.startAnimation(animationDown);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
     }
 
@@ -203,22 +218,22 @@ public class MeFragment extends Fragment {
                 public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
                     try {
                         UploadResponse body = response.body();
-                        Toast.makeText(getContext(), NetworkDescriptionRes.UPLOAD[body.state], Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, NetworkDescriptionRes.UPLOAD[body.state], Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<UploadResponse> call, Throwable t) {
-                    Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
                 }
             });
 
         } else {
             Toast.makeText(application, R.string.user_no_login,
                     Toast.LENGTH_SHORT).show();
-            Intent login = new Intent(getContext(), LoginActivity.class);
+            Intent login = new Intent(application, LoginActivity.class);
             startActivity(login);
         }
     }
@@ -233,24 +248,24 @@ public class MeFragment extends Fragment {
                 public void onResponse(Call<DownloadResponse> call, Response<DownloadResponse> response) {
                     try {
                         DownloadResponse body = response.body();
-                        Toast.makeText(getContext(), NetworkDescriptionRes.DOWNLOAD[body.state], Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, NetworkDescriptionRes.DOWNLOAD[body.state], Toast.LENGTH_SHORT).show();
                         if (body.state == DownloadResponse.OK) {
                             dataManager.onDownload(body.getData());
                         }
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<DownloadResponse> call, Throwable t) {
-                    Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             Toast.makeText(application, R.string.user_no_login,
                     Toast.LENGTH_SHORT).show();
-            Intent login = new Intent(getContext(), LoginActivity.class);
+            Intent login = new Intent(application, LoginActivity.class);
             startActivity(login);
         }
     }
@@ -266,26 +281,33 @@ public class MeFragment extends Fragment {
                 public void onResponse(Call<DownloadResponse> call, Response<DownloadResponse> response) {
                     try {
                         DownloadResponse body = response.body();
-                        Toast.makeText(getContext(), NetworkDescriptionRes.SYNC[body.state], Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, NetworkDescriptionRes.SYNC[body.state], Toast.LENGTH_SHORT).show();
                         if (body.state == DownloadResponse.OK) {
                             dataManager.onDownload(body.getData());
                         }
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<DownloadResponse> call, Throwable t) {
-                    Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
+
                 }
             });
 
         } else {
-            Toast.makeText(application, R.string.user_no_login,
-                    Toast.LENGTH_SHORT).show();
-            Intent login = new Intent(getContext(), LoginActivity.class);
-            startActivity(login);
+            try {
+                Toast.makeText(application, R.string.user_no_login,
+                        Toast.LENGTH_SHORT).show();
+                Intent login = new Intent(application, LoginActivity.class);
+                startActivity(login);
+
+            } catch (Exception e) {
+            }
         }
     }
+
+
 }

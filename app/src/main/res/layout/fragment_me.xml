@@ -193,10 +193,11 @@
                         app:tint="@color/colorPrimary" />
 
                     <TextView
-                        android:id="@+id/textViewsync"
+                        android:id="@+id/textView_Sync"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+
                         android:layout_marginStart="16dp"
                         android:layout_toRightOf="@id/imageView_sync"
                         android:text="@string/data_sync"
@@ -285,49 +286,102 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_syncTime"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_round_corner"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_autoSync">
+
+
+            <ImageView
+                android:id="@+id/imageView_syncTime"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_sync"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/textView_syncDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:layout_toRightOf="@id/imageView_syncTime"
+                android:text="@string/network_description_sync_error"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView_syncTime"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView_syncTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_toRightOf="@id/imageView_syncTime"
+                android:text="@string/date_format_date"
+                android:textColor="@color/gray_c3"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:id="@+id/layout_settings"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:layout_marginTop="6dp"-->
-<!--        android:background="@drawable/shape_round_corner"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/layout_syncModule">-->
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:id="@+id/layout_settings"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        android:layout_marginTop="6dp"-->
+    <!--        android:background="@drawable/shape_round_corner"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/layout_syncModule">-->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView_settings"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:src="@drawable/ic_login"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:tint="@color/colorPrimary" />-->
+    <!--        <ImageView-->
+    <!--            android:id="@+id/imageView_settings"-->
+    <!--            android:layout_width="20dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:src="@drawable/ic_login"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:tint="@color/colorPrimary" />-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/textView_settings"-->
+    <!--        <TextView-->
+    <!--            android:id="@+id/textView_settings"-->
 
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:layout_toRightOf="@id/imageView_settings"-->
-<!--            android:text="@string/account_login"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="16dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/imageView_settings"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_centerVertical="true"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:layout_toRightOf="@id/imageView_settings"-->
+    <!--            android:text="@string/account_login"-->
+    <!--            android:textColor="@color/black"-->
+    <!--            android:textSize="16dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintStart_toEndOf="@+id/imageView_settings"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

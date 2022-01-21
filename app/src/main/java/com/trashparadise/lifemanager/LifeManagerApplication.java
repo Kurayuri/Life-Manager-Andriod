@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -18,12 +19,15 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.gson.Gson;
 import com.trashparadise.lifemanager.bean.Contact;
 import com.trashparadise.lifemanager.bean.Bill;
-import com.trashparadise.lifemanager.bean.DataBundleBean;
 import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
+import com.trashparadise.lifemanager.bean.network.DownloadResponse;
+import com.trashparadise.lifemanager.bean.network.UploadRequest;
+import com.trashparadise.lifemanager.constants.NetworkDescriptionRes;
 import com.trashparadise.lifemanager.service.MessageReceiveThread;
 import com.trashparadise.lifemanager.service.NotificationThread;
+import com.trashparadise.lifemanager.service.RequestService;
 import com.trashparadise.lifemanager.ui.MainActivity;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
@@ -31,7 +35,12 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.Calendar;
 import java.util.TreeSet;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LifeManagerApplication extends Application {
     private DataManager dataManager;
@@ -40,6 +49,8 @@ public class LifeManagerApplication extends Application {
     private NotificationCompat.Builder builder;
     private static final String CHANNEL_ID = "Life Manager";
     private Bitmap icon;
+    public Calendar autoSyncTime;
+    public String autoSyncDescription;
 
     @Override
     public void onCreate() {
@@ -47,6 +58,9 @@ public class LifeManagerApplication extends Application {
         dataManager = DataManager.getInstance();
         readDate();
         dataManager.renewWork();
+
+        autoSyncTime =Calendar.getInstance();
+        autoSyncDescription=getString(R.string.network_description_sync_error);
 
         // Create notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -196,5 +210,40 @@ public class LifeManagerApplication extends Application {
         } catch (Exception e) {
             Log.e("Write Error", e.toString());
         }
+    }
+
+    public void onAutoSync() {
+        User user= dataManager.getUser();
+        Preference preference=dataManager.getPreference();
+        if (user.isValidation() && preference.isAutoSync()) {
+
+
+            Call<DownloadResponse> call = RequestService.API.sync(new UploadRequest(user.getUuid(), user.getSession(), dataManager.onUpload()));
+            call.enqueue(new Callback<DownloadResponse>() {
+                @Override
+                public void onResponse(Call<DownloadResponse> call, Response<DownloadResponse> response) {
+                    autoSyncTime =Calendar.getInstance();
+
+                    try {
+                        DownloadResponse body = response.body();
+                        autoSyncDescription=getString(NetworkDescriptionRes.SYNC[body.state]);
+                        if (body.state == DownloadResponse.OK) {
+                            dataManager.onDownload(body.getData());
+
+                        }
+                    } catch (Exception e) {
+                        autoSyncDescription = getString(R.string.network_error);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DownloadResponse> call, Throwable t) {
+                    autoSyncTime = Calendar.getInstance();
+                    autoSyncDescription = getString(R.string.network_error);
+                }
+            });
+
+        }
+
     }
 }

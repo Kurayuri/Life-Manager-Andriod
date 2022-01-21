@@ -25,6 +25,7 @@
 
     <color name="colorTextTeal">#19a3a2</color>
     <color name="colorPrimary">#5eb9ff</color>
+    <color name="colorPrimaryBackground">#d6edff</color>
     <color name="colorPrimaryPressed">#4d91c5</color>
     <color name="colorPrimaryDark">#3f3c51</color>
     <color name="colorAccent">#3f3c51</color>
@@ -94,4 +95,8 @@
     <color name="colorTextChartDescribe">#c9c7d3</color>
     <color name="colorGreenChart">#11a06a</color>
     <color name="colorTextContract">#e1dfed</color>
+
+    <drawable name="switch_background_disabled_holo_dark">#F00</drawable>
+    <drawable name="switch_background_focused_holo_dark">#0F0</drawable>
+    <drawable name="switch_background_holo_dark">#00F</drawable>
 </resources>

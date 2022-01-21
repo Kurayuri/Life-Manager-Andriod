@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -194,7 +193,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                             int currForm = localDataSet.get(viewHolder.getBindingAdapterPosition()).getForm();
                             Animation animationScaleRotateOut = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_out);
                             Animation animationScaleRotateIn = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_in);
-                            Animation animationTranslateLeft = AnimationUtils.loadAnimation(context, R.anim.anim_traslate_left);
+                            Animation animationTranslateLeft = AnimationUtils.loadAnimation(context, R.anim.anim_translate_left);
                             Animation animationRotateShake = AnimationUtils.loadAnimation(context, R.anim.anim_rotate_shake);
                             dataManager.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
 

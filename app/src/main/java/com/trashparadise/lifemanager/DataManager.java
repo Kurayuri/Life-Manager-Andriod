@@ -1,12 +1,18 @@
 package com.trashparadise.lifemanager;
 
+import android.app.Application;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.bean.Contact;
+import com.trashparadise.lifemanager.bean.DataBundleBean;
 import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
+import com.trashparadise.lifemanager.bean.network.DownloadResponse;
+import com.trashparadise.lifemanager.bean.network.UploadRequest;
+import com.trashparadise.lifemanager.service.RequestService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -20,6 +26,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DataManager {
     private static DataManager dataManager = new DataManager();
     private User user;
@@ -30,8 +40,11 @@ public class DataManager {
     private TreeSet<Work> workListTmp;
     private TreeSet<String> deletedList;
 
+    private LifeManagerApplication application;
+
     private DataManager() {
         workListTmp = new TreeSet<>();
+        application = null;
     }
 
     public static DataManager getInstance() {
@@ -140,8 +153,8 @@ public class DataManager {
         Integer repeat = work.getRepeat();
         Integer addField = Calendar.SECOND;
         Calendar date = (Calendar) work.getDate().clone();
-        String uuidPrefix=work.getUuid().substring(0,17);
-        long uuidSuffix=Long.parseLong(work.getUuid().substring(17,32),16);
+        String uuidPrefix = work.getUuid().substring(0, 17);
+        long uuidSuffix = Long.parseLong(work.getUuid().substring(17, 32), 16);
         Work workNew;
 
         int unfoldTime = preference.getUnfoldTimes().get(repeat);
@@ -165,8 +178,8 @@ public class DataManager {
         for (int i = 2; i <= unfoldTime; ++i) {
             workNew = work.clone();
             date.add(addField, 1);
-            uuidSuffix+=1;
-            workNew.set(Work.UUID,uuidPrefix+Long.toHexString(uuidSuffix));
+            uuidSuffix += 1;
+            workNew.set(Work.UUID, uuidPrefix + Long.toHexString(uuidSuffix));
             workNew.set(Work.DATE, (Calendar) date.clone());
             workList.add(workNew);
             deletedList.remove(workNew.getUuid());
@@ -255,19 +268,19 @@ public class DataManager {
 
             for (Map.Entry<String, Work> entry : heads.entrySet()) {
                 Work work = entry.getValue();
-                LocalDateTime currDate=LocalDateTime.ofInstant(
+                LocalDateTime currDate = LocalDateTime.ofInstant(
                         Instant.ofEpochMilli(new Date().getTime()), ZoneId.systemDefault());
 
                 Calendar workDate = (Calendar) work.getDate().clone();
-                LocalDateTime headDate=LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(workDate.getTimeInMillis()),ZoneId.systemDefault());
+                LocalDateTime headDate = LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(workDate.getTimeInMillis()), ZoneId.systemDefault());
 
                 Work workNew;
 
                 long dateDiff = 1;
                 Integer addField = Calendar.SECOND;
-                String uuidPrefix=work.getUuid().substring(0,17);
-                long uuidSuffix=Long.parseLong(work.getUuid().substring(17,32),16);
+                String uuidPrefix = work.getUuid().substring(0, 17);
+                long uuidSuffix = Long.parseLong(work.getUuid().substring(17, 32), 16);
 
                 switch (work.getRepeat()) {
                     case Work.EVERY_DAY:
@@ -279,7 +292,7 @@ public class DataManager {
                         addField = Calendar.WEEK_OF_MONTH;
                         break;
                     case Work.EVERY_MONTH:
-                        dateDiff = ChronoUnit.MONTHS.between(currDate,headDate);
+                        dateDiff = ChronoUnit.MONTHS.between(currDate, headDate);
                         addField = Calendar.MONTH;
                         break;
                     case Work.EVERY_YEAR:
@@ -290,8 +303,8 @@ public class DataManager {
                 for (int i = 1; i < unfoldTimes.get(work.getRepeat()) - dateDiff; ++i) {
                     workNew = work.clone();
                     workDate.add(addField, 1);
-                    uuidSuffix+=1;
-                    workNew.set(Work.UUID,uuidPrefix+Long.toHexString(uuidSuffix));
+                    uuidSuffix += 1;
+                    workNew.set(Work.UUID, uuidPrefix + Long.toHexString(uuidSuffix));
                     workNew.set(Work.DATE, (Calendar) workDate.clone());
                     addWork(workNew);
                     deletedList.remove(workNew.getUuid());
@@ -335,7 +348,6 @@ public class DataManager {
     }
 
 
-
     public void delContact(String uuid) {
         Contact contact = getContact(uuid);
         if (contact != null) {
@@ -371,7 +383,6 @@ public class DataManager {
     }
 
 
-
     public User getUser() {
         return user;
     }
@@ -404,4 +415,47 @@ public class DataManager {
     public TreeSet<String> getDeletedList() {
         return deletedList;
     }
+
+
+    public void setApplication(LifeManagerApplication application) {
+        this.application = application;
+    }
+
+
+
+    public String onUpload() {
+        Gson gson = new Gson();
+        DataBundleBean dataBundleBean = new DataBundleBean(dataManager.getBills(), dataManager.getWorks(),
+                dataManager.getContacts(), dataManager.getPreference(), dataManager.getDeletedList());
+        String json = gson.toJson(dataBundleBean);
+        Log.e("Upload", json);
+        return json;
+    }
+
+    public void onDownload(String json) {
+        Log.e("Download", json);
+        Gson gson = new Gson();
+        try {
+            DataBundleBean dataBundleBean = gson.fromJson(json, DataBundleBean.class);
+            if (dataBundleBean.getBillList() != null)
+                dataManager.setBillList(dataBundleBean.getBillList());
+            if (dataBundleBean.getPreference() != null) {
+                boolean autoSync = dataManager.getPreference().isAutoSync();
+                dataManager.setPreference(dataBundleBean.getPreference());
+                dataManager.getPreference().set(Preference.AUTOSYNC, autoSync);
+            }
+            if (dataBundleBean.getWorkList() != null)
+                dataManager.setWorkList(dataBundleBean.getWorkList());
+            if (dataBundleBean.getContactList() != null)
+                dataManager.setContactList(dataBundleBean.getContactList());
+
+            if (dataBundleBean.getDeletedList() != null)
+                dataManager.setDeletedList(dataBundleBean.getDeletedList());
+
+        } catch (Exception e) {
+            Log.e("Download Error", e.toString());
+        }
+    }
+
+
 }

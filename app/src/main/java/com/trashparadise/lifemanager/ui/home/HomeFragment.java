@@ -130,14 +130,14 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        // for test
+
         binding.floatingActionButtonNewBill.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragmentContainer_list, billListFragment);
                 fragmentTransaction.commit();
-                dataManager.getPreference().setHome(Preference.HOME_BILL);
+                dataManager.getPreference().set(Preference.HOME,Preference.HOME_BILL);
                 billAuditPieFragment.callUpdateData();
                 return true;
             }
@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment {
                 fragmentTransaction = getChildFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragmentContainer_list, workListAFragment);
                 fragmentTransaction.commit();
-                dataManager.getPreference().setHome(Preference.HOME_WORK);
+                dataManager.getPreference().set(Preference.HOME,Preference.HOME_WORK);
                 billAuditPieFragment.callUpdateData();
                 return true;
             }

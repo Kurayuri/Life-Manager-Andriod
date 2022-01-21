@@ -78,35 +78,6 @@ public class LifeManagerApplication extends Application {
     }
 
 
-    public String onUpload() {
-        Gson gson = new Gson();
-        DataBundleBean dataBundleBean = new DataBundleBean(dataManager.getBills(), dataManager.getWorks(),
-                dataManager.getContacts(), dataManager.getPreference(),dataManager.getDeletedList());
-        String json = gson.toJson(dataBundleBean);
-        Log.e("Upload", json);
-        Log.e("DL",dataManager.getDeletedList().toString());
-        return json;
-    }
-
-    public void onDownload(String json) {
-        Log.e("Download", json);
-        Gson gson = new Gson();
-        try {
-            DataBundleBean dataBundleBean = gson.fromJson(json, DataBundleBean.class);
-            if (dataBundleBean.getBillList() != null)
-                dataManager.setBillList(dataBundleBean.getBillList());
-            if (dataBundleBean.getPreference() != null)
-                dataManager.setPreference(dataBundleBean.getPreference());
-            if (dataBundleBean.getWorkList() != null)
-                dataManager.setWorkList(dataBundleBean.getWorkList());
-            if (dataBundleBean.getContactList() != null)
-                dataManager.setContactList(dataBundleBean.getContactList());
-            if (dataBundleBean.getDeletedList() != null)
-                dataManager.setDeletedList(dataBundleBean.getDeletedList());
-        } catch (Exception e) {
-            Log.e("Download Error", e.toString());
-        }
-    }
 
 
     public String workSend(String uuid) {
@@ -186,7 +157,7 @@ public class LifeManagerApplication extends Application {
         } catch (Exception e) {
             dataManager.setDeletedList(new TreeSet<>());
         }
-            if (exception != null) {
+        if (exception != null) {
             Log.e("Read Error", exception.toString());
         }
     }

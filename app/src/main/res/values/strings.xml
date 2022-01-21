@@ -43,9 +43,12 @@
     <string name="delete_confirm_text">确认删除？</string>
     <string name="account_login">账号登陆</string>
     <string name="account_register">账号注册</string>
+
     <string name="data_download">强制下载</string>
     <string name="data_upload">强制上传</string>
     <string name="data_sync">智能同步</string>
+    <string name="data_auto_sync">自动同步</string>
+
     <string name="on_data_sync">正在同步账户数据</string>
     <string name="on_data_download">正在下载账户数据</string>
     <string name="on_data_upload">正在上传账户数据</string>

@@ -17,11 +17,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.network.DownloadRequest;
 import com.trashparadise.lifemanager.bean.network.DownloadResponse;
@@ -34,7 +37,6 @@ import com.trashparadise.lifemanager.service.RequestService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Body;
 
 
 public class MeFragment extends Fragment {
@@ -49,7 +51,6 @@ public class MeFragment extends Fragment {
         return new MeFragment();
     }
 
-    //    private View account, sync, upload, issue, praise, about;
     private Toast toast;
 
     @Override
@@ -83,6 +84,18 @@ public class MeFragment extends Fragment {
     }
 
     private void initListener() {
+        binding.textViewUserUuid.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) application.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("uuid", user.getUuid());
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(application, R.string.copy_uuid,
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         binding.layoutLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,16 +121,16 @@ public class MeFragment extends Fragment {
                 onSync();
             }
         });
-        binding.textViewUserUuid.setOnLongClickListener(new View.OnLongClickListener() {
+        binding.layoutAutoSync.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) application.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("uuid", user.getUuid());
-                clipboard.setPrimaryClip(clip);
-
-                Toast.makeText(application, R.string.copy_uuid,
-                        Toast.LENGTH_SHORT).show();
-                return true;
+            public void onClick(View v) {
+                onSyncSwitch();
+            }
+        });
+        binding.switchAutoSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSyncSwitch();
             }
         });
     }
@@ -127,10 +140,17 @@ public class MeFragment extends Fragment {
         if (user.isValidation()) {
             binding.tvUserName.setText(user.getUsername());
             binding.textViewUserUuid.setText(user.getUuid());
+            binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
         } else {
             binding.tvUserName.setText(R.string.no_login);
             binding.textViewUserUuid.setText("");
+            dataManager.getPreference().set(Preference.AUTOSYNC, false);
+
         }
+        if (dataManager.getPreference().isAutoSync()) {
+            binding.layoutManualSync.setVisibility(View.GONE);
+        }
+
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setTitle(R.string.app_name);
@@ -142,13 +162,42 @@ public class MeFragment extends Fragment {
         initView();
     }
 
+    public void onSyncSwitch() {
+        dataManager.getPreference().set(Preference.AUTOSYNC, !(dataManager.getPreference().isAutoSync()));
+        binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
+        if (dataManager.getPreference().isAutoSync()) {
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_translate_up);
+            binding.layoutManualSyncContainer.startAnimation(animation);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    binding.layoutManualSync.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+        } else {
+            binding.layoutManualSync.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.anim_translate_down);
+            binding.layoutManualSyncContainer.startAnimation(animation);
+        }
+    }
 
     private void onUpload() {
         if (user.isValidation()) {
             Toast.makeText(application, R.string.on_data_upload,
                     Toast.LENGTH_SHORT).show();
 
-            Call<UploadResponse> call = RequestService.API.upload(new UploadRequest(user.getUuid(), user.getSession(), application.onUpload()));
+            Call<UploadResponse> call = RequestService.API.upload(new UploadRequest(user.getUuid(), user.getSession(), dataManager.onUpload()));
             call.enqueue(new Callback<UploadResponse>() {
                 @Override
                 public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
@@ -186,7 +235,7 @@ public class MeFragment extends Fragment {
                         DownloadResponse body = response.body();
                         Toast.makeText(getContext(), NetworkDescriptionRes.DOWNLOAD[body.state], Toast.LENGTH_SHORT).show();
                         if (body.state == DownloadResponse.OK) {
-                            application.onDownload(body.getData());
+                            dataManager.onDownload(body.getData());
                         }
                     } catch (Exception e) {
                         Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
@@ -211,7 +260,7 @@ public class MeFragment extends Fragment {
             Toast.makeText(application, R.string.on_data_sync,
                     Toast.LENGTH_SHORT).show();
 
-            Call<DownloadResponse> call = RequestService.API.sync(new UploadRequest(user.getUuid(), user.getSession(), application.onUpload()));
+            Call<DownloadResponse> call = RequestService.API.sync(new UploadRequest(user.getUuid(), user.getSession(), dataManager.onUpload()));
             call.enqueue(new Callback<DownloadResponse>() {
                 @Override
                 public void onResponse(Call<DownloadResponse> call, Response<DownloadResponse> response) {
@@ -219,10 +268,9 @@ public class MeFragment extends Fragment {
                         DownloadResponse body = response.body();
                         Toast.makeText(getContext(), NetworkDescriptionRes.SYNC[body.state], Toast.LENGTH_SHORT).show();
                         if (body.state == DownloadResponse.OK) {
-                            application.onDownload(body.getData());
+                            dataManager.onDownload(body.getData());
                         }
                     } catch (Exception e) {
-                        Log.e("www", e.toString());
                         Toast.makeText(getContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 }

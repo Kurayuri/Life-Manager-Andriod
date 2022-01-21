@@ -1,14 +1,20 @@
 package com.trashparadise.lifemanager;
 
+import android.util.Log;
+
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.bean.Contact;
 import com.trashparadise.lifemanager.bean.Preference;
 import com.trashparadise.lifemanager.bean.User;
 import com.trashparadise.lifemanager.bean.Work;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,12 +22,21 @@ import java.util.TreeSet;
 
 public class DataManager {
     private static DataManager dataManager = new DataManager();
-    private TreeSet<Bill> billList;
     private User user;
-    private TreeSet<Work> workList;
     private Preference preference;
+    private TreeSet<Bill> billList;
+    private TreeSet<Work> workList;
     private TreeSet<Contact> contactList;
     private TreeSet<Work> workListTmp;
+    private TreeSet<String> deletedList;
+
+    private DataManager() {
+        workListTmp = new TreeSet<>();
+    }
+
+    public static DataManager getInstance() {
+        return dataManager;
+    }
 
     public void setBillList(TreeSet<Bill> billList) {
         this.billList = billList;
@@ -39,22 +54,18 @@ public class DataManager {
         this.contactList = contactList;
     }
 
-    private DataManager() {
-        workListTmp = new TreeSet<>();
-    }
 
-    public static DataManager getInstance() {
-        return dataManager;
+    public void addBill(Bill bill) {
+        billList.add(bill);
+        deletedList.remove(bill.getUuid());
     }
 
     public void delBill(String uuid) {
         Bill bill = getBill(uuid);
-        if (bill != null)
+        if (bill != null) {
             billList.remove(bill);
-    }
-
-    public void addBill(Bill bill) {
-        billList.add(bill);
+            deletedList.add(uuid);
+        }
     }
 
     public Bill getBill(String uuid) {
@@ -70,6 +81,7 @@ public class DataManager {
 
     public void setBill(String uuid, Bill billNew) {
         delBill(uuid);
+        billNew.set(Bill.UUID, uuid);
         addBill(billNew);
     }
 
@@ -113,16 +125,25 @@ public class DataManager {
 
     public void delWork(String uuid) {
         Work work = getWork(uuid);
-        if (work != null)
+        if (work != null) {
             workList.remove(work);
+            deletedList.add(uuid);
+        }
     }
 
-    // auto unfold
     public void addWork(Work work) {
+        workList.add(work);
+        deletedList.remove(work.getUuid());
+    }
+
+    public void addWorkChain(Work work) {
         Integer repeat = work.getRepeat();
         Integer addField = Calendar.SECOND;
         Calendar date = (Calendar) work.getDate().clone();
+        String uuidPrefix=work.getUuid().substring(0,17);
+        long uuidSuffix=Long.parseLong(work.getUuid().substring(17,32),16);
         Work workNew;
+
         int unfoldTime = preference.getUnfoldTimes().get(repeat);
         switch (repeat) {
             case Work.EVERY_DAY:
@@ -139,17 +160,17 @@ public class DataManager {
                 break;
         }
         workList.add(work);
+        deletedList.remove(work.getUuid());
 
         for (int i = 2; i <= unfoldTime; ++i) {
             workNew = work.clone();
             date.add(addField, 1);
-            workNew.setDate((Calendar) date.clone());
+            uuidSuffix+=1;
+            workNew.set(Work.UUID,uuidPrefix+Long.toHexString(uuidSuffix));
+            workNew.set(Work.DATE, (Calendar) date.clone());
             workList.add(workNew);
+            deletedList.remove(workNew.getUuid());
         }
-    }
-
-    public void addWorkChain(Work work) {
-        addWork(work);
     }
 
     public Work getWork(String uuid) {
@@ -183,8 +204,13 @@ public class DataManager {
     }
 
     public void setWorkChain(String uuid, Work workNew) {
+        Work work = getWork(uuid);
+        if (work != null) {
+            workNew.set(Work.UUID, uuid);
+            workNew.set(Work.CLASSUUID, work.getClassUuid());
+        }
         delWorkChain(uuid);
-        addWork(workNew);
+        addWorkChain(workNew);
     }
 
     public void delWorkChain(String uuid) {
@@ -193,8 +219,10 @@ public class DataManager {
         String classUuid = work.getClassUuid();
         Integer form = work.getForm();
 
-        if (work != null)
+        if (work != null) {
             workList.remove(work);
+            deletedList.add(uuid);
+        }
 
         Iterator i = workList.iterator();
         Work x;
@@ -206,61 +234,82 @@ public class DataManager {
                     (x.getDate().compareTo(calendar) < 0 ? 1 : 0) + (form.equals(0) ? 1 : 0)) == 1 ? true : false)
             ) {
                 i.remove();
+                deletedList.add(x.getUuid());
             }
         }
     }
 
     public void renewWork() {
-        TreeMap<String, Work> head = new TreeMap<>();
-        Calendar calendar = Calendar.getInstance();
-        TreeMap<Integer, Integer> unfoldTimes = preference.getUnfoldTimes();
-        for (Work work : workList) {
-            if (head.get(work.getClassUuid()) != null) {
-                if (head.get(work.getClassUuid()).getDate().compareTo(work.getDate()) < 0) {
-                    head.put(work.getClassUuid(), work);
+        try {
+            TreeMap<String, Work> heads = new TreeMap<>();
+            TreeMap<Integer, Integer> unfoldTimes = preference.getUnfoldTimes();
+            for (Work work : workList) {
+                if (heads.get(work.getClassUuid()) != null) {
+                    if (heads.get(work.getClassUuid()).getDate().compareTo(work.getDate()) < 0) {
+                        heads.put(work.getClassUuid(), work);
+                    }
+                } else {
+                    heads.put(work.getClassUuid(), work);
                 }
-            } else {
-                head.put(work.getClassUuid(), work);
             }
-        }
-        for (Map.Entry<String, Work> entry : head.entrySet()) {
-            Work work = entry.getValue();
-            Work workNew;
-            Calendar date = (Calendar) work.getDate().clone();
-            long dateDiff = 1;
-            Integer addField = Calendar.SECOND;
 
-            switch (work.getRepeat()) {
-                case Work.EVERY_DAY:
-                    dateDiff = ChronoUnit.DAYS.between(calendar.toInstant(), work.getDate().toInstant());
-                    addField = Calendar.DATE;
-                    break;
-                case Work.EVERY_WEEK:
-                    dateDiff = ChronoUnit.WEEKS.between(calendar.toInstant(), work.getDate().toInstant());
-                    addField = Calendar.WEEK_OF_MONTH;
-                    break;
-                case Work.EVERY_MONTH:
-                    dateDiff = ChronoUnit.MONTHS.between(calendar.toInstant(), work.getDate().toInstant());
-                    addField = Calendar.MONTH;
-                    break;
-                case Work.EVERY_YEAR:
-                    dateDiff = ChronoUnit.YEARS.between(calendar.toInstant(), work.getDate().toInstant());
-                    addField = Calendar.YEAR;
-                    break;
+            for (Map.Entry<String, Work> entry : heads.entrySet()) {
+                Work work = entry.getValue();
+                LocalDateTime currDate=LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(new Date().getTime()), ZoneId.systemDefault());
+
+                Calendar workDate = (Calendar) work.getDate().clone();
+                LocalDateTime headDate=LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(workDate.getTimeInMillis()),ZoneId.systemDefault());
+
+                Work workNew;
+
+                long dateDiff = 1;
+                Integer addField = Calendar.SECOND;
+                String uuidPrefix=work.getUuid().substring(0,17);
+                long uuidSuffix=Long.parseLong(work.getUuid().substring(17,32),16);
+
+                switch (work.getRepeat()) {
+                    case Work.EVERY_DAY:
+                        dateDiff = ChronoUnit.DAYS.between(currDate, headDate);
+                        addField = Calendar.DATE;
+                        break;
+                    case Work.EVERY_WEEK:
+                        dateDiff = ChronoUnit.WEEKS.between(currDate, headDate);
+                        addField = Calendar.WEEK_OF_MONTH;
+                        break;
+                    case Work.EVERY_MONTH:
+                        dateDiff = ChronoUnit.MONTHS.between(currDate,headDate);
+                        addField = Calendar.MONTH;
+                        break;
+                    case Work.EVERY_YEAR:
+                        dateDiff = ChronoUnit.YEARS.between(currDate, headDate);
+                        addField = Calendar.YEAR;
+                        break;
+                }
+                for (int i = 1; i < unfoldTimes.get(work.getRepeat()) - dateDiff; ++i) {
+                    workNew = work.clone();
+                    workDate.add(addField, 1);
+                    uuidSuffix+=1;
+                    workNew.set(Work.UUID,uuidPrefix+Long.toHexString(uuidSuffix));
+                    workNew.set(Work.DATE, (Calendar) workDate.clone());
+                    addWork(workNew);
+                    deletedList.remove(workNew.getUuid());
+                }
             }
-            for (int i = 1; i < unfoldTimes.get(work.getRepeat()) - dateDiff; ++i) {
-                workNew = work.clone();
-                date.add(addField, 1);
-                workNew.setDate((Calendar) date.clone());
-                workList.add(workNew);
-            }
+        } catch (Exception e) {
+            Log.e("Renew Error", e.toString());
         }
     }
 
     public void setWork(String uuid, Work workNew) {
-        workNew.setClassUuid(getWork(uuid).getClassUuid());
+        Work work = getWork(uuid);
+        if (work != null) {
+            workNew.set(Work.CLASSUUID, work.getClassUuid());
+            workNew.set(Work.UUID, work.getUuid());
+        }
         delWork(uuid);
-        workList.add(workNew);
+        addWork(workNew);
     }
 
     public void setWork(String uuid, int field, Object object) {
@@ -285,26 +334,26 @@ public class DataManager {
         return new ArrayList<Work>(workList);
     }
 
-    public Preference getPreference() {
-        return preference;
-    }
 
 
     public void delContact(String uuid) {
         Contact contact = getContact(uuid);
-        if (contact != null)
+        if (contact != null) {
             contactList.remove(contact);
+            deletedList.add(uuid);
+        }
     }
 
     public void addContact(Contact contact) {
         contactList.add(contact);
+        deletedList.remove(contact.getUuid());
     }
 
     public Contact getContact(String uuid) {
         if (uuid == null || uuid.equals(""))
             return null;
         for (Contact contact : contactList) {
-            if (contact.getUuid().equals(uuid)) {
+            if (contact.getContactUuid().equals(uuid)) {
                 return contact;
             }
         }
@@ -313,12 +362,15 @@ public class DataManager {
 
     public void setContact(String uuid, Contact contactNew) {
         delContact(uuid);
+        contactNew.set(Contact.UUID, uuid);
         addContact(contactNew);
     }
 
     public ArrayList<Contact> getContactList() {
         return new ArrayList<Contact>(contactList);
     }
+
+
 
     public User getUser() {
         return user;
@@ -328,6 +380,9 @@ public class DataManager {
         this.user = user;
     }
 
+    public Preference getPreference() {
+        return preference;
+    }
 
     public TreeSet<Bill> getBills() {
         return billList;
@@ -339,5 +394,14 @@ public class DataManager {
 
     public TreeSet<Contact> getContacts() {
         return contactList;
+    }
+
+
+    public void setDeletedList(TreeSet<String> deletedList) {
+        this.deletedList = deletedList;
+    }
+
+    public TreeSet<String> getDeletedList() {
+        return deletedList;
     }
 }

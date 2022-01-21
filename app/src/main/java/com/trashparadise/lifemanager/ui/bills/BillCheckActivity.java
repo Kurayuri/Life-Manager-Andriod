@@ -15,9 +15,8 @@ import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
-import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.constants.TypeRes;
+import com.trashparadise.lifemanager.constants.BillTypeRes;
 import com.trashparadise.lifemanager.databinding.ActivityBillCheckBinding;
 
 import java.math.BigDecimal;
@@ -76,13 +75,13 @@ public class BillCheckActivity extends AppCompatActivity {
 
 
         binding.textViewAmount.setText(decimalFormat.format(amount));
-        binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
+        binding.textViewAmount.setTextColor(getResources().getColor(BillTypeRes.COLOR[form]));
         binding.editTextNote.setText(note);
         binding.textViewDate.setText(dateFormatDate.format(date.getTime()));
 //        binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         binding.textViewType.setText(type);
-        binding.imageViewType.setImageResource(TypeRes.ICONS[form][TypeRes.getId(form, type)]);
+        binding.imageViewType.setImageResource(BillTypeRes.ICONS[form][BillTypeRes.getId(form, type)]);
 
         binding.buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override

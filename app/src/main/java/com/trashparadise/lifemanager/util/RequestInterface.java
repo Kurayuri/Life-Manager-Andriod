@@ -35,4 +35,7 @@ public interface RequestInterface {
 
     @POST("receive")
     Call<ReceiveResponse> receive(@Body ReceiveRequest body);
+
+    @POST("sync")
+    Call<DownloadResponse> sync(@Body UploadRequest body);
 }

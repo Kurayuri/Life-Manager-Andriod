@@ -7,12 +7,22 @@ public class DataBundleBean {
     private TreeSet<Work> workList;
     private TreeSet<Contact> contactList;
     private Preference preference;
+    private TreeSet<String> deletedList;
 
-    public DataBundleBean(TreeSet<Bill> billList, TreeSet<Work> workList, TreeSet<Contact> contactList, Preference preference) {
+    public TreeSet<String> getDeletedList() {
+        return deletedList;
+    }
+
+    public void setDeletedList(TreeSet<String> deletedList) {
+        this.deletedList = deletedList;
+    }
+
+    public DataBundleBean(TreeSet<Bill> billList, TreeSet<Work> workList, TreeSet<Contact> contactList, Preference preference, TreeSet<String> deletedList) {
         this.billList = billList;
         this.workList = workList;
         this.contactList = contactList;
         this.preference = preference;
+        this.deletedList=deletedList;
     }
 
     public TreeSet<Bill> getBillList() {

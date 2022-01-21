@@ -19,7 +19,7 @@ import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
-import com.trashparadise.lifemanager.constants.TypeRes;
+import com.trashparadise.lifemanager.constants.BillTypeRes;
 import com.trashparadise.lifemanager.ui.bills.BillAuditActivity;
 import com.trashparadise.lifemanager.ui.bills.BillCheckActivity;
 
@@ -215,8 +215,8 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             Integer form = bill.getForm();
             viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate().getTime()));
             viewHolder.getTextViewType().setText(localDataSet.get(position).getType());
-            viewHolder.getImageViewType().setImageResource(TypeRes.ICONS[form][TypeRes.getId(bill.getForm(), bill.getType())]);
-            viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(TypeRes.COLOR[bill.getForm()]));
+            viewHolder.getImageViewType().setImageResource(BillTypeRes.ICONS[form][BillTypeRes.getId(bill.getForm(), bill.getType())]);
+            viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(BillTypeRes.COLOR[bill.getForm()]));
             if (bill.getForm() == 0) {
                 viewHolder.getTextViewAmount().setText("-" + decimalFormat.format(bill.getAmount()));
             } else {

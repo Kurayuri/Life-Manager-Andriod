@@ -15,11 +15,18 @@ public class Bill implements Comparable<Bill>, Serializable {
     private Integer form;       // 形式，输入/指出
     private String note;        // 备注
     private String uuid;        // uuid
+    private Calendar modifiedTime;
 
-    public static final int ALL=-1;
-    public static final int EXPAND=0;
-    public static final int INCOME=1;
+    public static final int ALL = -1;
+    public static final int EXPAND = 0;
+    public static final int INCOME = 1;
 
+    public static final int AMOUNT = 0;
+    public static final int DATE = 1;
+    public static final int TYPE = 2;
+    public static final int FORM = 3;
+    public static final int NOTE = 4;
+    public static final int UUID = 5;
 
     public Bill(BigDecimal amount, Calendar date, String type, Integer form, String note) {
         this.amount = amount;
@@ -27,27 +34,68 @@ public class Bill implements Comparable<Bill>, Serializable {
         this.type = type;
         this.form = form;
         this.note = note;
-        this.uuid = UUID.randomUUID().toString().replaceAll("-","");
+        this.uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
+        this.modifiedTime = Calendar.getInstance();
     }
 
     @Override
     public int compareTo(Bill o) {
-        int ans=o.getDate().compareTo(this.getDate());
+        int ans = o.getDate().compareTo(this.getDate());
         return ans == 0 ? o.getUuid().compareTo(this.getUuid()) : ans;
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
 
-        return this.amount.equals(((Bill)obj).getAmount()) &&
-                this.date.equals(((Bill)obj).getDate()) &&
-                this.type.equals(((Bill)obj).getType()) &&
-                this.note.equals(((Bill)obj).getNote()) &&
-                this.form.equals(((Bill)obj).getForm()) ;
+        return this.amount.equals(((Bill) obj).getAmount()) &&
+                this.date.equals(((Bill) obj).getDate()) &&
+                this.type.equals(((Bill) obj).getType()) &&
+                this.note.equals(((Bill) obj).getNote()) &&
+                this.form.equals(((Bill) obj).getForm());
     }
+
+
+    public void set(int field, Object object) {
+        switch (field) {
+            case AMOUNT:
+                this.setAmount((BigDecimal) object);
+                break;
+            case DATE:
+                this.setDate((Calendar) object);
+                break;
+            case TYPE:
+                this.setType((String) object);
+                break;
+            case FORM:
+                this.setForm((Integer) object);
+                break;
+            case NOTE:
+                this.setNote((String) object);
+                break;
+            case UUID:
+                this.setUuid((String) object);
+                break;
+
+        }
+        onModify();
+    }
+
 
     public Integer getForm() {
         return form;
+    }
+
+    public Calendar getModifiedTime() {
+        return modifiedTime;
+    }
+
+
+    public void setModifiedTime(Calendar modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public void onModify() {
+        this.modifiedTime = Calendar.getInstance();
     }
 
     public void setForm(Integer form) {

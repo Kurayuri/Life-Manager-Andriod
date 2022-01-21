@@ -16,6 +16,7 @@ import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.bean.network.RegisterRequest;
 import com.trashparadise.lifemanager.bean.network.RegisterResponse;
+import com.trashparadise.lifemanager.constants.NetworkDescriptionRes;
 import com.trashparadise.lifemanager.databinding.ActivityRegisterBinding;
 import com.trashparadise.lifemanager.util.ValidUtils;
 import com.trashparadise.lifemanager.service.RequestService;
@@ -28,7 +29,6 @@ public class RegisterActivity extends AppCompatActivity
         implements View.OnClickListener {
 
     private final String TAG = "RegisterActivity";
-    String account = "";
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
     private ActivityRegisterBinding binding;
@@ -41,9 +41,6 @@ public class RegisterActivity extends AppCompatActivity
         View root = binding.getRoot();
         setContentView(root);
 
-        Intent intent = getIntent();
-        account = intent.getStringExtra("account");
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.account_register);
@@ -51,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity
 
         setOnClickListener();
 
-        setOnFocusChangeErrMsg(binding.etPassword, "password", "密码必须不少于6位");
+        setOnFocusChangeErrMsg(binding.etPassword, "password", getString(R.string.password_no_empty));
     }
 
     private void setOnClickListener() {
@@ -91,18 +88,28 @@ public class RegisterActivity extends AppCompatActivity
         String password1 = binding.etPassword.getText().toString();
         String password2 = binding.etPassword2.getText().toString();
         if (!(password1.equals(password2))) {
-            Toast.makeText(this, "两次输入的密码不一致",
+            Toast.makeText(this, R.string.password_differ,
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!ValidUtils.isPasswordValid(password1)){
+            Toast.makeText(this, R.string.password_no_empty,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Call<RegisterResponse> call = RequestService.API.register(new RegisterRequest(username, password1));
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                RegisterResponse body = response.body();
-                Toast.makeText(RegisterActivity.this, body.description, Toast.LENGTH_SHORT).show();
-                if (body.state == RegisterResponse.OK) {
-                    RegisterActivity.this.finish();
+                try {
+                    RegisterResponse body = response.body();
+                    Toast.makeText(RegisterActivity.this, NetworkDescriptionRes.REGISTER[body.state], Toast.LENGTH_SHORT).show();
+                    if (body.state == RegisterResponse.OK) {
+                        RegisterActivity.this.finish();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(RegisterActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
                 }
             }
 

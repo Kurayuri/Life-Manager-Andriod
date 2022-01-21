@@ -14,17 +14,18 @@ public class Work implements Comparable<Work>, Serializable {
     private String note;        // 备注
     private String uuid;        // uuid
     private String classUuid;   // 关联项目类uuid
+    private Calendar modifiedTime;
 
-    public static final int EVERY_NONE=0;
+    public static final int EVERY_NONE = 0;
 
     public String getClassUuid() {
         return classUuid;
     }
 
-    public Work clone(){
+    public Work clone() {
         Calendar calendar;
-        calendar=(Calendar) this.date.clone();
-        Work workNew=new Work(this.title,calendar,this.repeat,this.form,this.note);
+        calendar = (Calendar) this.date.clone();
+        Work workNew = new Work(this.title, calendar, this.repeat, this.form, this.note);
         workNew.setClassUuid(this.classUuid);
         return workNew;
     }
@@ -32,36 +33,44 @@ public class Work implements Comparable<Work>, Serializable {
     @Override
     public boolean equals(@Nullable Object obj) {
 
-        return this.title.equals(((Work)obj).getTitle()) &&
-                this.date.equals(((Work)obj).getDate()) &&
-                this.repeat.equals(((Work)obj).getRepeat()) &&
-                this.note.equals(((Work)obj).getNote()) &&
-                this.form.equals(((Work)obj).getForm()) ;
+        return this.title.equals(((Work) obj).getTitle()) &&
+                this.date.equals(((Work) obj).getDate()) &&
+                this.repeat.equals(((Work) obj).getRepeat()) &&
+                this.note.equals(((Work) obj).getNote()) &&
+                this.form.equals(((Work) obj).getForm());
     }
 
     public void setClassUuid(String classUuid) {
         this.classUuid = classUuid;
     }
 
-    public static final int EVERY_DAY=7;
-    public static final int EVERY_WEEK=4;
-    public static final int EVERY_MONTH=2;
-    public static final int EVERY_YEAR=1;
+    public static final int EVERY_DAY = 7;
+    public static final int EVERY_WEEK = 4;
+    public static final int EVERY_MONTH = 2;
+    public static final int EVERY_YEAR = 1;
 
-    public static final int ALL=-1;
-    public static final int TODO=0;
-    public static final int DONE=1;
+    public static final int ALL = -1;
+    public static final int TODO = 0;
+    public static final int DONE = 1;
 
-    public static final int TITLE=0;
-    public static final int FORM=1;
-    public static final int REPEAT=2;
-    public static final int NOTE=3;
-    public static final int DATE=4;
-    public static final int UUID=5;
-    public static final int CLASSUUID=6;
+    public static final int TITLE = 0;
+    public static final int FORM = 1;
+    public static final int REPEAT = 2;
+    public static final int NOTE = 3;
+    public static final int DATE = 4;
+    public static final int UUID = 5;
+    public static final int CLASSUUID = 6;
 
-    public void set(int field,Object object){
-        switch (field){
+    public Calendar getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(Calendar modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public void set(int field, Object object) {
+        switch (field) {
             case TITLE:
                 this.setTitle((String) object);
                 break;
@@ -84,17 +93,18 @@ public class Work implements Comparable<Work>, Serializable {
                 this.setClassUuid((String) object);
                 break;
         }
+        onModify();
     }
 
-
-    public Work(String title, Calendar date,Integer repeat,Integer form, String note) {
-        this.title=title;
-        this.repeat=repeat;
+    public Work(String title, Calendar date, Integer repeat, Integer form, String note) {
+        this.title = title;
+        this.repeat = repeat;
         this.date = date;
         this.form = form;
         this.note = note;
-        this.uuid = java.util.UUID.randomUUID().toString().replaceAll("-","");
-        this.classUuid = java.util.UUID.randomUUID().toString().replaceAll("-","");
+        this.uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
+        this.classUuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
+        this.modifiedTime = Calendar.getInstance();
     }
 
     public String getTitle() {
@@ -145,9 +155,13 @@ public class Work implements Comparable<Work>, Serializable {
         this.uuid = uuid;
     }
 
+    public void onModify() {
+        this.modifiedTime = Calendar.getInstance();
+    }
+
     @Override
     public int compareTo(Work o) {
-        int ans=o.getDate().compareTo(this.getDate());
+        int ans = o.getDate().compareTo(this.getDate());
         return ans == 0 ? o.getUuid().compareTo(this.getUuid()) : ans;
     }
 

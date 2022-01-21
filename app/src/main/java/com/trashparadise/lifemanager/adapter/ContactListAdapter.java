@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,13 +85,13 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(),0);
+                listener.onItemClick(localDataSet.get(viewHolder.getBindingAdapterPosition()).getContactUuid(),0);
             }
         });
         viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                listener.onItemClick(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(),1);
+                listener.onItemClick(localDataSet.get(viewHolder.getBindingAdapterPosition()).getContactUuid(),1);
                 return true;
             }
         });
@@ -102,8 +101,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ContactListAdapter.ViewHolder viewHolder, int position) {
         Contact contact = localDataSet.get(position);
-        viewHolder.getTextViewName().setText(contact.getName());
-        viewHolder.getTextViewUuid().setText(contact.getUuid());
+        viewHolder.getTextViewName().setText(contact.getRemarkName());
+        viewHolder.getTextViewUuid().setText(contact.getContactUuid());
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class TypeRes {
+public class BillTypeRes {
     public static String[][] NAMES = new String[][]{{
             "餐饮", "出行", "购物", "日用", "娱乐", "零食", "水果", "烟酒",
             "水电", "宠物", "就医", "运动", "衣物", "教育", "美妆", "育婴"},{

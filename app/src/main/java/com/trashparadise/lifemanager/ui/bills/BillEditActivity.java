@@ -4,7 +4,6 @@ import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.adapter.BillTypeAdapter;
 import com.trashparadise.lifemanager.bean.Bill;
-import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.R;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.bean.TypeBean;
-import com.trashparadise.lifemanager.constants.TypeRes;
+import com.trashparadise.lifemanager.constants.BillTypeRes;
 import com.trashparadise.lifemanager.databinding.ActivityBillEditBinding;
 
 import java.math.BigDecimal;
@@ -78,7 +77,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
             amount = new BigDecimal("0");
             note = new String("");
             form = 0;
-            type = new String(TypeRes.NAMES[form][typeId]);
+            type = new String(BillTypeRes.NAMES[form][typeId]);
             date = Calendar.getInstance();
         } else {
             amount = new BigDecimal(bill.getAmount().toString());
@@ -113,17 +112,17 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void initTypeDate() {
-        typeId = TypeRes.getId(form, type);
+        typeId = BillTypeRes.getId(form, type);
         typeList.clear();
-        for (int i = 0; i < TypeRes.NAMES[form].length; ++i) {
-            typeList.add(new TypeBean(TypeRes.NAMES[form][i], TypeRes.ICONS[form][i], TypeRes.ICONS_GRAY[form][i], i));
+        for (int i = 0; i < BillTypeRes.NAMES[form].length; ++i) {
+            typeList.add(new TypeBean(BillTypeRes.NAMES[form][i], BillTypeRes.ICONS[form][i], BillTypeRes.ICONS_GRAY[form][i], i));
         }
         typeList.get(typeId).setChecked(true);
     }
 
     private void initView() {
         binding.textViewAmount.setText(decimalFormat.format(amount));
-        binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
+        binding.textViewAmount.setTextColor(getResources().getColor(BillTypeRes.COLOR[form]));
         binding.editTextNote.setText(note);
         binding.textViewDate.setText(dateFormatDate.format(date.getTime()));
         binding.textViewDate.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -248,7 +247,7 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         initTypeDate();
         billTypeAdapter.notifyDataSetChanged();
         onItemClick(0);
-        binding.textViewAmount.setTextColor(getResources().getColor(TypeRes.COLOR[form]));
+        binding.textViewAmount.setTextColor(getResources().getColor(BillTypeRes.COLOR[form]));
     }
 
     @Override

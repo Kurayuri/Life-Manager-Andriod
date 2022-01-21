@@ -78,17 +78,18 @@ public class LifeManagerApplication extends Application {
     }
 
 
-    public String onPush() {
+    public String onUpload() {
         Gson gson = new Gson();
-        DataBundleBean dataBundleBean = new DataBundleBean(new TreeSet<>(dataManager.getBillList()), new TreeSet<>(dataManager.getWorkList()),
-                new TreeSet<>(dataManager.getContactList()), dataManager.getPreference());
+        DataBundleBean dataBundleBean = new DataBundleBean(dataManager.getBills(), dataManager.getWorks(),
+                dataManager.getContacts(), dataManager.getPreference(),dataManager.getDeletedList());
         String json = gson.toJson(dataBundleBean);
-        Log.e("Push", json);
+        Log.e("Upload", json);
+        Log.e("DL",dataManager.getDeletedList().toString());
         return json;
     }
 
-    public void onPull(String json) {
-        Log.e("Pull", json);
+    public void onDownload(String json) {
+        Log.e("Download", json);
         Gson gson = new Gson();
         try {
             DataBundleBean dataBundleBean = gson.fromJson(json, DataBundleBean.class);
@@ -100,10 +101,13 @@ public class LifeManagerApplication extends Application {
                 dataManager.setWorkList(dataBundleBean.getWorkList());
             if (dataBundleBean.getContactList() != null)
                 dataManager.setContactList(dataBundleBean.getContactList());
-        }catch (Exception e){
-            Log.e("Pull Error",e.toString());
+            if (dataBundleBean.getDeletedList() != null)
+                dataManager.setDeletedList(dataBundleBean.getDeletedList());
+        } catch (Exception e) {
+            Log.e("Download Error", e.toString());
         }
     }
+
 
     public String workSend(String uuid) {
         Gson gson = new Gson();
@@ -142,7 +146,6 @@ public class LifeManagerApplication extends Application {
             Log.e("billList.data", dataManager.getBillList().size() + "");
         } catch (Exception e) {
             dataManager.setBillList(new TreeSet<>());
-            exception = e;
         }
         try {
             in = new ObjectInputStream(openFileInput("workList.data"));
@@ -151,7 +154,6 @@ public class LifeManagerApplication extends Application {
             Log.e("workList.data", dataManager.getWorkList().size() + "");
         } catch (Exception e) {
             dataManager.setWorkList(new TreeSet<>());
-            exception = e;
         }
         try {
 
@@ -160,7 +162,6 @@ public class LifeManagerApplication extends Application {
             in.close();
         } catch (Exception e) {
             dataManager.setPreference(new Preference());
-            exception = e;
         }
         try {
             in = new ObjectInputStream(openFileInput("user.data"));
@@ -168,7 +169,6 @@ public class LifeManagerApplication extends Application {
             in.close();
         } catch (Exception e) {
             dataManager.setUser(new User());
-            exception = e;
         }
         try {
             in = new ObjectInputStream(openFileInput("contactList.data"));
@@ -177,10 +177,16 @@ public class LifeManagerApplication extends Application {
             Log.e("contactList.data", dataManager.getContactList().size() + "");
         } catch (Exception e) {
             dataManager.setContactList(new TreeSet<>());
-            exception = e;
-
         }
-        if (exception != null) {
+        try {
+            in = new ObjectInputStream(openFileInput("deletedList.data"));
+            dataManager.setDeletedList((TreeSet<String>) in.readObject());
+            in.close();
+            Log.e("deletedList.data", dataManager.getDeletedList().size() + "");
+        } catch (Exception e) {
+            dataManager.setDeletedList(new TreeSet<>());
+        }
+            if (exception != null) {
             Log.e("Read Error", exception.toString());
         }
     }
@@ -210,6 +216,11 @@ public class LifeManagerApplication extends Application {
             out = new ObjectOutputStream(openFileOutput("contactList.data", MODE_PRIVATE));
             out.writeObject(dataManager.getContacts());
             Log.e("contactList.data", dataManager.getContacts().size() + "");
+            out.close();
+
+            out = new ObjectOutputStream(openFileOutput("deletedList.data", MODE_PRIVATE));
+            out.writeObject(dataManager.getDeletedList());
+            Log.e("deletedList.data", dataManager.getContacts().size() + "");
             out.close();
         } catch (Exception e) {
             Log.e("Write Error", e.toString());

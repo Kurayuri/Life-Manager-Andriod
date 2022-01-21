@@ -108,7 +108,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
 
 
         initView();
-        initListrner();
+        initListener();
 
     }
 
@@ -155,7 +155,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
         radioGroup.check(formToId(form));
     }
 
-    private void initListrner() {
+    private void initListener() {
         binding.buttonDay.setOnClickListener(this);
         binding.buttonWeek.setOnClickListener(this);
         binding.buttonMonth.setOnClickListener(this);
@@ -257,7 +257,7 @@ public class WorkEditActivity extends AppCompatActivity implements View.OnClickL
             Work workNew = new Work(title, dateNew, repeat, form, note);
             if (uuid.equals("")) {
                 //New
-                dataManager.addWork(workNew);
+                dataManager.addWorkChain(workNew);
                 finish();
             } else {
                 //Edit

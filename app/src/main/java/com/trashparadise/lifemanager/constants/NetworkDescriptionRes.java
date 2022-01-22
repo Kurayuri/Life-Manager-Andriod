@@ -36,5 +36,15 @@ public class NetworkDescriptionRes {
             R.string.network_description_sync_miss
     };
 
+    public static final int[] SEND = new int[]{
+            R.string.network_description_send_ok,
+            R.string.network_description_send_error,
+            R.string.network_description_send_miss
+    };
+    public static final int[] RECEIVE = new int[]{
+            R.string.network_description_receive_ok,
+            R.string.network_description_receive_error,
+            R.string.network_description_receive_unknown
+    };
 
 }

@@ -56,6 +56,9 @@
     <string name="no_login">未登陆</string>
     <string name="copy_uuid">已复制用户链接</string>
 
+    <string name="on_send">正在发送</string>
+
+
     <string name="normal_issues">常见问题</string>
     <string name="praise">好评鼓励</string>
     <string name="about_us">关于我们</string>
@@ -135,4 +138,12 @@
     <string name="network_description_sync_ok">同步成功</string>
     <string name="network_description_sync_error">用户认证失败</string>
     <string name="network_description_sync_miss">云端用户数据不存在</string>
+
+    <string name="network_description_send_ok">发送成功</string>
+    <string name="network_description_send_error">用户认证失败</string>
+    <string name="network_description_send_miss">目标用户不存在</string>
+
+    <string name="network_description_receive_ok">接受成功</string>
+    <string name="network_description_receive_error">用户认证失败</string>
+    <string name="network_description_receive_unknown">未知错误</string>
 </resources>

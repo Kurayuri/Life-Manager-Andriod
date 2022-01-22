@@ -2,14 +2,17 @@ package com.trashparadise.lifemanager.service;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.bean.network.ReceiveRequest;
 import com.trashparadise.lifemanager.bean.network.ReceiveResponse;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -37,9 +40,10 @@ public class MessageReceiveThread extends Thread {
                     public void onResponse(Call<ReceiveResponse> call, Response<ReceiveResponse> response) {
                         try {
                             ReceiveResponse body = response.body();
-                            ArrayList<String> data = body.getData();
+                            String data = body.getData();
+                            ArrayList<String> strs=gson.fromJson(data,new TypeToken<ArrayList<String>>(){}.getType());
                             Log.e("Receive", data.toString());
-                            for (String str : data) {
+                            for (String str : strs) {
                                 Work work = gson.fromJson(str, Work.class);
                                 application.workReceive(work);
                             }

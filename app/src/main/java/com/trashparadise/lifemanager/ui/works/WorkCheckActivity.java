@@ -30,6 +30,7 @@ import com.trashparadise.lifemanager.bean.Work;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.bean.network.SendRequest;
 import com.trashparadise.lifemanager.bean.network.SendResponse;
+import com.trashparadise.lifemanager.constants.NetworkDescriptionRes;
 import com.trashparadise.lifemanager.constants.RepeatRes;
 import com.trashparadise.lifemanager.databinding.ActivityWorkCheckBinding;
 import com.trashparadise.lifemanager.ui.contact.ContactSelectActivity;
@@ -189,7 +190,7 @@ public class WorkCheckActivity extends AppCompatActivity {
     private void onSend(String uuid, String dstUuid){
         User user=dataManager.getUser();
         if (user.isValidation()) {
-            Toast.makeText(this, "正在发送",
+            Toast.makeText(this, R.string.on_send,
                     Toast.LENGTH_SHORT).show();
             String data= application.workSend(uuid);
             Call<SendResponse> call = RequestService.API.send(new SendRequest(user.getUuid(),user.getSession(),dstUuid,data));
@@ -197,17 +198,17 @@ public class WorkCheckActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SendResponse> call, Response<SendResponse> response) {
                     SendResponse body = response.body();
-                    Toast.makeText(WorkCheckActivity.this, body.description, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WorkCheckActivity.this, NetworkDescriptionRes.SEND[body.state], Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(Call<SendResponse> call, Throwable t) {
-                    Toast.makeText(WorkCheckActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WorkCheckActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 }
             });
 
         } else {
-            Toast.makeText(application, "用户未登陆",
+            Toast.makeText(application, R.string.user_no_login,
                     Toast.LENGTH_SHORT).show();
         }
     }

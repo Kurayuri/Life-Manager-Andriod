@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MeFragment extends Fragment {
+public class MeFragment extends Fragment implements LifeManagerApplication.OnAutoSyncFinishListener {
 
     private AppCompatActivity activity;
     private FragmentMeBinding binding;
@@ -53,8 +54,6 @@ public class MeFragment extends Fragment {
     public static MeFragment newInstance() {
         return new MeFragment();
     }
-
-    private Toast toast;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,7 +70,7 @@ public class MeFragment extends Fragment {
 
         initView();
         initListener();
-
+        application.meFragment=this;
         return root;
     }
 
@@ -130,20 +129,21 @@ public class MeFragment extends Fragment {
 
     private void initView() {
         if (user.isValidation()) {
+            binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
             binding.tvUserName.setText(user.getUsername());
             binding.textViewUserUuid.setText(user.getUuid());
-            binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
         } else {
             binding.tvUserName.setText(R.string.no_login);
             binding.textViewUserUuid.setText("");
             dataManager.getPreference().set(Preference.AUTOSYNC, false);
 
         }
+        binding.textViewSyncTime.setText(dateFormatDate.format(application.autoSyncTime.getTime()));
+        binding.textViewSyncDescription.setText(application.autoSyncDescription);
+
         if (dataManager.getPreference().isAutoSync()) {
             binding.layoutManualSync.setVisibility(View.GONE);
             binding.layoutSyncTime.setVisibility(View.VISIBLE);
-            binding.textViewSyncTime.setText(dateFormatDate.format(application.autoSyncTime.getTime()));
-            binding.textViewSyncDescription.setText(application.autoSyncDescription);
         }
 
         ActionBar actionBar = activity.getSupportActionBar();
@@ -151,19 +151,13 @@ public class MeFragment extends Fragment {
         actionBar.setTitle(R.string.app_name);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initView();
-    }
 
     public void onSyncSwitch() {
-        dataManager.getPreference().set(Preference.AUTOSYNC, !(dataManager.getPreference().isAutoSync()));
-        binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
+
         Animation animationUp = AnimationUtils.loadAnimation(application, R.anim.anim_translate_up);
         Animation animationDown = AnimationUtils.loadAnimation(application, R.anim.anim_translate_down);
-        if (dataManager.getPreference().isAutoSync()) {
-            application.onAutoSync();
+        if (!dataManager.getPreference().isAutoSync()) {
+
             binding.layoutManualSyncContainer.startAnimation(animationUp);
             animationUp.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -173,9 +167,12 @@ public class MeFragment extends Fragment {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    dataManager.getPreference().set(Preference.AUTOSYNC, !(dataManager.getPreference().isAutoSync()));
+                    binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
                     binding.layoutManualSync.setVisibility(View.GONE);
                     binding.layoutSyncTime.setVisibility(View.VISIBLE);
                     binding.layoutSyncTime.startAnimation(animationDown);
+                    application.onAutoSync(null);
                 }
 
                 @Override
@@ -194,6 +191,8 @@ public class MeFragment extends Fragment {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    dataManager.getPreference().set(Preference.AUTOSYNC, !(dataManager.getPreference().isAutoSync()));
+                    binding.switchAutoSync.setChecked(dataManager.getPreference().isAutoSync());
                     binding.layoutManualSync.setVisibility(View.VISIBLE);
                     binding.layoutSyncTime.setVisibility(View.GONE);
                     binding.layoutManualSync.startAnimation(animationDown);
@@ -292,7 +291,7 @@ public class MeFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<DownloadResponse> call, Throwable t) {
-                        Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(application, R.string.network_error, Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -309,5 +308,15 @@ public class MeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView();
+    }
 
+    @Override
+    public void onAutoSyncFinish() {
+        binding.textViewSyncTime.setText(dateFormatDate.format(application.autoSyncTime.getTime()));
+        binding.textViewSyncDescription.setText(application.autoSyncDescription);
+    }
 }

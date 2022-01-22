@@ -43,18 +43,14 @@ public class BillAuditPieFragment extends Fragment {
     private Legend legend;
 
 
-
     public BillAuditPieFragment(Calendar date, Integer form) {
         this.date = date;
         this.form = form;
-
-
     }
 
     public BillAuditPieFragment() {
         this.date = Calendar.getInstance();
         this.form = Bill.EXPAND;
-
     }
 
     @Override
@@ -62,7 +58,7 @@ public class BillAuditPieFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentBillAuditPieBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        dataManager=DataManager.getInstance();
+        dataManager = DataManager.getInstance();
         dateFormat = new SimpleDateFormat(getString(R.string.date_format_month));
         decimalFormat = new DecimalFormat(getString(R.string.amount_decimal_format_unit));
 
@@ -131,11 +127,10 @@ public class BillAuditPieFragment extends Fragment {
         dateEnd.add(Calendar.MONTH, 1);
 
 
-
         ArrayList<Bill> localDataSet = dataManager.getBillList(dateStart, dateEnd, form);
         TreeMap<String, Float> localDataSetAudit = new TreeMap<>();
         for (Bill bill : localDataSet) {
-                localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
+            localDataSetAudit.put(bill.getType(), localDataSetAudit.getOrDefault(bill.getType(), 0f) + bill.getAmount().floatValue());
         }
 
         ArrayList<PieEntry> entries = new ArrayList<>();

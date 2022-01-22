@@ -14,8 +14,11 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
+import com.trashparadise.lifemanager.adapter.WorkListAdapter;
 import com.trashparadise.lifemanager.bean.Contact;
 import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.bean.Preference;
@@ -28,6 +31,7 @@ import com.trashparadise.lifemanager.service.MessageReceiveThread;
 import com.trashparadise.lifemanager.service.NotificationThread;
 import com.trashparadise.lifemanager.service.RequestService;
 import com.trashparadise.lifemanager.ui.MainActivity;
+import com.trashparadise.lifemanager.ui.me.MeFragment;
 import com.trashparadise.lifemanager.ui.works.WorkEditActivity;
 
 import java.io.ObjectInput;
@@ -48,8 +52,10 @@ public class LifeManagerApplication extends Application {
     private NotificationCompat.Builder builder;
     private static final String CHANNEL_ID = "Life Manager";
     private Bitmap icon;
+
     public Calendar autoSyncTime;
     public String autoSyncDescription;
+    public MeFragment meFragment;
 
     @Override
     public void onCreate() {
@@ -58,8 +64,8 @@ public class LifeManagerApplication extends Application {
         readDate();
         dataManager.renewWork();
 
-        autoSyncTime =Calendar.getInstance();
-        autoSyncDescription=getString(R.string.network_description_sync_error);
+        autoSyncTime = Calendar.getInstance();
+        autoSyncDescription = getString(R.string.network_description_sync_error);
 
         // Create notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -89,8 +95,6 @@ public class LifeManagerApplication extends Application {
         MessageReceiveThread getMessageThread = new MessageReceiveThread(this);
         getMessageThread.start();
     }
-
-
 
 
     public String workSend(String uuid) {
@@ -211,21 +215,29 @@ public class LifeManagerApplication extends Application {
         }
     }
 
-    public void onAutoSync() {
-        User user= dataManager.getUser();
-        Preference preference=dataManager.getPreference();
+    public interface OnAutoSyncFinishListener {
+        void onAutoSyncFinish();
+    }
+
+    public void onAutoSync(OnAutoSyncFinishListener listener) {
+        if (meFragment != null && listener == null) {
+            listener = (MeFragment) meFragment;
+        }
+        OnAutoSyncFinishListener finalListener = listener;
+
+        User user = dataManager.getUser();
+        Preference preference = dataManager.getPreference();
         if (user.isValidation() && preference.isAutoSync()) {
-
-
             Call<DownloadResponse> call = RequestService.API.sync(new UploadRequest(user.getUuid(), user.getSession(), dataManager.onUpload()));
+
             call.enqueue(new Callback<DownloadResponse>() {
                 @Override
                 public void onResponse(Call<DownloadResponse> call, Response<DownloadResponse> response) {
-                    autoSyncTime =Calendar.getInstance();
+                    autoSyncTime = Calendar.getInstance();
 
                     try {
                         DownloadResponse body = response.body();
-                        autoSyncDescription=getString(NetworkDescriptionRes.SYNC[body.state]);
+                        autoSyncDescription = getString(NetworkDescriptionRes.SYNC[body.state]);
                         if (body.state == DownloadResponse.OK) {
                             dataManager.onDownload(body.getData());
 
@@ -233,12 +245,16 @@ public class LifeManagerApplication extends Application {
                     } catch (Exception e) {
                         autoSyncDescription = getString(R.string.network_error);
                     }
+                    if (finalListener != null)
+                        finalListener.onAutoSyncFinish();
                 }
 
                 @Override
                 public void onFailure(Call<DownloadResponse> call, Throwable t) {
                     autoSyncTime = Calendar.getInstance();
                     autoSyncDescription = getString(R.string.network_error);
+                    if (finalListener != null)
+                        finalListener.onAutoSyncFinish();
                 }
             });
 

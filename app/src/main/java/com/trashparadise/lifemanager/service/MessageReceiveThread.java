@@ -40,12 +40,15 @@ public class MessageReceiveThread extends Thread {
                     public void onResponse(Call<ReceiveResponse> call, Response<ReceiveResponse> response) {
                         try {
                             ReceiveResponse body = response.body();
-                            String data = body.getData();
-                            ArrayList<String> strs=gson.fromJson(data,new TypeToken<ArrayList<String>>(){}.getType());
-                            Log.e("Receive", data.toString());
-                            for (String str : strs) {
-                                Work work = gson.fromJson(str, Work.class);
-                                application.workReceive(work);
+                            Log.e("Receive","-"+body.description);
+                            if (body.state == ReceiveResponse.OK) {
+                                String data = body.getData();
+                                ArrayList<String> strs = gson.fromJson(data, new TypeToken<ArrayList<String>>() {
+                                }.getType());
+                                for (String str : strs) {
+                                    Work work = gson.fromJson(str, Work.class);
+                                    application.workReceive(work);
+                                }
                             }
                         } catch (Exception e) {
                             Log.e("Receive Error", e.toString());

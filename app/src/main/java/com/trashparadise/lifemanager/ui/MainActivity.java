@@ -1,8 +1,10 @@
 package com.trashparadise.lifemanager.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_host_fragment_activity_main);
 
 
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
 
@@ -56,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        application.onAutoSync();
+        application.onAutoSync(null);
         super.onResume();
-    }
-}
+}}

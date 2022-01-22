@@ -201,7 +201,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                             Animation animationScaleRotateIn = AnimationUtils.loadAnimation(context, R.anim.anim_scale_rotate_in);
                             Animation animationTranslateLeft = AnimationUtils.loadAnimation(context, R.anim.anim_translate_left);
                             Animation animationRotateShake = AnimationUtils.loadAnimation(context, R.anim.anim_rotate_shake);
-                            dataManager.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
+
 
                             switch (currForm) {
                                 case Work.DONE:
@@ -225,6 +225,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                                                     viewHolder.textViewDate.setTextColor(application.getColor(R.color.iconDone));
                                                     viewHolder.imageViewForm.setImageResource(R.drawable.ic_done);
                                                     viewHolder.imageViewForm.startAnimation(animationScaleRotateIn);
+                                                    dataManager.setWork(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid(), Work.FORM, Work.DONE);
                                                 }
 
                                                 @Override
@@ -258,6 +259,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
                                                 @Override
                                                 public void onAnimationEnd(Animation animation) {
                                                     --animationCount;
+
                                                     if (animationCount <= 0) {
                                                         updateDataSet();
                                                     }

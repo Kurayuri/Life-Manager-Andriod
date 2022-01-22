@@ -17,6 +17,8 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -156,15 +158,19 @@ public class BillEditActivity extends AppCompatActivity implements View.OnClickL
         binding.buttonConfirm.setOnClickListener(this);
         binding.textViewDate.setOnClickListener(this);
         radioGroup.setOnCheckedChangeListener(this);
+        Animation animationDown = AnimationUtils.loadAnimation(BillEditActivity.this, R.anim.anim_translate_down);
+        binding.constraintLayoutKeyboardBorder.startAnimation(animationDown);
         KeyboardVisibilityEvent.setEventListener(this, new KeyboardVisibilityEventListener() {
 
             @Override
             public void onVisibilityChanged(boolean isOpen) {
-
-                if (isOpen)
+                if (isOpen) {
+                    binding.constraintLayoutKeyboardBorder.clearAnimation();
                     binding.constraintLayoutKeyboardBorder.setVisibility(View.GONE);
-                else
+                } else {
                     binding.constraintLayoutKeyboardBorder.setVisibility(View.VISIBLE);
+                    binding.constraintLayoutKeyboardBorder.startAnimation(animationDown);
+                }
             }
         });
     }

@@ -56,8 +56,8 @@ public class RequestService {
     }
 
 
-    public static String address = "https://121.43.138.1:8080/";
-//    public static String address = "http://10.0.2.2:8080/";
+//    public static String address = "https://121.43.138.1:8080/";
+    public static String address = "http://10.0.2.2:8080/";
     public static RequestInterface API;
 
     static {

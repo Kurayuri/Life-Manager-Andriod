@@ -51,7 +51,7 @@ public class WorksFragment extends Fragment {
         ActionBar actionBar=activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_work_form);
+        actionBar.setCustomView(R.layout.actionbar_work_form_multi_choice);
         radioGroupForm=actionBar.getCustomView().findViewById(R.id.radioGroup_form);
         radioGroupForm.check(R.id.rb_todo);
 

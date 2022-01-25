@@ -2,7 +2,6 @@ package com.trashparadise.lifemanager.ui.bills;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.trashparadise.lifemanager.R;
+import com.trashparadise.lifemanager.bean.Bill;
 import com.trashparadise.lifemanager.databinding.FragmentBillsBinding;
 
 public class BillsFragment extends Fragment {
@@ -25,8 +24,8 @@ public class BillsFragment extends Fragment {
     private FragmentBillsBinding binding;
     private AppCompatActivity activity;
     private RadioGroup radioGroupForm;
-    private Integer form;
-    private Integer formNew;
+    private Integer currForm;
+    private Integer newForm;
     private BillListFragment billListFragment;
 
     public static BillsFragment newInstance() {
@@ -37,21 +36,21 @@ public class BillsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        form = -1;
-        formNew = -1;
+        currForm = Bill.ALL;
+        newForm = Bill.ALL;
 
         activity = (AppCompatActivity) getActivity();
         binding = FragmentBillsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        billListFragment=new BillListFragment(form,true);
+        billListFragment = new BillListFragment(currForm, true);
 
         getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_billList, billListFragment).commit();
 
         ActionBar actionBar = activity.getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.actionbar_bill_form);
+        actionBar.setCustomView(R.layout.actionbar_bill_form_multi_choice);
         radioGroupForm = actionBar.getCustomView().findViewById(R.id.radioGroup_form);
 
         initListener();
@@ -73,11 +72,11 @@ public class BillsFragment extends Fragment {
         radioGroupForm.getChildAt(0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (form == 0) {
-                    form = -1;
+                if (currForm == Bill.INCOME) {
+                    currForm = Bill.ALL;
                     radioGroupForm.clearCheck();
                 } else {
-                    form = 0;
+                    currForm = Bill.INCOME;
                 }
                 updateDateSet();
             }
@@ -85,19 +84,19 @@ public class BillsFragment extends Fragment {
         radioGroupForm.getChildAt(1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (form == 1) {
-                    form = -1;
+                if (currForm == Bill.EXPAND) {
+                    currForm = Bill.ALL;
                     radioGroupForm.clearCheck();
                 } else {
-                    form = 1;
+                    currForm = Bill.EXPAND;
                 }
                 updateDateSet();
             }
         });
     }
 
-    public void updateDateSet(){
-        billListFragment.updateDateSet(form);
+    public void updateDateSet() {
+        billListFragment.updateDateSet(currForm);
     }
 
     @Override

@@ -10,14 +10,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
+import com.trashparadise.lifemanager.DataManager;
 import com.trashparadise.lifemanager.R;
 import com.trashparadise.lifemanager.adapter.BillListAdapter;
 import com.trashparadise.lifemanager.LifeManagerApplication;
 import com.trashparadise.lifemanager.databinding.FragmentBillListBinding;
 
+import java.util.TreeSet;
+
 public class BillListFragment extends Fragment {
     private LifeManagerApplication application;
+    private DataManager dataManager;
     private View view;
     private BillListAdapter billListAdapter;
     private RecyclerView recyclerView;
@@ -26,15 +31,16 @@ public class BillListFragment extends Fragment {
     private Boolean slimOn;
     private int billListLayout;
 
-    public BillListFragment(Integer form,Boolean auditOn) {
-        this.form=form;
-        this.auditOn=auditOn;
-        slimOn=false;
+    public BillListFragment(Integer form, Boolean auditOn) {
+        this.form = form;
+        this.auditOn = auditOn;
+        slimOn = false;
     }
+
     public BillListFragment() {
-        this.form=-1;
-        this.auditOn=false;
-        slimOn=true;
+        this.form = -1;
+        this.auditOn = false;
+        slimOn = true;
     }
 
 
@@ -42,19 +48,42 @@ public class BillListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        billListLayout=slimOn?R.layout.fragment_bill_list_slim:R.layout.fragment_bill_list;
-        view=inflater.inflate(billListLayout, container, false);
+        billListLayout = slimOn ? R.layout.fragment_bill_list_slim : R.layout.fragment_bill_list;
+        view = inflater.inflate(billListLayout, container, false);
 
         application = (LifeManagerApplication) this.getActivity().getApplication();
+        dataManager = DataManager.getInstance();
 
-        recyclerView=view.findViewById(R.id.recyclerView);
-        billListAdapter=new BillListAdapter(getContext(),form,auditOn,slimOn);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        billListAdapter = new BillListAdapter(getContext(), form, auditOn, slimOn);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(billListAdapter);
         return view;
     }
-    public void updateDateSet(Integer form){
+
+    public void updateDateSet(Integer form) {
+        this.form = form;
         billListAdapter.callUpdateDataSet(form);
+    }
+
+    public void onMultiChoice() {
+        billListAdapter.onMultiChoice();
+    }
+
+    public void onMultiDelete() {
+        TreeSet<String> chosen = billListAdapter.onMultiDelete();
+        for (String uuid : chosen) {
+            dataManager.delBill(uuid);
+        }
+        billListAdapter.callUpdateDataSet(form);
+    }
+
+    public void onMultiInterval() {
+        billListAdapter.onMultiInterval();
+    }
+
+    public void onMultiReverse() {
+        billListAdapter.onMultiReverse();
     }
 
 }

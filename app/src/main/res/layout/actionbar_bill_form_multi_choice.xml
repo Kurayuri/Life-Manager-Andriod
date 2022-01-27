@@ -23,5 +23,41 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/colorTextWhiteDeep" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_multiGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_multiChoice"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/button_multiDelete"
+            style="@style/ActionBarImageButton"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorTextWhiteDeep" />
+        <ImageButton
+            android:id="@+id/button_multiInterval"
+            style="@style/ActionBarImageButton"
+            android:src="@drawable/ic_interval"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_multiDelete"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorTextWhiteDeep" />
+        <ImageButton
+            android:id="@+id/button_multiReverse"
+            style="@style/ActionBarImageButton"
+            android:src="@drawable/ic_reverse"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_multiInterval"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorTextWhiteDeep" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

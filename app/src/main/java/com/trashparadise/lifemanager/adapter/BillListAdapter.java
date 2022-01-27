@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TreeSet;
 
 public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHolder> {
     private ArrayList<Bill> localDataSet;
@@ -40,8 +43,10 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private Integer form;
     private Boolean auditOn;
     private Boolean slimOn;
-    private int itemBillLayout;
+    private int itemBillLayoutStyle;
 
+    private Boolean multiChoice;
+    private TreeSet<Integer> chosen;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ConstraintLayout layout;
@@ -49,6 +54,8 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         private final TextView textViewAmount;
         private final TextView textViewType;
         private final ImageView imageViewType;
+        private final CheckBox checkBox;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -57,6 +64,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             textViewAmount = (TextView) view.findViewById(R.id.textView_amount);
             textViewType = (TextView) view.findViewById(R.id.textView_type);
             imageViewType = (ImageView) view.findViewById(R.id.imageView_type);
+            checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         }
 
         public ConstraintLayout getLayout() {
@@ -78,6 +86,11 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         public TextView getTextViewAmount() {
             return textViewAmount;
         }
+
+        public CheckBox getCheckBox() {
+            return checkBox;
+        }
+
     }
 
 
@@ -86,7 +99,10 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         this.context = context;
         this.auditOn = auditOn;
         this.slimOn = slimOn;
-        itemBillLayout = slimOn ? R.layout.item_bill_slim : R.layout.item_bill;
+        itemBillLayoutStyle = slimOn ? R.layout.item_bill_slim : R.layout.item_bill;
+
+        multiChoice = false;
+        chosen = new TreeSet<>();
 
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         dataManager = DataManager.getInstance();
@@ -105,6 +121,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     private void updateDataSet() {
         ArrayList<Bill> allDataSet = dataManager.getBillList();
         localDataSet = new ArrayList<>();
+        chosen.clear();
 
         if (form != -1) {
             for (int i = 0; i < allDataSet.size(); ++i) {
@@ -145,7 +162,7 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         View view = null;
         switch (viewType) {
             case 0:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemBillLayout, viewGroup, false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(itemBillLayoutStyle, viewGroup, false);
                 break;
             case 1:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_bill_month, viewGroup, false);
@@ -153,7 +170,6 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
         }
 
         ViewHolder viewHolder = new ViewHolder(view);
-
         switch (viewType) {
             case 0:
                 viewHolder.layout.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +181,17 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                     }
                 });
                 if (!slimOn) {
+                    viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (b) {
+                                chosen.add(viewHolder.getBindingAdapterPosition());
+                            } else {
+                                chosen.remove(viewHolder.getBindingAdapterPosition());
+                            }
+                        }
+                    });
+
                     viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
@@ -172,7 +199,9 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                             builder.setMessage(R.string.delete_confirm_text)
                                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            dataManager.delBill(localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid());
+                                            String uuid = localDataSet.get(viewHolder.getBindingAdapterPosition()).getUuid();
+
+                                            dataManager.delBill(uuid);
                                             updateDataSet();
                                         }
                                     })
@@ -199,7 +228,6 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
                 break;
         }
         return viewHolder;
-
     }
 
     @Override
@@ -217,11 +245,15 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
             viewHolder.getTextViewDate().setText(dateFormatTime.format(bill.getDate().getTime()));
             viewHolder.getTextViewType().setText(localDataSet.get(position).getType());
             viewHolder.getImageViewType().setImageResource(BillTypeRes.ICONS[form][BillTypeRes.getId(bill.getForm(), bill.getType())]);
-            viewHolder.getTextViewAmount().setTextColor(context.getResources().getColor(BillTypeRes.COLOR[bill.getForm()]));
-            if (bill.getForm() == 0) {
+            viewHolder.getTextViewAmount().setTextColor(context.getColor(BillTypeRes.COLOR[bill.getForm()]));
+            if (bill.getForm() == Bill.EXPAND) {
                 viewHolder.getTextViewAmount().setText("-" + decimalFormat.format(bill.getAmount()));
             } else {
                 viewHolder.getTextViewAmount().setText("+" + decimalFormat.format(bill.getAmount()));
+            }
+            if (!slimOn) {
+                viewHolder.getCheckBox().setVisibility(multiChoice ? View.VISIBLE : View.GONE);
+                viewHolder.getCheckBox().setChecked(chosen.contains(position));
             }
         }
     }
@@ -230,4 +262,40 @@ public class BillListAdapter extends RecyclerView.Adapter<BillListAdapter.ViewHo
     public int getItemCount() {
         return localDataSet.size();
     }
+
+    public void onMultiChoice() {
+        if (!multiChoice) {
+            chosen.clear();
+        }
+        multiChoice = !multiChoice;
+        notifyDataSetChanged();
+    }
+
+    public TreeSet<String> onMultiDelete() {
+        TreeSet<String> chosenUuid = new TreeSet<>();
+        for (Integer position : chosen) {
+            chosenUuid.add(localDataSet.get(position).getUuid());
+        }
+        return chosenUuid;
+    }
+
+    public void onMultiReverse() {
+        TreeSet<Integer> tmp = new TreeSet<>();
+        for (int i = 0; i < localDataSet.size(); ++i) {
+            tmp.add(i);
+        }
+        if (chosen.size() > 0) {
+            for (int i = chosen.first(); i <= chosen.last(); ++i)
+                tmp.remove(i);
+        }
+        chosen = tmp;
+        notifyItemRangeChanged(0,localDataSet.size());
+    }
+
+    public void onMultiInterval() {
+        for (int i = chosen.first(); i <= chosen.last(); ++i)
+            chosen.add(i);
+        notifyItemRangeChanged(chosen.first(), chosen.last());
+    }
+
 }

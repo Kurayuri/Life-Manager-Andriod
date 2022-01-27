@@ -99,26 +99,30 @@
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4265625" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4185185185185185" />
         <entry key="..\:/Users/Kurayuri/AndroidStudioProjects/LifeManager/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.4185185185185185" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/drawable/ic_delete.xml" value="0.1315" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/drawable/sector_switch_background.xml" value="0.1405" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/drawable/sector_switch_thumb.xml" value="0.1405" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/drawable/selector_radio_button.xml" value="0.1405" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/actionbar_bill_form.xml" value="0.1" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/actionbar_bill_form_multi_choice.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/actionbar_mutlti_choice.xml" value="0.18958333333333333" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/actionbar_work_form.xml" value="0.1" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/actionbar_work_form_multi_choice.xml" value="0.1" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/activity_bill_audit.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/activity_contact_select.xml" value="0.264" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/fragment_bill_audit_pie.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/fragment_bill_list.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/fragment_bill_list_slim.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/fragment_contact_list.xml" value="0.10461956521739131" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/fragment_me.xml" value="0.264" />
-        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_bill.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_bill.xml" value="0.4" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_bill_month.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_bill_slim.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_bill_type.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_contact.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_work.xml" value="0.33" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_work.xml" value="0.264" />
         <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_work_month.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_work_slim.xml" value="0.6" />
+        <entry key="..\:/Users/Kurayuri/StudioProjects/Life-Manager-Andriod/app/src/main/res/layout/item_work_slim.xml" value="0.536" />
       </map>
     </option>
   </component>

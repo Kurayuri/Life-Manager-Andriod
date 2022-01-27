@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.TreeSet;
 
 public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHolder> {
     private ArrayList<Work> localDataSet;
@@ -46,6 +49,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private Boolean auditOn;
     private Boolean slimOn;
     private Boolean openOn;
+    private Boolean multiChoice;
+    private TreeSet<Integer> chosen;
 
     private Vibrator vibrator;
     private SoundPoolUtils soundPoolUtils;
@@ -69,6 +74,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         private final TextView textViewTitle;
         private final TextView textViewRepeat;
         private final ImageView imageViewForm;
+        private final CheckBox checkBox;
 
         public TextView getTextViewRepeat() {
             return textViewRepeat;
@@ -81,6 +87,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
             textViewNote = (TextView) view.findViewById(R.id.textView_note);
             textViewTitle = (TextView) view.findViewById(R.id.textView_title);
             textViewRepeat = (TextView) view.findViewById(R.id.textView_repeat);
+            checkBox = (CheckBox) view.findViewById(R.id.checkBox);
 
             imageViewForm = (ImageView) view.findViewById(R.id.imageView_form);
         }
@@ -95,6 +102,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
         public ImageView getImageViewForm() {
             return imageViewForm;
+        }
+
+        public CheckBox getCheckBox() {
+            return checkBox;
         }
 
         public TextView getTextViewDate() {
@@ -115,6 +126,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         this.listener = listener;
         application = (LifeManagerApplication) ((AppCompatActivity) context).getApplication();
         dataManager = DataManager.getInstance();
+
+        multiChoice = false;
+        chosen = new TreeSet<>();
+
         updateDataSet();
         dateFormatMonth = new SimpleDateFormat(context.getString(R.string.date_format_month));
         dateFormatTime = new SimpleDateFormat(context.getString(R.string.date_format_time));
@@ -135,6 +150,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
     private void updateDataSet() {
         ArrayList<Work> allDataSet = dataManager.getWorkList();
         localDataSet = new ArrayList<>();
+        chosen.clear();
+
         if (form != Work.ALL) {
             for (int i = 0; i < allDataSet.size(); ++i) {
                 if (allDataSet.get(i).getForm().equals(form)) {
@@ -327,6 +344,16 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
 
                     if (!slimOn) {
+                        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                if (b) {
+                                    chosen.add(viewHolder.getBindingAdapterPosition());
+                                } else {
+                                    chosen.remove(viewHolder.getBindingAdapterPosition());
+                                }
+                            }
+                        });
                         viewHolder.layout.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
@@ -394,6 +421,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
             viewHolder.getTextViewRepeat().setText(application.getResources().getString(RepeatRes.getStringId(work.getRepeat())));
             viewHolder.getTextViewDate().setTextColor(application.getColor(form == 0 ? R.color.colorTextRed : R.color.colorPrimary));
+            if (!slimOn) {
+                viewHolder.getCheckBox().setVisibility(multiChoice ? View.VISIBLE : View.GONE);
+                viewHolder.getCheckBox().setChecked(chosen.contains(position));
+            }
         }
     }
 
@@ -407,5 +438,40 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
         return isAudit(position) ? 1 : 0;
     }
 
+
+    public void onMultiChoice() {
+        if (!multiChoice) {
+            chosen.clear();
+        }
+        multiChoice = !multiChoice;
+        notifyDataSetChanged();
+    }
+
+    public TreeSet<String> onMultiDelete() {
+        TreeSet<String> chosenUuid = new TreeSet<>();
+        for (Integer position : chosen) {
+            chosenUuid.add(localDataSet.get(position).getUuid());
+        }
+        return chosenUuid;
+    }
+
+    public void onMultiReverse() {
+        TreeSet<Integer> tmp = new TreeSet<>();
+        for (int i = 0; i < localDataSet.size(); ++i) {
+            tmp.add(i);
+        }
+        if (chosen.size() > 0) {
+            for (int i = chosen.first(); i <= chosen.last(); ++i)
+                tmp.remove(i);
+        }
+        chosen = tmp;
+        notifyItemRangeChanged(0, localDataSet.size());
+    }
+
+    public void onMultiInterval() {
+        for (int i = chosen.first(); i <= chosen.last(); ++i)
+            chosen.add(i);
+        notifyItemRangeChanged(chosen.first(), chosen.last());
+    }
 
 }

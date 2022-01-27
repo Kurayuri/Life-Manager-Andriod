@@ -4,6 +4,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -25,9 +28,11 @@ public class WorksFragment extends Fragment {
     private FragmentWorksBinding binding;
     private AppCompatActivity activity;
     private RadioGroup radioGroupForm;
+    private ActionBar actionBar;
     private Integer form;
-    private Integer formNew;
+    private View layoutMultiGroup;
     private WorkListFragment workListFragment;
+    private boolean multiChoice;
 
     public static WorksFragment newInstance() {
         return new WorksFragment();
@@ -38,22 +43,23 @@ public class WorksFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         form = Work.TODO;
-        formNew = Work.TODO;
+        multiChoice = false;
 
-        activity=(AppCompatActivity)getActivity();
+        activity = (AppCompatActivity) getActivity();
         binding = FragmentWorksBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        workListFragment=new WorkListFragment(form,true,false,true);
+        workListFragment = new WorkListFragment(form, true, false, true);
 
-        getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_workList,workListFragment).commit();
+        getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer_workList, workListFragment).commit();
 
-        ActionBar actionBar=activity.getSupportActionBar();
+        actionBar = activity.getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.actionbar_work_form_multi_choice);
-        radioGroupForm=actionBar.getCustomView().findViewById(R.id.radioGroup_form);
+        radioGroupForm = actionBar.getCustomView().findViewById(R.id.radioGroup_form);
         radioGroupForm.check(R.id.rb_todo);
+        layoutMultiGroup = actionBar.getCustomView().findViewById(R.id.layout_multiGroup);
 
         initListener();
 
@@ -61,7 +67,7 @@ public class WorksFragment extends Fragment {
         return root;
     }
 
-    private void initListener(){
+    private void initListener() {
         binding.floatingActionButtonNewWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,9 +101,55 @@ public class WorksFragment extends Fragment {
                 updateDateSet();
             }
         });
+        actionBar.getCustomView().findViewById(R.id.button_multiChoice).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                workListFragment.onMultiChoice();
+                multiChoice = !multiChoice;
+                if (multiChoice) {
+                    layoutMultiGroup.setVisibility(View.VISIBLE);
+                    radioGroupForm.setVisibility(View.GONE);
+                } else {
+                    layoutMultiGroup.setVisibility(View.GONE);
+                    radioGroupForm.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+        actionBar.getCustomView().findViewById(R.id.button_multiDelete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(R.string.delete_confirm_text)
+                        .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                workListFragment.onMultiDelete();
+                            }
+                        })
+                        .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                Dialog dialogFragment = builder.create();
+                dialogFragment.show();
+            }
+        });
+        actionBar.getCustomView().findViewById(R.id.button_multiInterval).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                workListFragment.onMultiInterval();
+            }
+        });
+        actionBar.getCustomView().findViewById(R.id.button_multiReverse).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                workListFragment.onMultiReverse();
+            }
+        });
+
     }
 
-    public void updateDateSet(){
+    public void updateDateSet() {
         workListFragment.updateDateSet(form);
     }
 

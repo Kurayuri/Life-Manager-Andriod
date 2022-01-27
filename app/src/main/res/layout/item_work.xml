@@ -57,7 +57,7 @@
             android:text="@string/date_format_time"
             android:textColor="@color/colorTextRed"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView_title"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/checkBox" />
 
         <TextView
             android:id="@+id/textView_repeat"
@@ -85,6 +85,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/textView_note"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

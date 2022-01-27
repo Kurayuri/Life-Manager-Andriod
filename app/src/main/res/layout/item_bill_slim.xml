@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="44dp">
+    android:layout_height="44sp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/imageView_type"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="35sp"
+            android:layout_height="35sp"
             android:layout_centerVertical="true"
 
             android:layout_marginStart="16dp"
@@ -35,7 +35,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_toRightOf="@id/imageView_type"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="6sp"
             android:text="@string/title_bills"
             android:textColor="@color/black"
             android:textSize="14sp"

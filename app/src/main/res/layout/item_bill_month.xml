@@ -4,13 +4,13 @@
     android:id="@+id/layout"
     android:background="@color/gray_f6"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="40sp">
 
     <TextView
         android:id="@+id/textView_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="2sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/audit_month_bill"
-        android:textSize="12dp"
+        android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView_date"
         android:textColor="@color/colorTextTeal"
         app:layout_constraintEnd_toEndOf="parent" />

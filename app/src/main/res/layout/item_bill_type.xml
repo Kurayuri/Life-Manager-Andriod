@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="70sp">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="38sp"
+            android:layout_height="38sp"
             android:layout_centerVertical="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="8sp"
             android:src="@drawable/classify_eat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

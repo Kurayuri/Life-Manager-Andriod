@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="128sp"
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,13 +19,12 @@
 
         <ImageView
             android:id="@+id/headView"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
+            android:layout_width="68sp"
+            android:layout_height="68sp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginTop="30sp"
             android:src="@drawable/ic_people"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -37,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="10sp"
             android:contextClickable="true"
             android:text="未登录"
             android:textColor="@color/black"
@@ -49,7 +48,7 @@
             android:id="@+id/textView_userUuid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="6sp"
             android:text=""
             android:textColor="@color/colorTextHintDeep"
             android:textSize="10sp"
@@ -58,7 +57,7 @@
 
         <!--        <View-->
         <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="1dp"-->
+        <!--            android:layout_height="1sp"-->
         <!--            android:background="?android:attr/listDivider"-->
         <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -67,16 +66,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_login"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="6dp"
+        android:layout_height="50sp"
+        android:layout_marginTop="6sp"
         android:background="@drawable/shape_round_corner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/relativeLayout">
 
         <ImageView
             android:id="@+id/imageView_account"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:src="@drawable/ic_login"
@@ -95,7 +94,7 @@
             android:layout_toRightOf="@id/imageView_account"
             android:text="@string/account_login"
             android:textColor="@color/black"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView_account"
             app:layout_constraintTop_toTopOf="parent" />
@@ -107,14 +106,14 @@
         android:id="@+id/layout_syncModule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="6sp"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/layout_login">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_autoSync"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="50sp"
             android:background="@drawable/shape_round_corner"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -122,8 +121,8 @@
 
             <ImageView
                 android:id="@+id/imageView_autoSync"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_auto_sync"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -140,7 +139,7 @@
                 android:layout_toRightOf="@id/imageView_autoSync"
                 android:text="@string/data_auto_sync"
                 android:textColor="@color/black"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_autoSync"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -150,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:switchMinWidth="40dp"
+                android:switchMinWidth="40sp"
                 android:thumb="@drawable/sector_switch_thumb"
                 android:track="@drawable/sector_switch_background"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -175,7 +174,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_sync"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="50sp"
                     android:background="@drawable/shape_round_corner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -183,8 +182,8 @@
 
                     <ImageView
                         android:id="@+id/imageView_sync"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="20sp"
+                        android:layout_height="20sp"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/ic_sync"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -202,7 +201,7 @@
                         android:layout_toRightOf="@id/imageView_sync"
                         android:text="@string/data_sync"
                         android:textColor="@color/black"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView_sync"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -213,15 +212,15 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_upload"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="50sp"
                     android:background="@drawable/shape_round_corner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layout_sync">
 
                     <ImageView
                         android:id="@+id/imageView_export"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="20sp"
+                        android:layout_height="20sp"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/ic_upload"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -238,14 +237,14 @@
                         android:layout_toRightOf="@id/imageView_export"
                         android:text="@string/data_upload"
                         android:textColor="@color/black"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView_export"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <!--        <View-->
                     <!--            android:layout_width="match_parent"-->
-                    <!--            android:layout_height="1dp"-->
+                    <!--            android:layout_height="1sp"-->
                     <!--            android:background="?android:attr/listDivider"-->
                     <!--            app:layout_constraintBottom_toBottomOf="parent" />-->
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -253,7 +252,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_download"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="50sp"
                     android:background="@drawable/shape_round_corner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layout_upload">
@@ -261,8 +260,8 @@
 
                     <ImageView
                         android:id="@+id/imageView_download"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="20sp"
+                        android:layout_height="20sp"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/ic_download"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -279,7 +278,7 @@
                         android:layout_toRightOf="@id/imageView_download"
                         android:text="@string/data_download"
                         android:textColor="@color/black"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageView_download"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -294,7 +293,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_syncTime"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="50sp"
             android:background="@drawable/shape_round_corner"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
@@ -303,8 +302,8 @@
 
             <ImageView
                 android:id="@+id/imageView_syncTime"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_sync"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -321,7 +320,7 @@
                 android:layout_toRightOf="@id/imageView_syncTime"
                 android:text="@string/network_description_sync_error"
                 android:textColor="@color/black"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_syncTime"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -335,7 +334,7 @@
                 android:layout_toRightOf="@id/imageView_syncTime"
                 android:text="@string/date_format_date"
                 android:textColor="@color/gray_c3"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -343,45 +342,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-    <!--        android:id="@+id/layout_settings"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="50dp"-->
-    <!--        android:layout_marginTop="6dp"-->
-    <!--        android:background="@drawable/shape_round_corner"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/layout_syncModule">-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/imageView_settings"-->
-    <!--            android:layout_width="20dp"-->
-    <!--            android:layout_height="20dp"-->
-    <!--            android:layout_centerVertical="true"-->
-    <!--            android:layout_marginStart="16dp"-->
-    <!--            android:src="@drawable/ic_login"-->
-    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toTopOf="parent"-->
-    <!--            app:tint="@color/colorPrimary" />-->
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/textView_settings"-->
-
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_centerVertical="true"-->
-    <!--            android:layout_marginStart="16dp"-->
-    <!--            android:layout_toRightOf="@id/imageView_settings"-->
-    <!--            android:text="@string/account_login"-->
-    <!--            android:textColor="@color/black"-->
-    <!--            android:textSize="16dp"-->
-    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--            app:layout_constraintStart_toEndOf="@+id/imageView_settings"-->
-    <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-
-    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

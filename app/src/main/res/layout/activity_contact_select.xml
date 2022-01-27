@@ -9,11 +9,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="8sp"
         android:text="@string/new_friend"
         android:textColor="@color/colorTextHintDeep"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="14dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintStart_toStartOf="parent" />
@@ -23,13 +23,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="20sp"
         android:layout_marginEnd="10dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView_name"
-            android:layout_width="0dp"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:text="@string/friend_name"
             android:textColor="@color/colorPrimary"
@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/textView_uuid"
-            android:layout_width="0dp"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:text="@string/friend_uuid"
             android:textColor="@color/colorPrimary"
@@ -51,11 +51,11 @@
 
         <EditText
             android:id="@+id/editText_name"
-            android:layout_width="0dp"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
 
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="8sp"
             android:gravity="left|center_vertical"
             android:hint="@string/friend_name"
             android:inputType="text"
@@ -69,7 +69,7 @@
 
         <EditText
             android:id="@+id/editText_uuid"
-            android:layout_width="0dp"
+            android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
@@ -87,8 +87,8 @@
 
         <ImageView
             android:id="@+id/imageView_add"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_work_merge"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -100,9 +100,9 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer_contactList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="6dp"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        android:layout_marginTop="6sp"
         app:layout_constraintTop_toBottomOf="@id/layout_new"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,8 +112,8 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="3dp"
+        android:layout_height="1sp"
+        android:layout_marginTop="3sp"
         android:background="?android:attr/listDivider"
         app:layout_constraintTop_toBottomOf="@id/layout_new" />
 
